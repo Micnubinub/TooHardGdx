@@ -11,7 +11,7 @@ public class GameController {
             } else if (Game.leaderButton.isClicked(x, y)) {
 
             } else if (Game.storeButton.isClicked(x, y)) {
-                Game.showStore();
+//  todp              Game.showStore();
             } else {
                 Game.state = GameState.Playing;
             }
@@ -21,7 +21,7 @@ public class GameController {
             if (Game.homeButton.isClicked(x, y)) {
                 Game.setup();
             } else if (Game.shareButton.isClicked(x, y)) {
-                Game.Share(Game.takeScreenShot());
+//       todo         Game.Share(Game.takeScreenShot());
             }
         }
     }

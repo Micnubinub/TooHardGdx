@@ -1,9 +1,5 @@
 package tbs.spinjump;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,11 +10,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Created by Sidney on 14/05/2015.
  */
 public class SpikeObject extends GameObject {
+    static int height, width, halfT, tCX, tCY;
     private static Sprite triangle;
     private static boolean isTriangleInit = false;
     public float angle;
-    static int height, width, halfT, tCX, tCY;
-    
+
 
     public SpikeObject() {
         initTriangle();
@@ -42,22 +38,23 @@ public class SpikeObject extends GameObject {
 
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
         pixmap.setColor(new Color(1, 1, 1, 1));
-        pixmap.fillTriangle(s / 2, s / 2, s / 2);
+//Todo        pixmap.fillTriangle(s / 2, s / 2, s / 2);
 
         triangle = new Sprite(new Texture(pixmap));
 
         pixmap.dispose();
     }
 
-
-    public void drawTriangle(SpriteBatch batch, float triangleX, float triangleY, float triangleRadius) {
-        triangleRadius *= 0.95f;
-        angle %= 360;
-
-        triangle.setSize(triangleRadius, triangleRadius);
-        triangle.setRotation(angle);
-        triangle.setPosition(triangleX, triangleY);
-        triangle.draw(batch);
+    private static Sprite getSpike(final int w, final int h, final int color, boolean left) {
+        final Pixmap pixmap = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+        pixmap.setColor(color);
+        if (left)
+            pixmap.fillTriangle(0, 0, w, h / 2, 0, h);
+        else
+            pixmap.fillTriangle(w, h, 0, h / 2, w, 0);
+        final Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return new Sprite(texture);
     }
 
     public static void setWidthAndHeight() {
@@ -72,6 +69,16 @@ public class SpikeObject extends GameObject {
 
     public static float sin(float angleDeg) {
         return (float) Math.sin(Math.toRadians(angleDeg));
+    }
+
+    public void drawTriangle(SpriteBatch batch, float triangleX, float triangleY, float triangleRadius) {
+        triangleRadius *= 0.95f;
+        angle %= 360;
+
+        triangle.setSize(triangleRadius, triangleRadius);
+        triangle.setRotation(angle);
+        triangle.setPosition(triangleX, triangleY);
+        triangle.draw(batch);
     }
 
     public boolean checkCollision(int triangleCX, int triangleCY, int triangleR, int playerCX, int playerCY, int playerR) {

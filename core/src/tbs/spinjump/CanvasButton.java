@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.awt.Rectangle;
 
 public class CanvasButton extends GameObject {
-    public int width, height;
-    public static Sprite image;
     private static final Rectangle rectangle = new Rectangle();
+    public static Sprite image;
+    public int width, height;
 
     public CanvasButton(int x, int y, String id) {
         this.x = x;
@@ -20,6 +20,7 @@ public class CanvasButton extends GameObject {
         image = new Sprite(new Texture(Gdx.files.internal(id)));
         image.setSize(width, height);
     }
+
 
     public boolean isClicked(int x, int y) {
         rectangle.setBounds(x, y, width, height);

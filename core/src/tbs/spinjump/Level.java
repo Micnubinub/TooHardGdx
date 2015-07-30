@@ -1,18 +1,18 @@
 package tbs.spinjump;
 
-import android.graphics.Canvas;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 
 public class Level {
 
     // COGS:
-    public static final ArrayList<GearPlatform> gears = new ArrayList<>();
-    private final int cogsToRecycle = 3;
+    public static final ArrayList<GearPlatform> gears = new ArrayList<GearPlatform>();
     public static float cogSpeedMult = 1;
     public static int moverIndex;
     public static boolean moving;
     public static int stageNum;
+    private final int cogsToRecycle = 3;
 
     public Level() {
         if (gears.size() > 0) {
@@ -23,35 +23,6 @@ public class Level {
             gears.add(new GearPlatform());
         }
         setup();
-    }
-
-    public void setup() {
-        // COGS:
-        stageNum = -1; // ACCOUNT FOR THE FIRST COG YOU ARE ALREADY ON
-        cogSpeedMult = 1;
-        moverIndex = 0;
-        moving = false;
-        for (int i = 0; i < gears.size(); ++i) {
-            final GearPlatform tmpGear = gears.get(i);
-            if (i == 0)
-                tmpGear.setY((int) GameValues.COG_START_Y);
-            tmpGear.generate(i == 0);
-        }
-    }
-
-    public void update(float delta) {
-        if (moving) {
-            moveLevel((GameValues.PLAYER_JUMP_SPEED * 0.85f) * delta);
-        }
-        for (int i = 0; i < gears.size(); ++i) {
-            gears.get(i).update(delta);
-        }
-    }
-
-    public void draw(Canvas canvas) {
-        for (int i = 0; i < gears.size(); ++i) {
-            gears.get(i).draw(canvas);
-        }
     }
 
     public static void updateLevelMover(int index) {
@@ -92,5 +63,34 @@ public class Level {
         if (tmpIndex < 0)
             tmpIndex = gears.size() - 1;
         return (int) (gears.get(tmpIndex).getY() - (gears.get(tmpIndex).getWidth() + GameValues.COG_GAP));
+    }
+
+    public void setup() {
+        // COGS:
+        stageNum = -1; // ACCOUNT FOR THE FIRST COG YOU ARE ALREADY ON
+        cogSpeedMult = 1;
+        moverIndex = 0;
+        moving = false;
+        for (int i = 0; i < gears.size(); ++i) {
+            final GearPlatform tmpGear = gears.get(i);
+            if (i == 0)
+                tmpGear.setY((int) GameValues.COG_START_Y);
+            tmpGear.generate(i == 0);
+        }
+    }
+
+    public void update(float delta) {
+        if (moving) {
+            moveLevel((GameValues.PLAYER_JUMP_SPEED * 0.85f) * delta);
+        }
+        for (int i = 0; i < gears.size(); ++i) {
+            gears.get(i).update(delta);
+        }
+    }
+
+    public void draw(SpriteBatch batch) {
+        for (int i = 0; i < gears.size(); ++i) {
+            gears.get(i).draw(batch);
+        }
     }
 }

@@ -1,6 +1,5 @@
 package tbs.spinjump;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,17 +9,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Created by Sidney on 11/06/2015.
  */
 public class AnimCircle {
+    private static Sprite circle;
+    private static boolean isCircleInit = false;
     public float scale;
     public float alpha;
     public float x, y;
-    private static Sprite circle;
-    private static boolean isCircleInit = false;
 
     public AnimCircle() {
         initCircle();
     }
 
     public static void dispose() {
+        //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
         circle.getTexture().dispose();
         isCircleInit = false;
     }
@@ -37,7 +37,7 @@ public class AnimCircle {
         final int s = GameValues.MENU_BTN_WIDTH;
 
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(1, 1, 1, 1));
+        pixmap.setColor(1, 1, 1, 1);
         pixmap.fillCircle(s / 2, s / 2, s / 2);
 
         circle = new Sprite(new Texture(pixmap));

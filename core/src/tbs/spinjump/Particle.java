@@ -11,6 +11,8 @@ public class Particle {
     public static final int STATE_DEAD = 1; // particle is dead
 
     public static final int DEFAULT_LIFETIME = 200; // play with this
+    private static Sprite circle;
+    private static boolean isCircleInit = false;
     private int state; // particle is alive or dead
     private float width; // width of the particle
     private float height; // height of the particle
@@ -19,14 +21,13 @@ public class Particle {
     private int age; // current age of the particle
     private int lifetime; // particle dies when it reaches this value
     private int color; // the color of the particle
-    private static Sprite circle;
-    private static boolean isCircleInit = false;
 
     public Particle() {
         initCircle();
     }
 
     public static void dispose() {
+        //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
         circle.getTexture().dispose();
         isCircleInit = false;
     }

@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class TrailParticle {
+    private static Sprite circle;
+    private static boolean isCircleInit = false;
     public float scale;
     public int x;
     public int y;
-    private static Sprite circle;
-    private static boolean isCircleInit = false;
 
 
     public TrailParticle() {
@@ -19,6 +19,7 @@ public class TrailParticle {
     }
 
     public static void dispose() {
+        //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
         circle.getTexture().dispose();
         isCircleInit = false;
     }

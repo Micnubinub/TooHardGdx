@@ -1,34 +1,17 @@
 package tbs.spinjump;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.Typeface;
-import android.net.Uri;
-import android.os.Environment;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
-public class Game {
-    public static final Paint paint = new Paint();
+public class Game extends ApplicationAdapter {
     public static Level level;
     public static GameState state;
     public static int score;
     public static Player player;
-    public static Rect textRect;
-    public static Typeface mainFont;
 
     // TEXT ANIMATOR:
     public static TextAnimator textAnimator;
@@ -37,7 +20,6 @@ public class Game {
 
     // TMPS:
     public static String textToMeasure;
-    public static Context context;
 
     // MENU BUTTONS:
     public static CanvasButton rateButton;
@@ -49,17 +31,14 @@ public class Game {
     public static CanvasButton homeButton2;
 
     // SAVE STATE:
-    public static SecurePreferences saver;
+    private static Color color;
+    private static int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+    //Todo init
+    private static Texture menuTint;
+    private static SpriteBatch batch;
 
-    public Game(Context context) {
-        this.context = context;
-        saver = new SecurePreferences(context, "prefs_tbs_th",
-                "X5TBSSDVSH6GH", true);
+    public Game() {
 
-        // LOAD FONT:
-        mainFont = Typeface.createFromAsset(context.getAssets(), "fonts/Cantarell-Regular.ttf");
-        paint.setTypeface(mainFont);
-        paint.setAntiAlias(false);
 
         // ONCE:
         level = new Level();
@@ -67,13 +46,13 @@ public class Game {
         textAnimator = new TextAnimator();
 
         // SETUP BUTTONS:
-        rateButton = new CanvasButton(ScreenObject.getCenterX() - (GameValues.MENU_BTN_WIDTH / 2), ScreenObject.getCenterY() + GameValues.BUTTON_PADDING * 2, R.drawable.rate_btn);
-        leaderButton = new CanvasButton((int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), ScreenObject.getCenterY() + GameValues.BUTTON_PADDING * 2, R.drawable.leader_btn);
-        achievementButton = new CanvasButton((int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), ScreenObject.getCenterY() + GameValues.BUTTON_PADDING * 2, R.drawable.achiv_btn);
-        storeButton = new CanvasButton((int) (ScreenObject.width - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), ScreenObject.height - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), R.drawable.store_btn);
-        homeButton = new CanvasButton((int) (ScreenObject.getCenterX() + (GameValues.BUTTON_PADDING * 0.5f)), (int) (ScreenObject.getCenterY() + (GameValues.BUTTON_PADDING * 2.5f)), R.drawable.home_btn);
-        shareButton = new CanvasButton((int) (ScreenObject.getCenterX() - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING * 0.5f)), (int) (ScreenObject.getCenterY() + (GameValues.BUTTON_PADDING * 2.5f)), R.drawable.share_btn);
-        homeButton2 = new CanvasButton((int) (ScreenObject.width - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), ScreenObject.height - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), R.drawable.home_btn);
+        rateButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), (h / 2) + GameValues.BUTTON_PADDING * 2, "rate_btn");
+        leaderButton = new CanvasButton((int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), (h / 2) + GameValues.BUTTON_PADDING * 2, "leader_btn");
+        achievementButton = new CanvasButton((int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), (h / 2) + GameValues.BUTTON_PADDING * 2, "achiv_btn");
+        storeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), "store_btn");
+        homeButton = new CanvasButton((int) ((w / 2) + (GameValues.BUTTON_PADDING * 0.5f)), (int) ((h / 2) + (GameValues.BUTTON_PADDING * 2.5f)), "home_btn");
+        shareButton = new CanvasButton((int) ((w / 2) - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING * 0.5f)), (int) ((h / 2) + (GameValues.BUTTON_PADDING * 2.5f)), "share_btn");
+        homeButton2 = new CanvasButton((int) (2 - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), "home_btn");
 
         // SETUP ETC:
         setup();
@@ -81,7 +60,6 @@ public class Game {
 
     public static void setup() {
         // SETUP:
-        textRect = new Rect();
         state = GameState.Menu;
         level.setup();
         player.setup();
@@ -94,105 +72,71 @@ public class Game {
         player.loadData();
     }
 
-    public static void draw(Canvas canvas) {
-        paint.setColor(GameValues.BACKGROUND_COLOR);
-        canvas.drawPaint(paint);
+    public static void draw(SpriteBatch batch) {
+        color.set(GameValues.BACKGROUND_COLOR);
+        Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // GAME:
-        level.draw(canvas);
-        player.draw(canvas);
-        textAnimator.draw(canvas);
+        level.draw(batch);
+        player.draw(batch);
+        textAnimator.draw(batch);
 
         // SCORE:
         if (state == GameState.Playing) {
-            Game.paint.setColor(0xFFFFFFFF);
-            paint.setTextAlign(Paint.Align.RIGHT);
-            paint.setTextSize(GameValues.SCORE_TEXT_SIZE * scoreTextMult);
-            textToMeasure = player.score + "";
-            paint.getTextBounds(textToMeasure, 0, textToMeasure.length(), textRect);
-            canvas.drawText(textToMeasure, ScreenObject.width - GameValues.TEXT_PADDING, textRect.height() + GameValues.TEXT_PADDING, paint);
-            paint.setColor(GameValues.RING_COLOR);
-            paint.setTextSize(GameValues.SCORE_TEXT_SIZE / 2.5f);
-            canvas.drawText("SCORE", ScreenObject.width - (textRect.width() + (GameValues.TEXT_PADDING * 1.5f)), textRect.height() + (GameValues.TEXT_PADDING * 0.9f), paint);
+            color.set(0xFFFFFFFF);
+            textToMeasure = "SCORE" + player.score;
+            Utility.drawCenteredText(batch, color, textToMeasure, w - GameValues.TEXT_PADDING, GameValues.TEXT_PADDING, Utility.getScale(GameValues.SCORE_TEXT_SIZE * scoreTextMult));
         }
 
         // DRAW MENU:
         if (state == GameState.Menu) {
-            paint.setColor(0xFF000000);
-            paint.setAlpha(180);
-            canvas.drawRect(0, 0, ScreenObject.width, ScreenObject.height, paint);
+            batch.draw(menuTint, 0, 0, w, h);
 
             // MENU TEXT:
-            paint.setColor(0xFFe6e8f1);
-            paint.setAlpha(255);
-            paint.setTextAlign(Paint.Align.CENTER);
-            paint.setTextSize(GameValues.MENU_TEXT_SIZE);
-            canvas.drawText("TOO HARD?", ScreenObject.getCenterX(), ScreenObject.getCenterY() / 4, paint);
-            paint.setColor(0xffFFFFFF);
-            paint.setAlpha(120);
-            paint.setTextSize(GameValues.MENU_TEXT_SIZE / 2);
-            canvas.drawText("CAN YOU GET TO 100?", ScreenObject.getCenterX(), (ScreenObject.getCenterY() / 4) + (GameValues.TEXT_PADDING * 1.5f), paint);
-            paint.setTextSize(GameValues.MENU_TEXT_SIZE_2);
-            canvas.drawText("TAP TO BEGIN", ScreenObject.getCenterX(), ScreenObject.getCenterY() * 1.075f, paint);
+            color.set(0xe6e8f1FF);
+            Utility.drawCenteredText(batch, color, "TOO HARD?", w / 2, h / 4, Utility.getScale(GameValues.MENU_TEXT_SIZE));
+            color.set(1, 1, 1, 120 / 255f);
+            Utility.drawCenteredText(batch, color, "CAN YOU GET TO 100?", w / 2, (h / 4) + (GameValues.TEXT_PADDING * 1.5f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
+            Utility.drawCenteredText(batch, color, "TAP TO BEGIN", w / 2, (h / 2) * 1.075f, Utility.getScale(GameValues.MENU_TEXT_SIZE_2 / 2));
 
             // BUTTONS:
-            paint.setAlpha(180);
-            rateButton.draw(canvas);
-            leaderButton.draw(canvas);
-            achievementButton.draw(canvas);
-            storeButton.draw(canvas);
+            rateButton.draw(batch);
+            leaderButton.draw(batch);
+            achievementButton.draw(batch);
+            storeButton.draw(batch);
         }
 
         // DRAW DEATH:
         if (state == GameState.Death) {
-            paint.setColor(0xFF000000);
-            paint.setAlpha(180);
-            canvas.drawRect(0, 0, ScreenObject.width, ScreenObject.height, paint);
+            batch.draw(menuTint, 0, 0, w, h);
 
             // DEATH TEXT:
-            paint.setColor(0xFFe6e8f1);
-            paint.setAlpha(255);
-            paint.setTextAlign(Paint.Align.CENTER);
-            paint.setTextSize(GameValues.MENU_TEXT_SIZE);
-            canvas.drawText("YOU DIED", ScreenObject.getCenterX(), ScreenObject.getCenterY() / 4, paint);
-            paint.setColor(0xffFFFFFF);
-            paint.setAlpha(120);
-            paint.setTextSize(GameValues.MENU_TEXT_SIZE / 2);
-            if (player.score < 100)
-                canvas.drawText("GET TO 100", ScreenObject.getCenterX(), (ScreenObject.getCenterY() / 4) + (GameValues.TEXT_PADDING * 1.5f), paint);
-            else
-                canvas.drawText("310819958", ScreenObject.getCenterX(), (ScreenObject.getCenterY() / 4) + (GameValues.TEXT_PADDING * 1.5f), paint);
-
+            color.set(0xe6e8f1FF);
+            Utility.drawCenteredText(batch, color, "YOU DIED", w / 2, (h / 8), Utility.getScale(GameValues.MENU_TEXT_SIZE));
+            color.set(1, 1, 1, 120 / 250f);
+            Utility.drawCenteredText(batch, color, "GET TO 100", w / 2, (h / 4) + (GameValues.TEXT_PADDING * 1.5f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
             // AFTER GAME INFO:
-            paint.setTextSize(GameValues.MENU_TEXT_SIZE_2);
-            canvas.drawText("SCORE: " + player.score, ScreenObject.getCenterX(), ScreenObject.getCenterY() * 1.185f, paint);
-            paint.setTextSize(GameValues.MENU_TEXT_SIZE_2 * 1.25f);
-            paint.setColor(0xFFe6e8f1);
-            paint.setAlpha(255);
-            canvas.drawText("BEST: " + player.highScore, ScreenObject.getCenterX(), ScreenObject.getCenterY() * 1.075f, paint);
+            Utility.drawCenteredText(batch, color, "SCORE: " + player.score, w / 2, (h / 2) * 1.185f, Utility.getScale(GameValues.MENU_TEXT_SIZE_2));
+            Utility.drawCenteredText(batch, color, "BEST: " + player.highScore, w / 2, (h / 2) * 1.075f, Utility.getScale(GameValues.MENU_TEXT_SIZE_2));
 
 
             // BUTTONS:
-            paint.setAlpha(180);
-            homeButton.draw(canvas);
-            shareButton.draw(canvas);
+            homeButton.draw(batch);
+            shareButton.draw(batch);
         }
 
         // COINS:
-        paint.setColor(0xFFFFFFFF);
-        paint.setTextAlign(Paint.Align.LEFT);
-        paint.setTextSize(GameValues.COIN_TEXT_SIZE * coinTextMult);
+        color.set(0xFFFFFFFF);
+
         textToMeasure = player.coins + "";
-        paint.getTextBounds(textToMeasure, 0, textToMeasure.length(), textRect);
-        canvas.drawText(textToMeasure, GameValues.TEXT_PADDING, ScreenObject.height - GameValues.TEXT_PADDING, paint);
+        Utility.drawCenteredText(batch, color, textToMeasure, GameValues.TEXT_PADDING, h - GameValues.TEXT_PADDING, Utility.getScale(GameValues.COIN_TEXT_SIZE * coinTextMult));
         if (state == GameState.Playing)
-            paint.setColor(GameValues.RING_COLOR);
+            color.set(GameValues.RING_COLOR);
         else {
-            paint.setColor(0xFFFFFFFF);
-            paint.setAlpha(120);
+            color.set(1, 1, 1, 120 / 255f);
         }
-        paint.setTextSize(GameValues.COIN_TEXT_SIZE / 2.5f);
-        canvas.drawText("COINS", textRect.width() + (GameValues.TEXT_PADDING * 1.4f), ScreenObject.height - (GameValues.TEXT_PADDING * 1.1f), paint);
+        Utility.drawCenteredText(batch, color, "COINS", w / 2, h - (GameValues.TEXT_PADDING * 1.1f), Utility.getScale(GameValues.COIN_TEXT_SIZE / 2.5f));
     }
 
     public static void update(float delta) {
@@ -213,85 +157,18 @@ public class Game {
         }
     }
 
-    // SHARE:
-    public static Bitmap takeScreenShot() {
-        final View rootView = ((Activity) context).findViewById(
-                android.R.id.content).getRootView();
-        rootView.setDrawingCacheEnabled(true);
-        return rootView.getDrawingCache();
+    @Override
+    public void create() {
+        batch = new SpriteBatch();
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void Share(Bitmap img) {
-        final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        final String time_date = sdf.format(new Date());
-        final File file = new File(Environment.getExternalStorageDirectory()
-                + File.separator + "tap_screen_" + time_date + ".jpg");
-        if (file.exists()) {
-            file.delete();
-        }
-        try {
-            file.createNewFile();
-            final FileOutputStream ostream = new FileOutputStream(file);
-            img.compress(Bitmap.CompressFormat.JPEG, 90, ostream);
-            ostream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType("image/jpeg");
-        String filel = "file://" + Environment.getExternalStorageDirectory()
-                + File.separator + "tap_screen_" + time_date + ".jpg";
-        share.putExtra(Intent.EXTRA_STREAM, Uri.parse(filel));
-        context.startActivity(Intent.createChooser(share,
-                "Share Image"));
+    @Override
+    public void render() {
+        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        draw(batch);
+        batch.end();
     }
-
-    // STORE DIALOG:
-    public static void showStore() {
-        final Dialog dialog = new Dialog(context, R.style.CustomDialog);
-        dialog.setContentView(R.layout.store_gridview);
-        dialog.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        final ArrayList<StoreItem> storeItems = new ArrayList<StoreItem>();
-        storeItems.add(new StoreItem("item1", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item2", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item1", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item3", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item1", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item21", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item13", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item11", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item12", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item1232", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item12", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item132", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item21", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item13", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item11", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item12", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item1232", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item12", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item132", R.drawable.rate_btn));
-        storeItems.add(new StoreItem("item91", R.drawable.rate_btn));
-
-        final GridView gridView = (GridView) dialog.findViewById(R.id.grid);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //toast(storeItems.get(position).text);
-            }
-        });
-        gridView.setAdapter(new StoreAdapter(storeItems));
-        dialog.show();
-    }
-
 
 }

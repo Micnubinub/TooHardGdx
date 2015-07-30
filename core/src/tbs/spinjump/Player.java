@@ -1,9 +1,6 @@
 package tbs.spinjump;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.util.Log;
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -11,13 +8,14 @@ import java.util.ArrayList;
 
 public class Player extends GameObject {
 
+    private static final Color color = new Color();
+    private static int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
     // Collision & Platforms:
     public GearPlatform platform; // Which Platform the Player is on
     public double platformOnAngle;
     public int score;
     public int highScore;
     public int coins;
-
     // Particles:
     public int particleTime;
     public int particleIndex;
@@ -27,15 +25,11 @@ public class Player extends GameObject {
     public ArrayList<Particle> splash;
     public ArrayList<AnimCircle> circles;
     public int circleIndex;
-
     // ANIMATIONS:
     public float scaleMultiplier;
     public float overAlpha;
-
     // DEATH:
     public boolean dead;
-
-    private static final Color color = new Color();
 
     public Player() {
         setWidth((int) GameValues.PLAYER_SCALE);
@@ -60,7 +54,7 @@ public class Player extends GameObject {
         dead = false;
         score = 0;
         speed = GameValues.PLAYER_JUMP_SPEED;
-        setX(ScreenObject.getCenterX());
+        setX(w / 2);
         platform = Level.gears.get(0);
         setY((int) ((platform.getY() - platform.width) - (width)));
         platformOnAngle = getAngle(platform.x, platform.y);
@@ -139,7 +133,7 @@ public class Player extends GameObject {
         }
 
         // Check Death:
-        if (!dead && (x < 0 || y < 0 || x >= ScreenObject.width || y >= ScreenObject.height)) {
+        if (!dead && (x < 0 || y < 0 || x >= w || y >= h)) {
             death();
         }
 
@@ -168,26 +162,23 @@ public class Player extends GameObject {
             for (int i = 0; i < trail.size(); ++i) {
                 trail.get(i).draw(canvas);
             }
-        Game.paint.setColor(GameValues.COIN_COLOR_2);
         for (int i = 0; i < splash.size(); ++i) {
             splash.get(i).draw(canvas);
         }
-        Game.paint.setStyle(Paint.Style.STROKE);
-        Game.paint.setStrokeWidth(GameValues.RING_WIDTH / 1.25f);
+        //Todo Game.paint.setStrokeWidth(GameValues.RING_WIDTH / 1.25f);
         for (int i = 0; i < circles.size(); ++i) {
             circles.get(i).draw(canvas);
         }
-        Game.paint.setStyle(Paint.Style.FILL);
         if (!dead) {
-            Game.paint.setColor(GameValues.PLAYER_COLOR);
-            canvas.drawCircle(x, y, width, Game.paint);
-            Game.paint.setColor(GameValues.PLAYER_COLOR_2);
-            canvas.drawCircle(x, y, width * 0.5f, Game.paint);
-            if (overAlpha > 0) {
-                Game.paint.setColor(0xFFFFFFFF);
-                Game.paint.setAlpha((int) overAlpha);
-                canvas.drawCircle(x, y, width, Game.paint);
-            }
+//            Game.paint.setColor(GameValues.PLAYER_COLOR);
+//            canvas.drawCircle(x, y, width, Game.paint);
+//            Game.paint.setColor(GameValues.PLAYER_COLOR_2);
+//            canvas.drawCircle(x, y, width * 0.5f, Game.paint);
+//            if (overAlpha > 0) {
+//                Game.paint.setColor(0xFFFFFFFF);
+//                Game.paint.setAlpha((int) overAlpha);
+//                canvas.drawCircle(x, y, width, Game.paint);
+//            }
         }
     }
 
@@ -230,7 +221,7 @@ public class Player extends GameObject {
         overAlpha = 200;
         int start = (particleUseIndex * (splash.size() / particleGroups));
         int end = ((particleUseIndex + 1) * (splash.size() / particleGroups));
-        Log.e("DEBUG", "START: " + start + " END: " + end);
+//        .e("DEBUG", "START: " + start + " END: " + end);
         for (int i = start; i < end; ++i) {
             splash.get(i).setup((int) x, (int) y);
         }
@@ -257,26 +248,17 @@ public class Player extends GameObject {
 
     public void loadData() {
         // LOAD DATA:
-        if (Game.saver.getString("hScore") != null) {
-            highScore = Integer.parseInt(Game.saver
-                    .getString("hScore"));
-        } else {
-            highScore = 0;
-        }
-        if (Game.saver.getString("pCoins") != null) {
-            coins = Integer.parseInt(Game.saver
-                    .getString("pCoins"));
-        } else {
-            coins = 0;
-        }
+        highScore = Utility.getInt("hScore");
+        coins = Utility.getInt("pCoins");
+
     }
 
     public void saveData() {
         if (score > highScore) {
-            Game.saver.put("hScore", score + "");
+            Utility.saveInt("hScore", score);
             highScore = score;
         }
-        Game.saver.put("pCoins", coins + "");
+        Utility.saveInt("pCoins", coins);
     }
 
     public boolean isOnPlatform() {

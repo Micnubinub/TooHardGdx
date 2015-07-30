@@ -9,13 +9,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Created by Sidney on 16/06/2015.
  */
 public class Enemy {
+    private static Sprite circle;
+    private static boolean isCircleInit;
     public float scale;
     public float x, y;
     public GearPlatform platform;
     public double platformOnAngle;
     public boolean active;
-    private static Sprite circle;
-    private static boolean isCircleInit;
 
     public Enemy(GearPlatform platform) {
         this.scale = GameValues.ENEMY_SCALE;
@@ -25,15 +25,8 @@ public class Enemy {
         updateAnglePos();
     }
 
-    public void draw(SpriteBatch canvas) {
-        if (active) {
-            circle.setPosition(x, y);
-            circle.setSize(scale, scale);
-            circle.draw(canvas);
-        }
-    }
-
     public static void dispose() {
+        //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
         circle.getTexture().dispose();
         isCircleInit = false;
     }
@@ -61,6 +54,14 @@ public class Enemy {
         circle = new Sprite(new Texture(pixmap));
 
         pixmap.dispose();
+    }
+
+    public void draw(SpriteBatch canvas) {
+        if (active) {
+            circle.setPosition(x, y);
+            circle.setSize(scale, scale);
+            circle.draw(canvas);
+        }
     }
 
     public void update(float delta) {

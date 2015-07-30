@@ -1,13 +1,20 @@
 package tbs.spinjump;
 
-import android.graphics.Paint;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 
 public class GearPlatform extends GameObject {
 
+    private static final Color c = new Color();
+    private static int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+    private static Sprite circle;
+    private static boolean isCircleInit = false;
     // Gear Specific:
     public float rotationSpeed;
     public float rotation;
@@ -31,6 +38,42 @@ public class GearPlatform extends GameObject {
         }
     }
 
+    public static void dispose() {
+        //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
+        circle.getTexture().dispose();
+        isCircleInit = false;
+    }
+
+    private static void initCircle() {
+        if (isCircleInit)
+            return;
+        isCircleInit = true;
+
+        Pixmap.setFilter(Pixmap.Filter.BiLinear);
+        Pixmap.setBlending(Pixmap.Blending.None);
+
+        //Todo get maxHeight/width of the circle
+        final int s = GameValues.MENU_BTN_WIDTH;
+
+        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
+        pixmap.setColor(GameValues.COG_COLOR);
+        pixmap.fillCircle(s / 2, s / 2, s / 2);
+
+        //  Game.paint.setColor(GameValues.COG_COLOR_2);
+//        canvas.drawCircle(x, y, width * 0.7f, Game.paint);
+//        // RINGS:
+//        Game.paint.setStyle(Paint.Style.STROKE);
+//        Game.paint.setStrokeWidth(GameValues.RING_WIDTH / 2);
+//        Game.paint.setColor(GameValues.RING_COLOR);
+//        canvas.drawCircle(x, y, width + (GameValues.PLAYER_SCALE), Game.paint);
+//        Game.paint.setStrokeWidth(GameValues.RING_WIDTH);
+//        canvas.drawCircle(x, y, width + (GameValues.PLAYER_SCALE * 2), Game.paint);
+
+        circle = new Sprite(new Texture(pixmap));
+
+        pixmap.dispose();
+    }
+
     public void update(float delta) {
         rotation += (rotationSpeed * delta);
 
@@ -48,15 +91,15 @@ public class GearPlatform extends GameObject {
             for (int i = 0; i < coins.size(); ++i) {
                 coins.get(i).x += delta * xSpeed;
             }
-            if (x > (ScreenObject.width * 0.75f)) {
-                float adjuster = x - (ScreenObject.width * 0.75f);
+            if (x > (w * 0.75f)) {
+                float adjuster = x - (w * 0.75f);
                 x -= adjuster;
                 for (int i = 0; i < coins.size(); ++i) {
                     coins.get(i).x -= adjuster;
                 }
                 xSpeed *= -1;
-            } else if (x < (ScreenObject.width * 0.25f)) {
-                float adjuster = (ScreenObject.width * 0.25f) - x;
+            } else if (x < (w * 0.25f)) {
+                float adjuster = (w * 0.25f) - x;
                 x += adjuster;
                 for (int i = 0; i < coins.size(); ++i) {
                     coins.get(i).x += adjuster;
@@ -80,30 +123,22 @@ public class GearPlatform extends GameObject {
 
     public void draw(SpriteBatch batch) {
         // PLATFORM:
-        Game.paint.setColor(GameValues.COG_COLOR);
-        canvas.drawCircle(x, y, width, Game.paint);
-        Game.paint.setColor(GameValues.COG_COLOR_2);
-        canvas.drawCircle(x, y, width * 0.7f, Game.paint);
+        circle.setPosition(x, y);
+        circle.setSize(width, width);
 
-        // RINGS:
-        Game.paint.setStyle(Paint.Style.STROKE);
-        Game.paint.setStrokeWidth(GameValues.RING_WIDTH / 2);
-        Game.paint.setColor(GameValues.RING_COLOR);
-        canvas.drawCircle(x, y, width + (GameValues.PLAYER_SCALE), Game.paint);
-        Game.paint.setStrokeWidth(GameValues.RING_WIDTH);
-        canvas.drawCircle(x, y, width + (GameValues.PLAYER_SCALE * 2), Game.paint);
+        circle.draw(batch);
+
 
         // RESET:
-        Game.paint.setStyle(Paint.Style.FILL);
 
         // DRAW COINS:
         for (int i = 0; i < coins.size(); ++i) {
-            coins.get(i).draw(canvas);
+            coins.get(i).draw(batch);
         }
 
         // DRAW ENEMIES:
         for (int i = 0; i < enemies.size(); ++i) {
-            enemies.get(i).draw(canvas);
+            enemies.get(i).draw(batch);
         }
     }
 
@@ -113,7 +148,7 @@ public class GearPlatform extends GameObject {
             coins.get(x).y += speed;
         }
         // Left the Screen:
-        if (y - getWidth() > ScreenObject.height) {
+        if (y - getWidth() > h) {
             generate(false); // Reset
         }
     }
@@ -127,9 +162,9 @@ public class GearPlatform extends GameObject {
         if (!first) {
             tmpWidth = Utility.getRandom((int) GameValues.COG_MIN_SIZE, (int) GameValues.COG_MAX_SIZE);
             int tmpNum = (int) (GameValues.PLAYER_SCALE + (tmpWidth * 2));
-            setX(Utility.getRandom(tmpNum, ScreenObject.width - tmpNum));
+            setX(Utility.getRandom(tmpNum, w - tmpNum));
         } else {
-            setX(ScreenObject.getCenterX());
+            setX(w / 2);
         }
         float tmpAverage = (GameValues.COG_MIN_SIZE + GameValues.COG_MAX_SIZE) / 2;
         float speedMult = tmpAverage / tmpWidth;

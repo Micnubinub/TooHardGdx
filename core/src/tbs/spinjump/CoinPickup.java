@@ -24,6 +24,7 @@ public class CoinPickup {
 
 
     public static void dispose() {
+        //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
         circle.getTexture().dispose();
         isCircleInit = false;
     }

@@ -1,15 +1,14 @@
 package tbs.spinjump.hunnid;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -20,7 +19,6 @@ import java.util.Random;
 
 
 public class Utility {
-    private final Texture coin = new Texture(Gdx.files.internal("coin.png"));
     public static final String SOUND_ENABLED_BOOL = "SOUND_ENABLED_BOOL";
     public static final String ENCOURAGE_TEXT_ENABLED_BOOL = "SOUND_ENABLED_BOOL";
     public static final String EFFECTS_ENABLED_BOOL = "EFFECTS_ENABLED_BOOL";
@@ -36,7 +34,6 @@ public class Utility {
     //  public static final String TRAILS_BOUGHT = "TRAILS_BOUGHT";
     public static final String TOTAL_JUMPS = "TOTAL_JUMPS";
     public static final String TOTAL_DEATHS = "TOTAL_DEATHS";
-
     public static final ArrayList<String> hats = new ArrayList<String>(Arrays.asList("h0", "h1", "h10", "h11", "h12", "h13", "h14", "h15", "h16", "h17", "h18", "h19", "h2", "h20", "h21", "h22", "h23", "h24", "h25", "h26", "h27", "h28", "h3", "h4", "h5", "h6", "h7", "h8", "h9"));
     public static final ArrayList<String> moustaches = new ArrayList<String>(Arrays.asList("m0", "m1", "m2", "m3", "m4"));
     public static final int height = Gdx.graphics.getHeight();
@@ -50,6 +47,7 @@ public class Utility {
     private static BitmapFont font = new BitmapFont(Gdx.files.internal("font.fnt"));
     private static TextureAtlas sprites = new TextureAtlas(Gdx.files.internal("sprites.txt"));
     private static int playerWidth = (int) (Gdx.graphics.getWidth() / 10f), tileWidth = (int) (Gdx.graphics.getWidth() / 10.25f);
+    private final Texture coin = new Texture(Gdx.files.internal("coin.png"));
 
     public static int getPlayerYpos() {
         return playerYpos;
@@ -59,61 +57,6 @@ public class Utility {
         return sprites;
     }
 
-    public static int getPrice(String item) {
-        int price;
-        try {
-            price = Integer.parseInt(getItemProperties(item)[0]);
-        } catch (Exception e) {
-            e.printStackTrace();
-            price = 30;
-        }
-        return price;
-    }
-
-    public static boolean isItemBought(String item) {
-        if (item.contains("Hats") || item.contains("Moustache"))
-            return true;
-
-        if (item.startsWith("h"))
-            return getPreferences().getString(HATS_BOUGHT).contains(item);
-        else if (item.startsWith("m"))
-            return getPreferences().getString(MOUSTACHES_BOUGHT).contains(item);
-        else if (item.equals(colors[0]))
-            return true;
-        else
-            return getPreferences().getString(COLORS_BOUGHT).contains(item);
-    }
-
-    public static boolean buyItem(String item) {
-        if (isItemBought(item))
-            return false;
-
-        final int coins = getInt(COINS_INT);
-        final int price = getPrice(item);
-        if (price > coins)
-            return false;
-
-        saveInt(COINS_INT, coins - price);
-        if (item.startsWith("h"))
-            addHat(item);
-        else if (item.startsWith("m"))
-            addMoustache(item);
-        else
-            addColor(item);
-        return true;
-    }
-
-    public static Preferences getPreferences() {
-        return Gdx.app.getPreferences("prefs");
-    }
-
-    public static int getInt(String key) {
-        return getPreferences().getInteger(key, 0);
-    }
-
-    public static void saveInt(String key, int value) {
-        getPreferences().putInteger(key, value).flush();
-    }
 
 
     private static Color colorFromString(String color, float alpha) {
@@ -121,22 +64,75 @@ public class Utility {
         return new Color(Float.parseFloat(floats[0]), Float.parseFloat(floats[1]), Float.parseFloat(floats[2]), alpha);
     }
 
+    private static Image getColorSprite(int w, final int id, String color) {
+//        final Pixmap pixmap = new Pixmap(w, w, Pixmap.Format.RGBA8888);
+//        Pixmap.setBlending(Pixmap.Blending.None);
+//        pixmap.setColor(0xffffffff);
+//        w /= 2;
+//        pixmap.fillCircle(w, w, w);
+//        pixmap.setColor(Utility.colorFromString(color));
+//        int r = (int) (w * 0.98f);
+//        pixmap.fillCircle(w, w, r);
+//
+//        final Texture texture = new Texture(pixmap);
+//        pixmap.dispose();
+//        boolean bought = Utility.isItemBought(color);
+//
+//        final BitmapFont font = Utility.getFont();
+//        font.setColor(textColor);
+//        font.setScale(0.25f);
+//
+//        final float textWidth = font.getBounds("30").width;
+//        final float textHeight = font.getLineHeight();
+//        final int viewWidth = Math.round(textWidth + (textHeight / 2));
+//        final int titleHeight = Math.round(font.getLineHeight() + (textHeight / 2));
+//        final int distanceFromEdge = Math.round((viewWidth + titleHeight) * tagRatio);
+//        int textYpos = 0;
+//
+//        Sprite text = null;
+//
+//        if (!bought) {
+//            clearScreen();
+//            final int pH = titleHeight;
+//            final int pW = viewWidth + (2 * titleHeight);
+//            textYpos = Math.round(pH * tagRatio);
+//            Pixmap p = new Pixmap(pW, pH, Pixmap.Format.RGBA4444);
+//            p.setColor(white);
+//            p.fillTriangle(0, 0, pH, pH, pH, 0);
+//            p.fillRectangle(pH, 0, pW - pH - pH, pH);
+//            p.fillTriangle(pW - pH, pH, pW, 0, pW - pH, 0);
+//            Texture t = new Texture(p);
+//            batch.begin();
+//            batch.draw(t, 0, 0);
+//            font.draw(batch, "30", (pW / 2) - (textWidth / 2), (titleHeight / 2) + (textHeight / 3));
+//            batch.end();
+//            text = new Sprite(ScreenUtils.getFrameBufferTexture(0, 0, pW, pH));
+//            if (pW > sw)
+//                text.setScale((float) sw / pW);
+//            else
+//                text.setScale(1);
+//
+//            text.setOrigin(0, 0);
+//        }
+//        clearScreen();
+//
+//
+//        batch.begin();
+//        batch.draw(texture, 0, 0, sw, sw);
+//        if (!bought)
+//            batch.draw(text, sw - distanceFromEdge, 0 - textYpos, 0, 0, text.getWidth(), text.getHeight(), text.getScaleX(), text.getScaleY(), 45);
+//        batch.end();
 
-    private Texture getTexture(final int s, int color) {
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
-        Pixmap.setBlending(Pixmap.Blending.None);
-
-        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(color));
-        pixmap.fillCircle(s / 2, s / 2, s / 2);
-
-        return new Texture(pixmap);
+        Image image = new Image(ScreenUtils.getFrameBufferTexture(0, 0, 50, 50));
+        image.setScaling(Scaling.fit);
+        image.setUserObject("item" + String.valueOf(id));
+        return image;
     }
 
-    private Sprite getImageFromText(String text, int padding) {
-        final BitmapFont font = Game.Utility.getFont();
+/*    private Sprite getImageFromText(String text, int padding) {
+        final BitmapFont font = Utility.getFont();
         font.setColor(new Color(0x808080ff));
-        font.setScale(Game.Utility.mediumText() * 1.1f);
+        font.setScale(0.25f);
         // final int titleHeight = (int) (font.getLineHeight() * 1.8f);
 
         Gdx.gl.glClearColor(1, 1, 1, 1);
@@ -151,72 +147,7 @@ public class Utility {
         sprite.flip(false, true);
 
         return sprite;
-    }
-
-    private static Image getColorSprite(int w, final int id, String color) {
-        final Pixmap pixmap = new Pixmap(w, w, Pixmap.Format.RGBA8888);
-        Pixmap.setBlending(Pixmap.Blending.None);
-        pixmap.setColor(0xffffffff);
-        w /= 2;
-        pixmap.fillCircle(w, w, w);
-        pixmap.setColor(Game.Utility.colorFromString(color));
-        int r = (int) (w * 0.98f);
-        pixmap.fillCircle(w, w, r);
-
-        final Texture texture = new Texture(pixmap);
-        pixmap.dispose();
-        boolean bought = Game.Utility.isItemBought(color);
-
-        final BitmapFont font = Game.Utility.getFont();
-        font.setColor(textColor);
-        font.setScale(Game.Utility.mediumText() * 0.55f);
-
-        final float textWidth = font.getBounds("30").width;
-        final float textHeight = font.getLineHeight();
-        final int viewWidth = Math.round(textWidth + (textHeight / 2));
-        final int titleHeight = Math.round(font.getLineHeight() + (textHeight / 2));
-        final int distanceFromEdge = Math.round((viewWidth + titleHeight) * tagRatio);
-        int textYpos = 0;
-
-        Sprite text = null;
-
-        if (!bought) {
-            clearScreen();
-            final int pH = titleHeight;
-            final int pW = viewWidth + (2 * titleHeight);
-            textYpos = Math.round(pH * tagRatio);
-            Pixmap p = new Pixmap(pW, pH, Pixmap.Format.RGBA4444);
-            p.setColor(white);
-            p.fillTriangle(0, 0, pH, pH, pH, 0);
-            p.fillRectangle(pH, 0, pW - pH - pH, pH);
-            p.fillTriangle(pW - pH, pH, pW, 0, pW - pH, 0);
-            Texture t = new Texture(p);
-            batch.begin();
-            batch.draw(t, 0, 0);
-            font.draw(batch, "30", (pW / 2) - (textWidth / 2), (titleHeight / 2) + (textHeight / 3));
-            batch.end();
-            text = new Sprite(ScreenUtils.getFrameBufferTexture(0, 0, pW, pH));
-            if (pW > sw)
-                text.setScale((float) sw / pW);
-            else
-                text.setScale(1);
-
-            text.setOrigin(0, 0);
-        }
-        clearScreen();
-
-
-        batch.begin();
-        batch.draw(texture, 0, 0, sw, sw);
-        if (!bought)
-            batch.draw(text, sw - distanceFromEdge, 0 - textYpos, 0, 0, text.getWidth(), text.getHeight(), text.getScaleX(), text.getScaleY(), 45);
-        batch.end();
-
-        Image image = new Image(ScreenUtils.getFrameBufferTexture(0, 0, sw, sw));
-        image.setScaling(Scaling.fit);
-        image.setUserObject("item" + String.valueOf(id));
-        return image;
-    }
+    }*/
 
     private static Sprite getSpeedParticle(final int w, final int h, final int color) {
         final Pixmap pixmap = new Pixmap(w, h, Pixmap.Format.RGBA8888);
@@ -233,49 +164,59 @@ public class Utility {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
-    private Image getButton(String text) {
-        final BitmapFont font = Game.Utility.getFont();
-        font.setColor(textColor);
-        font.setScale(Game.Utility.mediumText());
-        final int h = (int) (font.getLineHeight() * 1.6f);
-        final int w = (int) (width / 2.8f);
-
-        final Pixmap pixmap = new Pixmap(w, h, Pixmap.Format.RGBA8888);
-        pixmap.setColor(0xffffffff);
+    private Texture getTexture(final int s, int color) {
         Pixmap.setFilter(Pixmap.Filter.BiLinear);
-        final int cy = h / 2;
+        Pixmap.setBlending(Pixmap.Blending.None);
 
-        pixmap.fillCircle(cy, cy, cy);
-        pixmap.fillRectangle(cy, 0, w - cy - cy, pixmap.getHeight());
-        pixmap.fillCircle(w - cy, cy, cy);
+        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
+        pixmap.setColor(new Color(color));
+        pixmap.fillCircle(s / 2, s / 2, s / 2);
 
-        final Texture texture = new Texture(pixmap);
+        return new Texture(pixmap);
+    }
 
-        Gdx.gl.glClearColor(0.8627f, 0.8627f, 0.8627f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        final float textWidth = font.getBounds(text).width;
-        final float textHeight = font.getLineHeight();
-        int x = w / 2;
-        int y = h / 2;
-        batch.begin();
-        batch.draw(texture, 0, 0);
-        font.draw(batch, text, x - textWidth / 2, y + (textHeight / 3));
-        batch.end();
-        texture.dispose();
-        pixmap.dispose();
-        final Image image = new Image(ScreenUtils.getFrameBufferTexture(0, 0, w, h));
+    private Image getButton(SpriteBatch batch, String text, int textColor) {
+//        final BitmapFont font = Utility.getFont();
+//        font.setColor(textColor);
+//        font.setScale(0.25f);
+//        final int h = (int) (font.getLineHeight() * 1.6f);
+//        final int w = (int) (width / 2.8f);
+//
+//        final Pixmap pixmap = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+//        pixmap.setColor(0xffffffff);
+//        Pixmap.setFilter(Pixmap.Filter.BiLinear);
+//        final int cy = h / 2;
+//
+//        pixmap.fillCircle(cy, cy, cy);
+//        pixmap.fillRectangle(cy, 0, w - cy - cy, pixmap.getHeight());
+//        pixmap.fillCircle(w - cy, cy, cy);
+//
+//        final Texture texture = new Texture(pixmap);
+//
+//        Gdx.gl.glClearColor(0.8627f, 0.8627f, 0.8627f, 1);
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//        final float textWidth = font.getBounds(text).width;
+//        final float textHeight = font.getLineHeight();
+//        int x = w / 2;
+//        int y = h / 2;
+//        batch.begin();
+//        batch.draw(texture, 0, 0);
+//        font.draw(batch, text, x - textWidth / 2, y + (textHeight / 3));
+//        batch.end();
+//        texture.dispose();
+//        pixmap.dispose();
+        final Image image = new Image(ScreenUtils.getFrameBufferTexture(0, 0, 90, 90));
         image.setOrigin(image.getWidth() / 2, image.getHeight() / 2);
         image.setUserObject(text);
 
         return image;
     }
 
-    @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.8627f, 0.8627f, 0.8627f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.begin();
+/*        batch.begin();
         batch.draw(walls, 0, 0, wallWidth, height);
         batch.draw(walls, width - wallWidth, 0, width, height);
         batch.draw(walls, 0, height - colorTitle.getHeight(), width, colorTitle.getHeight());
@@ -292,9 +233,9 @@ public class Utility {
         batch.draw(walls, 0, 0, wallWidth, height);
         batch.draw(walls, width - wallWidth, 0, width, height);
         batch.draw(title, 0, height - height / 7);
-        drawCoinText(Game.Utility.width / 2, Game.Utility.BUTTON_Y / 2);
+        drawCoinText(Utility.width / 2, Utility.BUTTON_Y / 2);
         updateParticles(delta);
 
-        batch.end();
+        batch.end();*/
     }
 }
