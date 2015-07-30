@@ -1,17 +1,18 @@
 package tbs.spinjump;
 
-import android.graphics.Rect;
+
+import com.badlogic.gdx.math.Rectangle;
 
 public class GameObject {
+    //todo if getting issues with rect, remove the static modifier
+    private static final Rectangle bounds = new Rectangle();
+    public boolean hasScore;
     float x;
     float y;
     int width;
     int height;
     float speed;
-    //todo if getting issues with rect, remove the static modifier
-    private static final Rect bounds = new Rect();
     int color;
-    public boolean hasScore;
 
     public GameObject() {
 
@@ -29,10 +30,10 @@ public class GameObject {
 
     public float getAngle(float xO, float yO) {
         //Todo check if theres too much conversion to and from deg
-        return ((float) Math.toDegrees(Math.atan2(yO - y, xO - x)))%360;
+        return ((float) Math.toDegrees(Math.atan2(yO - y, xO - x))) % 360;
     }
 
-    public Rect getBounds() {
+    public Rectangle getBounds() {
         bounds.set((int) x, (int) y, (int) x + width, (int) y + height);
         return bounds;
     }

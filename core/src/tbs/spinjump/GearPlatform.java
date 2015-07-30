@@ -1,7 +1,8 @@
 package tbs.spinjump;
 
-import android.graphics.Canvas;
 import android.graphics.Paint;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 
@@ -77,7 +78,7 @@ public class GearPlatform extends GameObject {
         return distanceSquared < (width + radius2) * (width + radius2);
     }
 
-    public void draw(Canvas canvas) {
+    public void draw(SpriteBatch batch) {
         // PLATFORM:
         Game.paint.setColor(GameValues.COG_COLOR);
         canvas.drawCircle(x, y, width, Game.paint);
