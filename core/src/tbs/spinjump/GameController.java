@@ -7,14 +7,14 @@ public class GameController implements InputProcessor {
     public static void pressScreen(int x, int y) {
         if (Game.state == GameState.Menu) {
             if (Game.rateButton.isClicked(x, y)) {
-                final String appPackageName = Game.context.getPackageName(); // getPackageName() from Context or Activity object
+          /*Todo      final String appPackageName = Game.context.getPackageName(); // getPackageName() from Context or Activity object
                 try {
                     Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
                 } catch (android.content.ActivityNotFoundException anfe) {
                     Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                }
+                }*/
             } else if (Game.leaderButton.isClicked(x, y)) {
-                if (BaseGameActivity.getApiClient().isConnected()) {
+/*          Todo      if (BaseGameActivity.getApiClient().isConnected()) {
                     ((BaseGameActivity) Game.context).startActivityForResult(
                             Games.Leaderboards.getLeaderboardIntent(
                                     MainActivity.getApiClient(), GameValues.leaderboardID),
@@ -23,7 +23,7 @@ public class GameController implements InputProcessor {
                     // LOGIN TO PLAY SERVICES:
                     ((BaseGameActivity) Game.context).getGameHelper()
                             .beginUserInitiatedSignIn();
-                }
+                }*/
             } else if (Game.storeButton.isClicked(x, y)) {
                 Game.state = GameState.Store;
                 Game.showStore();
@@ -35,12 +35,12 @@ public class GameController implements InputProcessor {
                     Game.casinoManager.generateRewards();
                     Game.player.earnCoinAnim(x, y, 0);
                     Game.state = GameState.Casino;
-                    Game.soundPlayer.play(Game.moneySound, 1, 1, 0, 0, 1);
+                    Game.moneySound.play();
                 } else {
-                    Game.soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
+                    Game.buttonSound.play();
                 }
             } else {
-                Game.soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
+                Game.buttonSound.play();
                 Game.state = GameState.Playing;
             }
         } else if (Game.state == GameState.Playing) {
@@ -50,7 +50,7 @@ public class GameController implements InputProcessor {
                 Game.setup();
             } else if (Game.shareButton.isClicked(x, y)) {
 //                MainActivity.unlockAchievement("CgkIxIfix40fEAIQDA");
-                Game.Share(Game.takeScreenShot());
+//      Todo          Game.Share(Game.takeScreenShot());
             } else if (Game.retryButton.isClicked(x, y)) {
                 Game.setup();
                 Game.state = GameState.Playing;
@@ -60,17 +60,17 @@ public class GameController implements InputProcessor {
                 Game.adButton.active = false;
             } else if (Game.likeButton.isClicked(x, y)) {
                 // SHOW FB PAGE:
-                try {
-                    Game.context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
-                    Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/337927283025915")));
-                } catch (Exception e) {
-                    Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/AndroidHackerApp")));
-                }
+//   Todo             try {
+//                    Game.context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+//                    Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/337927283025915")));
+//                } catch (Exception e) {
+//                    Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/AndroidHackerApp")));
+//                }
                 Game.likeButton.active = false;
             } else if (Game.buyButton.isClicked(x, y)) {
                 // EARN MONEY REWARD:
-                MainActivity.unlockAchievement("CgkIxIfix40fEAIQCA");
-                Game.soundPlayer.play(Game.moneySound, 1, 1, 0, 0, 1);
+//        Todo        MainActivity.unlockAchievement("CgkIxIfix40fEAIQCA");
+                Game.moneySound.play();
                 Game.player.earnCoinAnim(x, y, Utility.getRandom(1, 20));
                 Game.buyButton.active = false;
                 if (Game.player.score > 0)

@@ -27,14 +27,12 @@ public class CasinoManager {
 
     public CasinoManager() {
         items = new ArrayList<CanvasButton>();
-        int tmpX = 0;
-        int tmpY = 0;
         int itemRowC = 1;
         int itemColC = 1;
         float startXPos = ((Game.w / 2) - ((GameValues.CASINO_ITEM_SCALE * 1.5f) + GameValues.CASINO_ITEM_PADDING));
         float startYPos = ((Game.h / 2) - ((GameValues.CASINO_ITEM_SCALE * 1.5f) + GameValues.CASINO_ITEM_PADDING));
         for (int i = 0; i < 9; ++i) {
-            items.add(new CanvasButton((int) (startXPos + ((GameValues.CASINO_ITEM_SCALE + GameValues.CASINO_ITEM_PADDING) * (itemRowC - 1))), (int) (startYPos + ((GameValues.CASINO_ITEM_SCALE + GameValues.CASINO_ITEM_PADDING) * (itemColC - 1))), R.drawable.qe_btn, false));
+            items.add(new CanvasButton((int) (startXPos + ((GameValues.CASINO_ITEM_SCALE + GameValues.CASINO_ITEM_PADDING) * (itemRowC - 1))), (int) (startYPos + ((GameValues.CASINO_ITEM_SCALE + GameValues.CASINO_ITEM_PADDING) * (itemColC - 1))), "qe_btn", false));
             itemRowC += 1;
             if (itemRowC == 4) {
                 itemRowC = 1;
@@ -104,7 +102,7 @@ public class CasinoManager {
         // OTHER:
         if (rewardAnim) {
             color.set(0xFFFFFFFF);
-            //Todo maybe use getImageTextHere canvas.rotate(-rotation, ScreenObject.getCenterX(), ScreenObject.getCenterY());
+            //Todo maybe use getImageTextHere canvas.rotate(-rotation, (Game.w/2), (Game.h/2));
             Utility.drawCenteredText(batch, color, rewardText, Game.w / 2, (Game.h / 2), Utility.getScale(rewardTextize));
             color.set(1, 1, 1, 120 / 255f);
             if (won) {
@@ -155,7 +153,7 @@ public class CasinoManager {
 
             if (unlockAbleIndex == -1) {
                 itemText = moneySpent * 10 + " COINS!";
-                Game.player.earnCoinAnim(ScreenObject.getCenterX(), ScreenObject.getCenterY(), moneySpent * 10);
+                Game.player.earnCoinAnim((Game.w / 2), (Game.h / 2), moneySpent * 10);
             } else {
                 Game.storeItems.get(unlockAbleIndex).bought = true;
                 Game.player.purchases.set(unlockAbleIndex, 1);

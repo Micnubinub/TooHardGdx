@@ -62,6 +62,7 @@ public class Game extends ApplicationAdapter {
     //Todo init
     private static Texture menuTint;
     private static SpriteBatch batch;
+    private static Texture into;
 
     public static void setup() {
         // SETUP:
@@ -99,7 +100,6 @@ public class Game extends ApplicationAdapter {
 //            });
 //        }
     }
-
 
     public static void draw(SpriteBatch batch) {
 
@@ -223,8 +223,6 @@ public class Game extends ApplicationAdapter {
             Utility.drawCenteredText(batch, color, "THE BIG SHOTS", w / 2, h / 2, Utility.getScale(GameValues.MENU_TEXT_SIZE / 1.5f));
         }
     }
-
-    private static Texture into;
 
     private static Texture getTextureColor(int color) {
         final Pixmap p = new Pixmap(1, 1, Pixmap.Format.RGBA4444);
@@ -388,71 +386,90 @@ public class Game extends ApplicationAdapter {
         storeItems.add(buyCoins);
     }
 
-
     // STORE DIALOG:
     public static void showStore() {
-/*Todo        dialog.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                state = GameState.Menu;
-                soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
-                dialog.dismiss();
-            }
-        });
-
-
-        // CHECK IF THEY HAVE BEEN BOUGHT:
-        final GridView gridView = (GridView) dialog.findViewById(R.id.grid);
-        for (int i = 0; i < storeItems.size(); ++i) {
-            storeItems.get(i).bought = player.purchases.get(i) == 1; // x == y;
-        }
-        gridView.setAdapter(new StoreAdapter(storeItems));
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // SKINS:
-                if (storeItems.get(position).IAPID.equals("NONE")) {
-                    if (storeItems.get(position).cost <= player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
-                        // BUY:
-                        storeItems.get(position).bought = true;
+//        final Dialog dialog = new Dialog(context, R.style.CustomDialog);
+//        dialog.setContentView(R.layout.store_gridview);
+//
+//        // BUTTON:
+//        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) dialog.findViewById(R.id.back).getLayoutParams();
+//        params.width = GameValues.MENU_BTN_WIDTH;
+//        params.height = GameValues.MENU_BTN_HEIGHT;
+//        params.rightMargin = (int) (GameValues.BUTTON_PADDING / 1.5f);
+//        params.bottomMargin = (int) (GameValues.BUTTON_PADDING / 2);
+//        params.leftMargin = 0;
+//        params.topMargin = (int) (GameValues.BUTTON_PADDING / 1.5f);
+//        dialog.findViewById(R.id.back).setLayoutParams(params);
+//        dialog.findViewById(R.id.back).setAlpha(0.705f);
+//
+//        // SETUP SCALE AND POSITION OF DIALOG:
+//        dialog.getWindow().setLayout(ScreenObject.width, (int) (ScreenObject.height * 0.785f));
+//        WindowManager.LayoutParams wlp = dialog.getWindow().getAttributes();
+//        wlp.gravity = Gravity.BOTTOM;
+//        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+//        dialog.getWindow().setAttributes(wlp);
+//        dialog.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                state = GameState.Menu;
+//                soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
+//                dialog.dismiss();
+//            }
+//        });
+//
+//
+//        // CHECK IF THEY HAVE BEEN BOUGHT:
+//        final GridView gridView = (GridView) dialog.findViewById(R.id.grid);
+//        for (int i = 0; i < storeItems.size(); ++i) {
+//            storeItems.get(i).bought = player.purchases.get(i) == 1; // x == y;
+//        }
+//        gridView.setAdapter(new StoreAdapter(storeItems));
+//        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                // SKINS:
+//                if (storeItems.get(position).IAPID.equals("NONE")) {
+//                    if (storeItems.get(position).cost <= player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
+//                        // BUY:
+//                        storeItems.get(position).bought = true;
 //                        MainActivity.unlockAchievement("CgkIxIfix40fEAIQAQ");
-                        int itemsBought = 0;
-                        for (int i = 0; i < storeItems.size(); ++i) {
-                            if (storeItems.get(i).bought && storeItems.get(i).buyable && storeItems.get(i).IAPID.equals("NONE"))
-                                itemsBought += 1;
-                        }
-                       *//* if (itemsBought >= storeItems.size()) { // EDIT
-                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAw");
-                        } else if (itemsBought >= 5) {
-                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAg");
-                        }
-                        if (position == storeItems.size() - 3) {
-                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQBA");
-                        }*//*
-                        moneySound.play();
-                        player.coins -= storeItems.get(position).cost;
-//           todo             player.purchases.set(position, 1);
-                        player.saveData();
-                    } else if (storeItems.get(position).cost > player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
-                        // CANT AFFORD:
-                        buttonSound.play();
-                    } else if (storeItems.get(position).bought) {
-                        // EQUIP:
-                        if (storeItems.get(position).trail) {
-                            player.equipTrail(storeItems.get(position));
-                        } else {
-                            player.equipSkin(storeItems.get(position));
-                        }
-                        buttonSound.play();
-                    }
-                } else {
-                    // IN APP PURCHASE:
-//Todo                    gPurchaseManager.makePurchase(storeItems.get(position).IAPID);
-                }
+//                        int itemsBought = 0;
+//                        for (int i = 0; i < storeItems.size(); ++i) {
+//                            if (storeItems.get(i).bought && storeItems.get(i).buyable && storeItems.get(i).IAPID.equals("NONE"))
+//                                itemsBought += 1;
+//                        }
+//                        if (itemsBought >= storeItems.size()) { // EDIT
+//                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAw");
+//                        } else if (itemsBought >= 5) {
+//                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAg");
+//                        }
+//                        if (position == storeItems.size() - 3) {
+//                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQBA");
+//                        }
+//                        soundPlayer.play(moneySound, 1, 1, 0, 0, 1);
+//                        player.coins -= storeItems.get(position).cost;
+//                        player.purchases.set(position, 1);
+//                        player.saveData();
+//                    } else if (storeItems.get(position).cost > player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
+//                        // CANT AFFORD:
+//                        soundPlayer.play(buttonSound, 1, 1, 0, 0, 1);
+//                    } else if (storeItems.get(position).bought) {
+//                        // EQUIP:
+//                        if (storeItems.get(position).trail) {
+//                            player.equipTrail(storeItems.get(position));
+//                        } else {
+//                            player.equipSkin(storeItems.get(position));
+//                        }
+//                        soundPlayer.play(buttonSound, 1, 1, 0, 0, 1);
+//                    }
+//                } else {
+//                    // IN APP PURCHASE:
+//                    gPurchaseManager.makePurchase(storeItems.get(position).IAPID);
+//                }
 //                ((BaseAdapter) gridView.getAdapter()).notifyDataSetChanged();
-            }
-        });
-//        dialog.show();*/
+//            }
+//        });
+//        dialog.show();
     }
 
     @Override
@@ -473,69 +490,4 @@ public class Game extends ApplicationAdapter {
         draw(batch);
         batch.end();
     }    // STORE DIALOG:
-
-    public static void showStore() {
-/*Todo        dialog.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                state = GameState.Menu;
-                soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
-                dialog.dismiss();
-            }
-        });
-
-
-        // CHECK IF THEY HAVE BEEN BOUGHT:
-        final GridView gridView = (GridView) dialog.findViewById(R.id.grid);
-        for (int i = 0; i < storeItems.size(); ++i) {
-            storeItems.get(i).bought = player.purchases.get(i) == 1; // x == y;
-        }
-        gridView.setAdapter(new StoreAdapter(storeItems));
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // SKINS:
-                if (storeItems.get(position).IAPID.equals("NONE")) {
-                    if (storeItems.get(position).cost <= player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
-                        // BUY:
-                        storeItems.get(position).bought = true;
-//                        MainActivity.unlockAchievement("CgkIxIfix40fEAIQAQ");
-                        int itemsBought = 0;
-                        for (int i = 0; i < storeItems.size(); ++i) {
-                            if (storeItems.get(i).bought && storeItems.get(i).buyable && storeItems.get(i).IAPID.equals("NONE"))
-                                itemsBought += 1;
-                        }
-                       *//* if (itemsBought >= storeItems.size()) { // EDIT
-                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAw");
-                        } else if (itemsBought >= 5) {
-                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAg");
-                        }
-                        if (position == storeItems.size() - 3) {
-                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQBA");
-                        }*//*
-                        moneySound.play();
-                        player.coins -= storeItems.get(position).cost;
-//           todo             player.purchases.set(position, 1);
-                        player.saveData();
-                    } else if (storeItems.get(position).cost > player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
-                        // CANT AFFORD:
-                        buttonSound.play();
-                    } else if (storeItems.get(position).bought) {
-                        // EQUIP:
-                        if (storeItems.get(position).trail) {
-                            player.equipTrail(storeItems.get(position));
-                        } else {
-                            player.equipSkin(storeItems.get(position));
-                        }
-                        buttonSound.play();
-                    }
-                } else {
-                    // IN APP PURCHASE:
-//Todo                    gPurchaseManager.makePurchase(storeItems.get(position).IAPID);
-                }
-//                ((BaseAdapter) gridView.getAdapter()).notifyDataSetChanged();
-            }
-        });
-//        dialog.show();*/
-    }
 }

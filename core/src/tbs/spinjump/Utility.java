@@ -76,6 +76,14 @@ public class Utility {
         getPreferences().putInteger(key, value).flush();
     }
 
+    public static String getString(String key) {
+        return getPreferences().getString(key, "");
+    }
+
+    public static void saveString(String key, String value) {
+        getPreferences().putString(key, value).flush();
+    }
+
     public static void drawCenteredText(SpriteBatch batch, Color color, String text, float x, float y, float scale) {
         final BitmapFont font = getFont();
         font.getData().setScale(scale);
