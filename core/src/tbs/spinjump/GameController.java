@@ -1,6 +1,8 @@
 package tbs.spinjump;
 
-public class GameController {
+import com.badlogic.gdx.InputProcessor;
+
+public class GameController implements InputProcessor {
 
     public static void pressScreen(int x, int y) {
         if (Game.state == GameState.Menu) {
@@ -101,5 +103,46 @@ public class GameController {
             }
         }
 
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int x, int y, int pointer, int button) {
+        pressScreen(x, y);
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }

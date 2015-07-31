@@ -12,7 +12,7 @@ public class Level {
     public static int moverIndex;
     public static boolean moving;
     public static int stageNum;
-    private final int cogsToRecycle = 3;
+    private final int cogsToRecycle = 4;
 
     public Level() {
         if (gears.size() > 0) {
@@ -75,7 +75,7 @@ public class Level {
             final GearPlatform tmpGear = gears.get(i);
             if (i == 0)
                 tmpGear.setY((int) GameValues.COG_START_Y);
-            tmpGear.generate(i == 0);
+            tmpGear.generate(i == 0, i == 1);
         }
     }
 

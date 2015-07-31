@@ -36,6 +36,7 @@ public class TrailParticle {
         final int s = GameValues.MENU_BTN_WIDTH;
 
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
+        Game.paint.setColor(0xFFe6e8f1);
         pixmap.setColor(new Color(1, 1, 1, 1));
         pixmap.fillCircle(s / 2, s / 2, s / 2);
 
