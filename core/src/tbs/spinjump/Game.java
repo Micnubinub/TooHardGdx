@@ -124,8 +124,8 @@ public class Game extends ApplicationAdapter {
             batch.draw(menuTint, 0, 0, w, h);
 
    /* Todo use glyph and getData
-           batch.drawText("TOO HARD?", w/2, h/2 / 4, paint);
-            batch.drawText("CAN YOU GET TO 100?", w/2, (h/2 / 4) + (GameValues.TEXT_PADDING * 1.5f), paint);
+           batch.drawText("TOO HARD?", w/2, h/8, paint);
+            batch.drawText("CAN YOU GET TO 100?", w/2, (h/8) + (GameValues.TEXT_PADDING * 1.5f), paint);
             batch.drawText("TAP TO BEGIN", w/2, h/2 * 1.075f, paint);
 */
 
@@ -183,10 +183,10 @@ public class Game extends ApplicationAdapter {
 
             // DEATH TEXT:
             color.set(0xe6e8f1FF);
-            Utility.drawCenteredText(batch, color, "STORE", w / 2, h / 2 / 4, Utility.getScale(GameValues.MENU_TEXT_SIZE));
+            Utility.drawCenteredText(batch, color, "STORE", w / 2, h / 8, Utility.getScale(GameValues.MENU_TEXT_SIZE));
 
             color.set(1, 1, 1, 120 / 250f);
-            Utility.drawCenteredText(batch, color, "BUY NEW ITEMS", w / 2, (h / 2 / 4) + (GameValues.TEXT_PADDING * 1.5f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
+            Utility.drawCenteredText(batch, color, "BUY NEW ITEMS", w / 2, (h / 8) + (GameValues.TEXT_PADDING * 1.5f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
         }
 
         // DRAW CASINO
@@ -194,20 +194,14 @@ public class Game extends ApplicationAdapter {
             batch.draw(menuTint, 0, 0, w, h);
 
             // CASINO HEADER:
-            paint.setColor(0xFFe6e8f1);
-            paint.setAlpha(255);
-            paint.setTextAlign(Paint.Align.CENTER);
-            paint.setTextSize(GameValues.MENU_TEXT_SIZE);
-            canvas.drawText("REWARDS", w / 2, h / 2 / 4, paint);
-            paint.setColor(0xffFFFFFF);
-            paint.setAlpha(120);
-            paint.setTextSize(GameValues.MENU_TEXT_SIZE / 2);
-            canvas.drawText("SELECT ONE", w / 2, (h / 2 / 4) + (GameValues.TEXT_PADDING * 1.5f), paint);
+            color.set(0xFFe6e8f1);
+            Utility.drawCenteredText(batch, color, "REWARDS", w / 2, h / 8, Utility.getScale(GameValues.MENU_TEXT_SIZE));
+            color.set(1, 1, 1, 120 / 250f);
+            Utility.drawCenteredText(batch, color, "SELECT ONE", w / 2, (h / 8) + (GameValues.TEXT_PADDING * 1.5f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
 
             // DRAW CASINO:
-            paint.setAlpha(180);
-            casinoManager.draw(canvas);
-            homeButton2.draw(canvas);
+            casinoManager.draw(batch);
+            homeButton2.draw(batch);
         }
 
         // COINS:
@@ -221,7 +215,16 @@ public class Game extends ApplicationAdapter {
             color.set(1, 1, 1, 120 / 255f);
         }
         Utility.drawCenteredText(batch, color, "COINS", w / 2, h - (GameValues.TEXT_PADDING * 1.1f), Utility.getScale(GameValues.COIN_TEXT_SIZE / 2.5f));
+
+        // DRAW INTRO:
+        if (introAlpha > 0) {
+            batch.draw(into, 0, 0, w, h);
+            color.set(1, 1, 1, introAlpha / 255f);
+            Utility.drawCenteredText(batch, color, "THE BIG SHOTS", w / 2, h / 2, Utility.getScale(GameValues.MENU_TEXT_SIZE / 1.5f));
+        }
     }
+
+    private static Texture into;
 
     private static Texture getTextureColor(int color) {
         final Pixmap p = new Pixmap(1, 1, Pixmap.Format.RGBA4444);
@@ -245,6 +248,30 @@ public class Game extends ApplicationAdapter {
             coinTextMult -= delta * 0.0025;
             if (coinTextMult <= 1)
                 coinTextMult = 1;
+        }
+
+
+        // UPDATE CASINO:
+        if (state == GameState.Casino) {
+            casinoManager.update(delta);
+        }
+
+        // UPDATE BUTTONS YOU WANT TO ANIMATE:
+        adButton.update(delta);
+        likeButton.update(delta);
+        buyButton.update(delta);
+        rateButton.update(delta);
+        reviveButton.update(delta);
+        gambleButton.update(delta);
+
+        if (introCountdown > 0) {
+            introCountdown -= 1;
+            if (introCountdown < 0)
+                introCountdown = 0;
+        } else if (introAlpha > 0) {
+            introAlpha -= 10;
+            if (introAlpha < 0)
+                introAlpha = 0;
         }
     }
 
@@ -274,6 +301,7 @@ public class Game extends ApplicationAdapter {
         gambleButton.playSound = false;
         gambleButton.up = false;
         menuTint = getTextureColor(0x000000aa);
+        into = getTextureColor(GameValues.BACKGROUND_COLOR);
 
         // AD:
         showAdInt = 0;
@@ -360,6 +388,73 @@ public class Game extends ApplicationAdapter {
         storeItems.add(buyCoins);
     }
 
+
+    // STORE DIALOG:
+    public static void showStore() {
+/*Todo        dialog.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                state = GameState.Menu;
+                soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
+                dialog.dismiss();
+            }
+        });
+
+
+        // CHECK IF THEY HAVE BEEN BOUGHT:
+        final GridView gridView = (GridView) dialog.findViewById(R.id.grid);
+        for (int i = 0; i < storeItems.size(); ++i) {
+            storeItems.get(i).bought = player.purchases.get(i) == 1; // x == y;
+        }
+        gridView.setAdapter(new StoreAdapter(storeItems));
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // SKINS:
+                if (storeItems.get(position).IAPID.equals("NONE")) {
+                    if (storeItems.get(position).cost <= player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
+                        // BUY:
+                        storeItems.get(position).bought = true;
+//                        MainActivity.unlockAchievement("CgkIxIfix40fEAIQAQ");
+                        int itemsBought = 0;
+                        for (int i = 0; i < storeItems.size(); ++i) {
+                            if (storeItems.get(i).bought && storeItems.get(i).buyable && storeItems.get(i).IAPID.equals("NONE"))
+                                itemsBought += 1;
+                        }
+                       *//* if (itemsBought >= storeItems.size()) { // EDIT
+                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAw");
+                        } else if (itemsBought >= 5) {
+                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAg");
+                        }
+                        if (position == storeItems.size() - 3) {
+                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQBA");
+                        }*//*
+                        moneySound.play();
+                        player.coins -= storeItems.get(position).cost;
+//           todo             player.purchases.set(position, 1);
+                        player.saveData();
+                    } else if (storeItems.get(position).cost > player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
+                        // CANT AFFORD:
+                        buttonSound.play();
+                    } else if (storeItems.get(position).bought) {
+                        // EQUIP:
+                        if (storeItems.get(position).trail) {
+                            player.equipTrail(storeItems.get(position));
+                        } else {
+                            player.equipSkin(storeItems.get(position));
+                        }
+                        buttonSound.play();
+                    }
+                } else {
+                    // IN APP PURCHASE:
+//Todo                    gPurchaseManager.makePurchase(storeItems.get(position).IAPID);
+                }
+//                ((BaseAdapter) gridView.getAdapter()).notifyDataSetChanged();
+            }
+        });
+//        dialog.show();*/
+    }
+
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -377,7 +472,70 @@ public class Game extends ApplicationAdapter {
         batch.begin();
         draw(batch);
         batch.end();
+    }    // STORE DIALOG:
+
+    public static void showStore() {
+/*Todo        dialog.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                state = GameState.Menu;
+                soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
+                dialog.dismiss();
+            }
+        });
+
+
+        // CHECK IF THEY HAVE BEEN BOUGHT:
+        final GridView gridView = (GridView) dialog.findViewById(R.id.grid);
+        for (int i = 0; i < storeItems.size(); ++i) {
+            storeItems.get(i).bought = player.purchases.get(i) == 1; // x == y;
+        }
+        gridView.setAdapter(new StoreAdapter(storeItems));
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // SKINS:
+                if (storeItems.get(position).IAPID.equals("NONE")) {
+                    if (storeItems.get(position).cost <= player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
+                        // BUY:
+                        storeItems.get(position).bought = true;
+//                        MainActivity.unlockAchievement("CgkIxIfix40fEAIQAQ");
+                        int itemsBought = 0;
+                        for (int i = 0; i < storeItems.size(); ++i) {
+                            if (storeItems.get(i).bought && storeItems.get(i).buyable && storeItems.get(i).IAPID.equals("NONE"))
+                                itemsBought += 1;
+                        }
+                       *//* if (itemsBought >= storeItems.size()) { // EDIT
+                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAw");
+                        } else if (itemsBought >= 5) {
+                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAg");
+                        }
+                        if (position == storeItems.size() - 3) {
+                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQBA");
+                        }*//*
+                        moneySound.play();
+                        player.coins -= storeItems.get(position).cost;
+//           todo             player.purchases.set(position, 1);
+                        player.saveData();
+                    } else if (storeItems.get(position).cost > player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
+                        // CANT AFFORD:
+                        buttonSound.play();
+                    } else if (storeItems.get(position).bought) {
+                        // EQUIP:
+                        if (storeItems.get(position).trail) {
+                            player.equipTrail(storeItems.get(position));
+                        } else {
+                            player.equipSkin(storeItems.get(position));
+                        }
+                        buttonSound.play();
+                    }
+                } else {
+                    // IN APP PURCHASE:
+//Todo                    gPurchaseManager.makePurchase(storeItems.get(position).IAPID);
+                }
+//                ((BaseAdapter) gridView.getAdapter()).notifyDataSetChanged();
+            }
+        });
+//        dialog.show();*/
     }
-
-
 }

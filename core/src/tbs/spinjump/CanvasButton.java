@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Matrix4;
 
 import java.awt.Rectangle;
 
@@ -24,7 +23,6 @@ public class CanvasButton extends GameObject {
     public boolean rotate;
     public boolean rotateLeft;
     public float rotation;
-    public Matrix4 matrix;
 
     public CanvasButton(int x, int y, String id, boolean anim) {
         this.x = x;
@@ -46,7 +44,6 @@ public class CanvasButton extends GameObject {
 
         // ROTATION:
         rotate = false;
-        matrix = new Matrix();
     }
 
     public void wiggle(int amount) {
@@ -62,7 +59,7 @@ public class CanvasButton extends GameObject {
         rectangle.setBounds(x, y, width, height);
         if (rectangle.contains(x, y)) {
             if (playSound)
-                Game.soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
+                Game.buttonSound.play();
             return true;
         }
 
