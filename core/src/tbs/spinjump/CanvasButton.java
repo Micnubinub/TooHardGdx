@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
-import java.awt.Rectangle;
 
 public class CanvasButton extends GameObject {
     private static final Rectangle rectangle = new Rectangle();
@@ -56,7 +56,7 @@ public class CanvasButton extends GameObject {
     public boolean isClicked(int x, int y) {
         if (!active)
             return false;
-        rectangle.setBounds(x, y, width, height);
+        rectangle.set(x, y, width, height);
         if (rectangle.contains(x, y)) {
             if (playSound)
                 Game.buttonSound.play();
@@ -99,7 +99,9 @@ public class CanvasButton extends GameObject {
     }
 
     public void draw(SpriteBatch canvas) {
+        image.setCenter(image.getWidth() / 2, image.getHeight() / 2);
         image.setPosition(x, y);
+        image.setOriginCenter();
         image.draw(canvas);
 
         if (active) {

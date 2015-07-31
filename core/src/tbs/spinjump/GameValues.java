@@ -19,8 +19,8 @@ public class GameValues {
     public static final float SCALE_MULT = 1.1f;
 
     // Player:
-    public static final int PLAYER_COLOR = 0XFFff8c8c;
-    public static final int PLAYER_COLOR_2 = 0XFFffabab;
+    public static final int PLAYER_COLOR = 0Xff8c8cFF;
+    public static final int PLAYER_COLOR_2 = 0XffababFF;
     public static final float PLAYER_SCALE = (Gdx.graphics.getWidth() / 28) * SCALE_MULT;
     public static final float PLAYER_JUMP_SPEED = (float) (Gdx.graphics.getHeight() / 800) * SCALE_MULT;
 
@@ -36,9 +36,9 @@ public class GameValues {
 
     // Gears:
     public static final int RING_WIDTH = Gdx.graphics.getWidth() / 100;
-    public static final int RING_COLOR = 0xFF98a3d9;
-    public static final int COG_COLOR = 0XFF999999;
-    public static final int COG_COLOR_2 = 0xFFb3b3b3;
+    public static final int RING_COLOR = 0x98a3d9FF;
+    public static final int COG_COLOR = 0X999999FF;
+    public static final int COG_COLOR_2 = 0xb3b3b3FF;
     public static final float COG_GAP = Gdx.graphics.getHeight() / 4f;
     public static final float COG_START_Y = Gdx.graphics.getHeight() * 0.775f;
     public static final float COG_MIN_SIZE = (Gdx.graphics.getWidth() / 17.5f) * SCALE_MULT;
@@ -50,8 +50,8 @@ public class GameValues {
 
     // Coins:
     public static final float COIN_SCALE = PLAYER_SCALE * 0.6f;
-    public static final int COIN_COLOR = 0xFFffff93;
-    public static final int COIN_COLOR_2 = 0xFFffffe8;
+    public static final int COIN_COLOR = 0xffff93FF;
+    public static final int COIN_COLOR_2 = 0xffffe8FF;
 
     // Menu Buttons:
     public static final int MENU_BTN_WIDTH = (int) (Gdx.graphics.getWidth() / 5.75f);

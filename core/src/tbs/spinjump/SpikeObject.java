@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class SpikeObject extends GameObject {
     static int height, width, halfT, tCX, tCY;
     private static Sprite triangle;
-    private static boolean isTriangleInit = false;
     public float angle;
 
 
@@ -26,19 +25,12 @@ public class SpikeObject extends GameObject {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        isTriangleInit = false;
     }
 
     private static void initTriangle() {
-        if (isTriangleInit)
-            return;
-        isTriangleInit = true;
+        dispose();
 
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
-        Pixmap.setBlending(Pixmap.Blending.None);
-
-        //Todo get maxHeight/width of the triangle
-        final int s = GameValues.MENU_BTN_WIDTH;
+        final int s = Game.w / 4;
 
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
         pixmap.setColor(new Color(1, 1, 1, 1));

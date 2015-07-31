@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Created by Sidney on 10/06/2015.
  */
 public class AnimatedText {
+    private static final Color color = new Color();
     public int x, y;
     public int alpha;
     public String text;
     public float yVel; // SPEED ON Y AXIS
-    private static final Color color = new Color();
 
     public void setup(int x, int y, String text) {
         this.x = x;
@@ -37,8 +37,7 @@ public class AnimatedText {
     public void draw(SpriteBatch canvas) {
         if (alpha > 0) {
             color.set(1, 1, 1, (alpha / 255f));
-            //Todo use this to get scale : GameValues.ANIM_TEXT_SIZE
-            Utility.drawCenteredText(canvas, color, text, x, y, 0.25f);
+            Utility.drawCenteredText(canvas, color, text, x, y, Utility.getScale(GameValues.ANIM_TEXT_SIZE));
         }
     }
 

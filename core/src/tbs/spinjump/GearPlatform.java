@@ -12,7 +12,6 @@ public class GearPlatform extends GameObject {
 
     private static final Color c = new Color();
     private static Sprite circle;
-    private static boolean isCircleInit = false;
     // Gear Specific:
     public float rotationSpeed;
     public float rotation;
@@ -24,7 +23,6 @@ public class GearPlatform extends GameObject {
     public ArrayList<Enemy> enemies;
 
     public GearPlatform() {
-
         SpikeObject.setWidthAndHeight();
         coins = new ArrayList<CoinPickup>();
         for (int i = 0; i < 5; ++i) {
@@ -38,32 +36,24 @@ public class GearPlatform extends GameObject {
     }
 
     public static void dispose() {
-        //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
         try {
             circle.getTexture().dispose();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        isCircleInit = false;
     }
 
     private static void initCircle() {
-        if (isCircleInit)
-            return;
-        isCircleInit = true;
+        dispose();
 
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
-        Pixmap.setBlending(Pixmap.Blending.None);
-
-        //Todo get maxHeight/width of the circle
-        final int s = GameValues.MENU_BTN_WIDTH;
+        final int s = Game.w / 3;
 
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
-        pixmap.setColor(GameValues.COG_COLOR);
+        pixmap.setColor(GameValues.COG_COLOR_2);
+//        pixmap.fillCircle(s / 2, s / 2, Math.round((s / 2) * 0.7f));
         pixmap.fillCircle(s / 2, s / 2, s / 2);
 
-        //  Game.paint.setColor(GameValues.COG_COLOR_2);
-//        canvas.drawCircle(x, y, width * 0.7f, Game.paint);
+// Todo       pixmap.setStrokeWidth();
 //        // RINGS:
 //        Game.paint.setStyle(Paint.Style.STROKE);
 //        Game.paint.setStrokeWidth(GameValues.RING_WIDTH / 2);
@@ -126,7 +116,7 @@ public class GearPlatform extends GameObject {
 
     public void draw(SpriteBatch batch) {
         // PLATFORM:
-        circle.setPosition(x, y);
+        circle.setCenter(x, y);
         circle.setSize(width, width);
 
         circle.draw(batch);

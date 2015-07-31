@@ -4,7 +4,6 @@ package tbs.spinjump;
 import com.badlogic.gdx.math.Rectangle;
 
 public class GameObject {
-    //todo if getting issues with rect, remove the static modifier
     private static final Rectangle bounds = new Rectangle();
     public boolean hasScore;
     float x;
@@ -29,7 +28,6 @@ public class GameObject {
     }
 
     public float getAngle(float xO, float yO) {
-        //Todo check if theres too much conversion to and from deg
         return ((float) Math.toDegrees(Math.atan2(yO - y, xO - x))) % 360;
     }
 

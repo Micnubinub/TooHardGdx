@@ -1,15 +1,18 @@
 package tbs.spinjump;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
 
 public class Player extends GameObject {
 
-    private static final Color color = new Color();
+    //    private static final Color color = new Color();
     private static int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+    private static Sprite player;
     // Collision & Platforms:
     public GearPlatform platform; // Which Platform the Player is on
     public double platformOnAngle;
@@ -17,7 +20,6 @@ public class Player extends GameObject {
     public int highScore;
     public int coins;
     public int lastPlatformIndex;
-
     // Particles:
     public int particleTime;
     public int particleIndex;
@@ -32,20 +34,16 @@ public class Player extends GameObject {
     public float overAlpha;
     // DEATH:
     public boolean dead;
-
     // PURCHASES:
     public ArrayList<Integer> purchases;
-
     // COLORS:
     public int color1;
     public int color2;
     public int skinIndex;
     public int trailColor;
     public int trailIndex;
-
     // SHOW ADS:
     public boolean showAds;
-
     // POINTS SINCE DEATH:
     public int revivalCount;
 
@@ -66,6 +64,29 @@ public class Player extends GameObject {
         }
     }
 
+    public static void dispose() {
+        try {
+            player.getTexture().dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void getPlayer(int width, int color1, int color2) {
+        dispose();
+        final int s = width;
+        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA4444);
+        pixmap.setColor(color1);
+        pixmap.fillCircle(s / 2, s / 2, s / 2);
+        pixmap.setColor(color2);
+        pixmap.fillCircle(s / 2, s / 2, s / 4);
+
+        player = new Sprite(new Texture(pixmap));
+        player.setSize(s, s);
+        pixmap.dispose();
+
+    }
+
     public void setup() {
         // Starting Position on First Cog
         setupParticles();
@@ -78,6 +99,7 @@ public class Player extends GameObject {
         platformOnAngle = getAngle(platform.x, platform.y);
         particleIndex = 0;
         circleIndex = 0;
+        getPlayer(width * 2, GameValues.PLAYER_COLOR, GameValues.PLAYER_COLOR_2);
         updateAnglePos();
     }
 
@@ -188,23 +210,22 @@ public class Player extends GameObject {
         return distanceSquared < (width + radius2) * (width + radius2);
     }
 
-    public void draw(SpriteBatch canvas) {
+    public void draw(SpriteBatch batch) {
         if (!dead)
             for (int i = 0; i < trail.size(); ++i) {
-                trail.get(i).draw(canvas);
+                trail.get(i).draw(batch);
             }
         for (int i = 0; i < splash.size(); ++i) {
-            splash.get(i).draw(canvas);
+            splash.get(i).draw(batch);
         }
         //Todo Game.paint.setStrokeWidth(GameValues.RING_WIDTH / 1.25f);
         for (int i = 0; i < circles.size(); ++i) {
-            circles.get(i).draw(canvas);
+            circles.get(i).draw(batch);
         }
         if (!dead) {
-//Todo            Game.paint.setColor(GameValues.PLAYER_COLOR);
-//            canvas.drawCircle(x, y, width, Game.paint);
-//            Game.paint.setColor(GameValues.PLAYER_COLOR_2);
-//            canvas.drawCircle(x, y, width * 0.5f, Game.paint);
+            player.setCenter(x, y);
+            player.draw(batch);
+//Todo
 //            if (overAlpha > 0) {
 //                Game.paint.setColor(0xFFFFFFFF);
 //                Game.paint.setAlpha((int) overAlpha);

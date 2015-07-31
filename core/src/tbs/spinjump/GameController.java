@@ -1,10 +1,13 @@
 package tbs.spinjump;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 
 public class GameController implements InputProcessor {
 
     public static void pressScreen(int x, int y) {
+        Gdx.app.error("Press", "x :" + x + " y :" + y);
+
         if (Game.state == GameState.Menu) {
             if (Game.rateButton.isClicked(x, y)) {
           /*Todo      final String appPackageName = Game.context.getPackageName(); // getPackageName() from Context or Activity object

@@ -7,7 +7,7 @@ import tbs.spinjump.Game;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.height = 1280;
 		config.width = 720;
 		config.resizable = false;

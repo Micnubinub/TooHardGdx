@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class AnimCircle {
     private static Sprite circle;
-    private static boolean isCircleInit = false;
     public float scale;
     public float alpha;
     public float x, y;
@@ -20,27 +19,19 @@ public class AnimCircle {
     }
 
     public static void dispose() {
-        //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
         try {
             circle.getTexture().dispose();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        isCircleInit = false;
     }
 
     private static void initCircle() {
-        if (isCircleInit)
-            return;
-        isCircleInit = true;
+        dispose();
 
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
-        Pixmap.setBlending(Pixmap.Blending.None);
+        final int s = Game.w / 3;
 
-        //Todo get maxHeight/width of the circle
-        final int s = GameValues.MENU_BTN_WIDTH;
-
-        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
+        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA4444);
         pixmap.setColor(1, 1, 1, 1);
         pixmap.fillCircle(s / 2, s / 2, s / 2);
 
@@ -68,9 +59,11 @@ public class AnimCircle {
 
     public void draw(SpriteBatch batch) {
         if (alpha > 0) {
-            batch.setColor(1, 1, 1, (alpha / 225f));
-            circle.setPosition(x, y);
+            final float a = (alpha / 255f);
+
+            batch.setColor(1, 1, 1, a);
             circle.setSize(scale, scale);
+            circle.setCenter(x, y);
             circle.draw(batch);
         }
     }

@@ -59,14 +59,15 @@ public class Game extends ApplicationAdapter {
     public static int revivalCost;
     // CASINO:
     public static CasinoManager casinoManager;
-    //Todo init
     private static Texture menuTint;
     private static SpriteBatch batch;
     private static Texture introTexture;
 
     public static void setup() {
         // SETUP:
-        state = GameState.Menu;
+        state = GameState.Playing;
+        Pixmap.setFilter(Pixmap.Filter.BiLinear);
+        Pixmap.setBlending(Pixmap.Blending.None);
         level.setup();
         player.setup();
         Gdx.input.setInputProcessor(controller);
@@ -79,6 +80,7 @@ public class Game extends ApplicationAdapter {
 
         player.loadData();
         casinoManager.updateCost(player.coins);
+
     }
 
     public static void showAd(final boolean manual) {
@@ -486,6 +488,8 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void render() {
+        if (Utility.customBool(4))
+            Gdx.app.error("FPS", String.valueOf(Gdx.graphics.getFramesPerSecond()));
         color.set(GameValues.BACKGROUND_COLOR);
         Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -525,6 +529,7 @@ public class Game extends ApplicationAdapter {
         for (StoreItem item : storeItems) {
             item.dispose();
         }
+        Player.dispose();
         CoinPickup.dispose();
         Enemy.dispose();
         GearPlatform.dispose();

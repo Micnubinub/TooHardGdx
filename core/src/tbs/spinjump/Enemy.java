@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class Enemy {
     private static Sprite circle;
-    private static boolean isCircleInit;
     public float scale;
     public float x, y;
     public GearPlatform platform;
@@ -26,31 +25,22 @@ public class Enemy {
     }
 
     public static void dispose() {
-        //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
         try {
             circle.getTexture().dispose();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        isCircleInit = false;
     }
 
     private static void initCircle() {
-        if (isCircleInit)
-            return;
-        isCircleInit = true;
+        dispose();
 
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
-        Pixmap.setBlending(Pixmap.Blending.None);
-
-        //Todo get maxHeight/width of the circle
-        final int s = GameValues.MENU_BTN_WIDTH;
+        final int s = Game.w / 3;
 
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
 
-        //Todo move cod color into pix,
-        pixmap.fillCircle(s / 2, s / 2, s / 2);
         pixmap.setColor(GameValues.COG_COLOR);
+        pixmap.fillCircle(s / 2, s / 2, s / 2);
 
         pixmap.setColor(GameValues.COG_COLOR_2);
         pixmap.fillCircle(s / 2, s / 2, s / 4);
@@ -62,7 +52,7 @@ public class Enemy {
 
     public void draw(SpriteBatch canvas) {
         if (active) {
-            circle.setPosition(x, y);
+            circle.setCenter(x, y);
             circle.setSize(scale, scale);
             circle.draw(canvas);
         }

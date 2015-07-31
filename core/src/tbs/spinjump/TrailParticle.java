@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class TrailParticle {
     private static Sprite circle;
-    private static boolean isCircleInit = false;
     public float scale;
     public int x;
     public int y;
@@ -18,25 +17,17 @@ public class TrailParticle {
     }
 
     public static void dispose() {
-        //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
         try {
             circle.getTexture().dispose();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        isCircleInit = false;
     }
 
     private static void initCircle() {
-        if (isCircleInit)
-            return;
-        isCircleInit = true;
+        dispose();
 
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
-        Pixmap.setBlending(Pixmap.Blending.None);
-
-        //Todo get maxHeight/width of the circle
-        final int s = GameValues.MENU_BTN_WIDTH;
+        final int s = Game.w / 4;
 
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
         pixmap.setColor(0xe6e8f1FF);
@@ -58,8 +49,8 @@ public class TrailParticle {
     }
 
     public void draw(SpriteBatch batch) {
-        circle.setPosition(x, y);
-        circle.setSize(scale, scale);
+        circle.setCenter(x, y);
+        circle.setSize(scale * 2, scale * 2);
         circle.draw(batch);
     }
 }

@@ -40,6 +40,8 @@ public class StoreItem {
     }
 
     private void draw(SpriteBatch batch, float x, float y) {
+        sprite.setOriginCenter();
+        sprite.setCenter(sprite.getWidth() / 2, sprite.getHeight() / 2);
         sprite.setPosition(x, y);
         sprite.draw(batch);
     }
@@ -53,6 +55,7 @@ public class StoreItem {
     }
 
     public void getSprite() {
+        dispose();
         final Pixmap p = new Pixmap(100, 100, Pixmap.Format.RGBA4444);
         color.set(color1);
         p.setColor(color);
@@ -60,14 +63,12 @@ public class StoreItem {
         color.set(color2);
         p.setColor(color);
         sprite = new Sprite(new Texture(p));
-
         p.dispose();
     }
 
     public void setColors(int c1, int c2) {
         color1 = c1;
         color2 = c2;
-
         getSprite();
     }
 }
