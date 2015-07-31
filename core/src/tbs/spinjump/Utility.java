@@ -47,7 +47,11 @@ public class Utility {
     public static void disposeFont() {
         //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
         isFontInit = false;
-        font.dispose();
+        try {
+            font.dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static int[] getAnglePos(float angle, float distFromCenter, int x, int y) {

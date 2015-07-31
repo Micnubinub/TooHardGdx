@@ -44,6 +44,13 @@ public class StoreItem {
         sprite.draw(batch);
     }
 
+    public void dispose() {
+        try {
+            sprite.getTexture().dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void getSprite() {
         final Pixmap p = new Pixmap(100, 100, Pixmap.Format.RGBA4444);

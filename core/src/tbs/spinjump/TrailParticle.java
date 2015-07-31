@@ -1,6 +1,5 @@
 package tbs.spinjump;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -20,7 +19,11 @@ public class TrailParticle {
 
     public static void dispose() {
         //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
-        circle.getTexture().dispose();
+        try {
+            circle.getTexture().dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         isCircleInit = false;
     }
 
@@ -36,8 +39,7 @@ public class TrailParticle {
         final int s = GameValues.MENU_BTN_WIDTH;
 
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
-        Game.paint.setColor(0xFFe6e8f1);
-        pixmap.setColor(new Color(1, 1, 1, 1));
+        pixmap.setColor(0xe6e8f1FF);
         pixmap.fillCircle(s / 2, s / 2, s / 2);
 
         circle = new Sprite(new Texture(pixmap));

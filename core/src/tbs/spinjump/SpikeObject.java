@@ -21,7 +21,11 @@ public class SpikeObject extends GameObject {
     }
 
     public static void dispose() {
-        triangle.getTexture().dispose();
+        try {
+            triangle.getTexture().dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         isTriangleInit = false;
     }
 

@@ -27,7 +27,11 @@ public class Enemy {
 
     public static void dispose() {
         //Todo call thi in dispose, and make sure all the methods call getX(){ if (!isXInit...){initX();)
-        circle.getTexture().dispose();
+        try {
+            circle.getTexture().dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         isCircleInit = false;
     }
 

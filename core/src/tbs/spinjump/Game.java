@@ -62,7 +62,7 @@ public class Game extends ApplicationAdapter {
     //Todo init
     private static Texture menuTint;
     private static SpriteBatch batch;
-    private static Texture into;
+    private static Texture introTexture;
 
     public static void setup() {
         // SETUP:
@@ -71,6 +71,7 @@ public class Game extends ApplicationAdapter {
         player.setup();
         Gdx.input.setInputProcessor(controller);
         score = 0;
+        casinoManager = new CasinoManager();
 
         // ANIMATOR:
         scoreTextMult = 1;
@@ -218,7 +219,7 @@ public class Game extends ApplicationAdapter {
 
         // DRAW INTRO:
         if (introAlpha > 0) {
-            batch.draw(into, 0, 0, w, h);
+            batch.draw(introTexture, 0, 0, w, h);
             color.set(1, 1, 1, introAlpha / 255f);
             Utility.drawCenteredText(batch, color, "THE BIG SHOTS", w / 2, h / 2, Utility.getScale(GameValues.MENU_TEXT_SIZE / 1.5f));
         }
@@ -275,6 +276,7 @@ public class Game extends ApplicationAdapter {
 
     private static void init() {
         // ONCE:
+        initStoreItems();
         level = new Level();
         player = new Player();
         textAnimator = new TextAnimator();
@@ -299,7 +301,7 @@ public class Game extends ApplicationAdapter {
         gambleButton.playSound = false;
         gambleButton.up = false;
         menuTint = getTextureColor(0x000000aa);
-        into = getTextureColor(GameValues.BACKGROUND_COLOR);
+        introTexture = getTextureColor(GameValues.BACKGROUND_COLOR);
 
         // AD:
         showAdInt = 0;
@@ -312,7 +314,7 @@ public class Game extends ApplicationAdapter {
         initSound();
         // SETUP ETC:
         setup();
-        initStoreItems();
+
     }
 
     private static void initSound() {
@@ -323,6 +325,8 @@ public class Game extends ApplicationAdapter {
         deathSound = Gdx.audio.newSound(Gdx.files.internal("death2.wav"));
         winSound = Gdx.audio.newSound(Gdx.files.internal("win.wav"));
         ambientMusic = Gdx.audio.newMusic(Gdx.files.internal("ambient.wav"));
+        ambientMusic.setLooping(true);
+        ambientMusic.play();
     }
 
     private static void initStoreItems() {
@@ -485,9 +489,56 @@ public class Game extends ApplicationAdapter {
         color.set(GameValues.BACKGROUND_COLOR);
         Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        update(Gdx.graphics.getDeltaTime() * 1000);
         batch.begin();
         draw(batch);
         batch.end();
     }    // STORE DIALOG:
+
+    @Override
+    public void dispose() {
+        menuTint.dispose();
+        batch.dispose();
+        introTexture.dispose();
+        jumpSound.dispose();
+        coinSound.dispose();
+        buttonSound.dispose();
+        moneySound.dispose();
+        deathSound.dispose();
+        winSound.dispose();
+        ambientMusic.dispose();
+        rateButton.dispose();
+        leaderButton.dispose();
+        achievementButton.dispose();
+        storeButton.dispose();
+        homeButton.dispose();
+        shareButton.dispose();
+        homeButton2.dispose();
+        retryButton.dispose();
+        adButton.dispose();
+        likeButton.dispose();
+        buyButton.dispose();
+        reviveButton.dispose();
+        gambleButton.dispose();
+        AnimCircle.dispose();
+        Utility.disposeFont();
+        for (StoreItem item : storeItems) {
+            item.dispose();
+        }
+        CoinPickup.dispose();
+        Enemy.dispose();
+        GearPlatform.dispose();
+        Particle.dispose();
+        SpikeObject.dispose();
+        TrailParticle.dispose();
+
+        try {
+            for (CanvasButton item : casinoManager.items) {
+                item.dispose();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.dispose();
+    }
 }
