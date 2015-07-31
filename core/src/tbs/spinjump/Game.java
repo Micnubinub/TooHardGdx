@@ -12,12 +12,14 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Game extends ApplicationAdapter {
     // SAVE STATE:
     private static final Color color = new Color();
     private static final GlyphLayout glyphLayout = new GlyphLayout();
     private static final GameController controller = new GameController();
+    private static final Date date = new Date();
     public static Level level;
     public static GameState state;
     public static int score;
@@ -478,6 +480,11 @@ public class Game extends ApplicationAdapter {
 //        dialog.show();
     }
 
+    public static void log(String msg) {
+        date.setTime(System.currentTimeMillis());
+        Gdx.app.error("" + date.toString(), msg);
+    }
+
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -488,12 +495,12 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void render() {
-        if (Utility.customBool(4))
-            Gdx.app.error("FPS", String.valueOf(Gdx.graphics.getFramesPerSecond()));
         color.set(GameValues.BACKGROUND_COLOR);
         Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
         update(Gdx.graphics.getDeltaTime() * 1000);
+
         batch.begin();
         draw(batch);
         batch.end();

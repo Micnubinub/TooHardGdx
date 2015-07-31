@@ -12,7 +12,7 @@ public class Player extends GameObject {
 
     //    private static final Color color = new Color();
     private static int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-    private static Sprite player;
+    private static Sprite player, overA;
     // Collision & Platforms:
     public GearPlatform platform; // Which Platform the Player is on
     public double platformOnAngle;
@@ -62,6 +62,7 @@ public class Player extends GameObject {
         for (int i = 0; i < 6; ++i) {
             circles.add(new AnimCircle());
         }
+        initOverA();
     }
 
     public static void dispose() {
@@ -70,10 +71,20 @@ public class Player extends GameObject {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            overA.getTexture().dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static void getPlayer(int width, int color1, int color2) {
-        dispose();
+        try {
+            player.getTexture().dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         final int s = width;
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA4444);
         pixmap.setColor(color1);
@@ -85,6 +96,23 @@ public class Player extends GameObject {
         player.setSize(s, s);
         pixmap.dispose();
 
+    }
+
+    private static void initOverA() {
+        try {
+            overA.getTexture().dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        final int s = Game.w / 3;
+
+        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
+        pixmap.setColor(1, 1, 1, 1);
+        pixmap.fillCircle(s / 2, s / 2, s / 2);
+
+        overA = new Sprite(new Texture(pixmap));
+
+        pixmap.dispose();
     }
 
     public void setup() {
@@ -225,12 +253,12 @@ public class Player extends GameObject {
         if (!dead) {
             player.setCenter(x, y);
             player.draw(batch);
-//Todo
-//            if (overAlpha > 0) {
-//                Game.paint.setColor(0xFFFFFFFF);
-//                Game.paint.setAlpha((int) overAlpha);
-//                canvas.drawCircle(x, y, width, Game.paint);
-//            }
+            if (overAlpha > 0) {
+                overA.setAlpha(overAlpha / 255f);
+                overA.setSize(width, width);
+                overA.setCenter(x, y);
+                overA.draw(batch);
+            }
         }
     }
 

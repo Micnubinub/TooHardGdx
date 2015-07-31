@@ -28,10 +28,9 @@ public class AnimCircle {
 
     private static void initCircle() {
         dispose();
-
         final int s = Game.w / 3;
 
-        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA4444);
+        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
         pixmap.setColor(1, 1, 1, 1);
         pixmap.fillCircle(s / 2, s / 2, s / 2);
 
@@ -59,10 +58,8 @@ public class AnimCircle {
 
     public void draw(SpriteBatch batch) {
         if (alpha > 0) {
-            final float a = (alpha / 255f);
-
-            batch.setColor(1, 1, 1, a);
-            circle.setSize(scale, scale);
+            circle.setAlpha(alpha / 255f);
+            circle.setSize(scale * 1.5f, scale * 1.5f);
             circle.setCenter(x, y);
             circle.draw(batch);
         }
