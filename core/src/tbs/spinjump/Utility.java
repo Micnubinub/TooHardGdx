@@ -40,8 +40,7 @@ public class Utility {
 
     public static float getScale(float textHeight) {
         //Todo write this
-        float scale = 0.25f;
-        return scale;
+        return textHeight / 192f;
     }
 
     public static void disposeFont() {

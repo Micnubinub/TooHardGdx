@@ -117,7 +117,7 @@ public class Game extends ApplicationAdapter {
        */
             color.set(0xFFFFFFFF);
             textToMeasure = "SCORE" + player.score;
-            Utility.drawCenteredText(batch, color, textToMeasure, w - GameValues.TEXT_PADDING, GameValues.TEXT_PADDING, Utility.getScale(GameValues.SCORE_TEXT_SIZE * scoreTextMult));
+            Utility.drawCenteredText(batch, color, textToMeasure, w - GameValues.TEXT_PADDING, h - GameValues.TEXT_PADDING, Utility.getScale(GameValues.SCORE_TEXT_SIZE * scoreTextMult));
         }
 
         // DRAW MENU:
@@ -132,10 +132,10 @@ public class Game extends ApplicationAdapter {
 
             // MENU TEXT:
             color.set(0xe6e8f1FF);
-            Utility.drawCenteredText(batch, color, "TOO HARD?", w / 2, h / 4, Utility.getScale(GameValues.MENU_TEXT_SIZE));
+            Utility.drawCenteredText(batch, color, "TOO HARD?", w / 2, h - (h / 4), Utility.getScale(GameValues.MENU_TEXT_SIZE));
             color.set(1, 1, 1, 120 / 255f);
-            Utility.drawCenteredText(batch, color, "CAN YOU GET TO 100?", w / 2, (h / 4) + (GameValues.TEXT_PADDING * 1.5f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
-            Utility.drawCenteredText(batch, color, "TAP TO BEGIN", w / 2, (h / 2) * 1.075f, Utility.getScale(GameValues.MENU_TEXT_SIZE_2 / 2));
+            Utility.drawCenteredText(batch, color, "CAN YOU GET TO 100?", w / 2, h - ((h / 4) + (GameValues.TEXT_PADDING * 1.5f)), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
+            Utility.drawCenteredText(batch, color, "TAP TO BEGIN", w / 2, h - ((h / 2) * 1.075f), Utility.getScale(GameValues.MENU_TEXT_SIZE_2 / 2));
 
             // BUTTONS:
             rateButton.draw(batch);
@@ -145,7 +145,7 @@ public class Game extends ApplicationAdapter {
             gambleButton.draw(batch);
             if (gambleButton.active) {
                 color.set(1, 1, 1, 120 / 255f);
-                Utility.drawCenteredText(batch, color, casinoManager.playCost + " COINS", w / 2, (gambleButton.y + GameValues.MENU_BTN_HEIGHT) + (GameValues.TEXT_PADDING * 1.5f), Utility.getScale(GameValues.MENU_TEXT_SIZE_2 / 2));
+                Utility.drawCenteredText(batch, color, casinoManager.playCost + " COINS", w / 2, h - (h - ((gambleButton.y + GameValues.MENU_BTN_HEIGHT) + (GameValues.TEXT_PADDING * 1.5f))), Utility.getScale(GameValues.MENU_TEXT_SIZE_2 / 2));
             }
         }
 
@@ -155,12 +155,12 @@ public class Game extends ApplicationAdapter {
 
             // DEATH TEXT:
             color.set(0xe6e8f1FF);
-            Utility.drawCenteredText(batch, color, "YOU DIED", w / 2, (h / 8), Utility.getScale(GameValues.MENU_TEXT_SIZE));
+            Utility.drawCenteredText(batch, color, "YOU DIED", w / 2, h - (h / 8), Utility.getScale(GameValues.MENU_TEXT_SIZE));
             color.set(1, 1, 1, 120 / 250f);
-            Utility.drawCenteredText(batch, color, "GET TO 100", w / 2, (h / 4) + (GameValues.TEXT_PADDING * 1.5f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
+            Utility.drawCenteredText(batch, color, "GET TO 100", w / 2, h - ((h / 4) + (GameValues.TEXT_PADDING * 1.5f)), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
             // AFTER GAME INFO:
-            Utility.drawCenteredText(batch, color, "SCORE: " + player.score, w / 2, (h / 2) * 1.185f, Utility.getScale(GameValues.MENU_TEXT_SIZE_2));
-            Utility.drawCenteredText(batch, color, "BEST: " + player.highScore, w / 2, (h / 2) * 1.075f, Utility.getScale(GameValues.MENU_TEXT_SIZE_2));
+            Utility.drawCenteredText(batch, color, "SCORE: " + player.score, w / 2, h - ((h / 2) * 1.185f), Utility.getScale(GameValues.MENU_TEXT_SIZE_2));
+            Utility.drawCenteredText(batch, color, "BEST: " + player.highScore, w / 2, h - ((h / 2) * 1.075f), Utility.getScale(GameValues.MENU_TEXT_SIZE_2));
 
 
             // BUTTONS:
@@ -173,7 +173,7 @@ public class Game extends ApplicationAdapter {
             reviveButton.draw(batch);
             if (reviveButton.active) {
                 color.set(1, 1, 1, 120 / 250f);
-                Utility.drawCenteredText(batch, color, revivalCost + " COINS", w / 2, (reviveButton.y + GameValues.MENU_BTN_HEIGHT) + (GameValues.TEXT_PADDING * 1.5f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2.5f));
+                Utility.drawCenteredText(batch, color, revivalCost + " COINS", w / 2, h - ((reviveButton.y + GameValues.MENU_BTN_HEIGHT) + (GameValues.TEXT_PADDING * 1.5f)), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2.5f));
             }
         }
 
@@ -184,10 +184,10 @@ public class Game extends ApplicationAdapter {
 
             // DEATH TEXT:
             color.set(0xe6e8f1FF);
-            Utility.drawCenteredText(batch, color, "STORE", w / 2, h / 8, Utility.getScale(GameValues.MENU_TEXT_SIZE));
+            Utility.drawCenteredText(batch, color, "STORE", w / 2, h - (h / 8), Utility.getScale(GameValues.MENU_TEXT_SIZE));
 
             color.set(1, 1, 1, 120 / 250f);
-            Utility.drawCenteredText(batch, color, "BUY NEW ITEMS", w / 2, (h / 8) + (GameValues.TEXT_PADDING * 1.5f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
+            Utility.drawCenteredText(batch, color, "BUY NEW ITEMS", w / 2, h - ((h / 8) + (GameValues.TEXT_PADDING * 1.5f)), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
         }
 
         // DRAW CASINO
@@ -196,9 +196,9 @@ public class Game extends ApplicationAdapter {
 
             // CASINO HEADER:
             color.set(0xFFe6e8f1);
-            Utility.drawCenteredText(batch, color, "REWARDS", w / 2, h / 8, Utility.getScale(GameValues.MENU_TEXT_SIZE));
+            Utility.drawCenteredText(batch, color, "REWARDS", w / 2, h - (h / 8), Utility.getScale(GameValues.MENU_TEXT_SIZE));
             color.set(1, 1, 1, 120 / 250f);
-            Utility.drawCenteredText(batch, color, "SELECT ONE", w / 2, (h / 8) + (GameValues.TEXT_PADDING * 1.5f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
+            Utility.drawCenteredText(batch, color, "SELECT ONE", w / 2, h - ((h / 8) + (GameValues.TEXT_PADDING * 1.5f)), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
 
             // DRAW CASINO:
             casinoManager.draw(batch);
@@ -209,13 +209,13 @@ public class Game extends ApplicationAdapter {
         color.set(0xFFFFFFFF);
 
         textToMeasure = player.coins + "";
-        Utility.drawCenteredText(batch, color, textToMeasure, GameValues.TEXT_PADDING, h - GameValues.TEXT_PADDING, Utility.getScale(GameValues.COIN_TEXT_SIZE * coinTextMult));
+        Utility.drawCenteredText(batch, color, textToMeasure, GameValues.TEXT_PADDING, h - (h - GameValues.TEXT_PADDING), Utility.getScale(GameValues.COIN_TEXT_SIZE * coinTextMult));
         if (state == GameState.Playing)
             color.set(GameValues.RING_COLOR);
         else {
             color.set(1, 1, 1, 120 / 255f);
         }
-        Utility.drawCenteredText(batch, color, "COINS", w / 2, h - (GameValues.TEXT_PADDING * 1.1f), Utility.getScale(GameValues.COIN_TEXT_SIZE / 2.5f));
+        Utility.drawCenteredText(batch, color, "COINS", w / 2, h - (h - (GameValues.TEXT_PADDING * 1.1f)), Utility.getScale(GameValues.COIN_TEXT_SIZE / 2.5f));
 
         // DRAW INTRO:
         if (introAlpha > 0) {
@@ -282,20 +282,20 @@ public class Game extends ApplicationAdapter {
         textAnimator = new TextAnimator();
 
         // SETUP BUTTONS:
-        rateButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), (h / 2) + GameValues.BUTTON_PADDING * 2, "rate_btn", false);
-        leaderButton = new CanvasButton((int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), (h / 2) + GameValues.BUTTON_PADDING * 2, "leader_btn", false);
-        achievementButton = new CanvasButton((int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), (h / 2) + GameValues.BUTTON_PADDING * 2, "achiv_btn", false);
-        storeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), "store_btn", false);
-        homeButton2 = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), "home_btn", false);
+        rateButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) + GameValues.BUTTON_PADDING * 2), "rate_btn", false);
+        leaderButton = new CanvasButton((int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + GameValues.BUTTON_PADDING * 2), "leader_btn", false);
+        achievementButton = new CanvasButton((int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + GameValues.BUTTON_PADDING * 2), "achiv_btn", false);
+        storeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2)), "store_btn", false);
+        homeButton2 = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2)), "home_btn", false);
         // DEATH:
-        shareButton = new CanvasButton((int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), (int) ((h / 2) + (GameValues.BUTTON_PADDING * 2.5f)), "share_btn", false);
-        homeButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), (int) ((h / 2) + (GameValues.BUTTON_PADDING * 2.5f)), "home_btn", false);
-        retryButton = new CanvasButton((int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), (int) ((h / 2) + (GameValues.BUTTON_PADDING * 2.5f)), "retry_btn", false);
-        adButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), "ad_btn", true);
-        likeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), "fb_btn", true);
-        buyButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), "money_btn", true);
-        reviveButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), (h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 2.25f), "heart_btn", true);
-        gambleButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), (h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 2.25f), "gamble_btn", true);
+        shareButton = new CanvasButton((int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - (int) (((h / 2) + (GameValues.BUTTON_PADDING * 2.5f))), "share_btn", false);
+        homeButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - (int) (((h / 2) + (GameValues.BUTTON_PADDING * 2.5f))), "home_btn", false);
+        retryButton = new CanvasButton((int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - (int) (((h / 2) + (GameValues.BUTTON_PADDING * 2.5f))), "retry_btn", false);
+        adButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2)), "ad_btn", true);
+        likeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2)), "fb_btn", true);
+        buyButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2)), "money_btn", true);
+        reviveButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 2.25f)), "heart_btn", true);
+        gambleButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 2.25f)), "gamble_btn", true);
         reviveButton.up = false;
         buyButton.playSound = false;
         gambleButton.playSound = false;
