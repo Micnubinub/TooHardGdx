@@ -4,23 +4,23 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Game extends ApplicationAdapter {
+    // SAVE STATE:
+    private static final Color color = new Color();
     public static Level level;
     public static GameState state;
     public static int score;
     public static Player player;
-
     // TEXT ANIMATOR:
     public static TextAnimator textAnimator;
     public static float scoreTextMult;
     public static float coinTextMult;
-
     // TMPS:
     public static String textToMeasure;
-
     // MENU BUTTONS:
     public static CanvasButton rateButton;
     public static CanvasButton leaderButton;
@@ -29,34 +29,11 @@ public class Game extends ApplicationAdapter {
     public static CanvasButton homeButton;
     public static CanvasButton shareButton;
     public static CanvasButton homeButton2;
-
-    // SAVE STATE:
-    private static Color color;
-    private static int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+    public static int w, h;
     //Todo init
     private static Texture menuTint;
     private static SpriteBatch batch;
 
-    public Game() {
-
-
-        // ONCE:
-        level = new Level();
-        player = new Player();
-        textAnimator = new TextAnimator();
-
-        // SETUP BUTTONS:
-        rateButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), (h / 2) + GameValues.BUTTON_PADDING * 2, "rate_btn");
-        leaderButton = new CanvasButton((int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), (h / 2) + GameValues.BUTTON_PADDING * 2, "leader_btn");
-        achievementButton = new CanvasButton((int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), (h / 2) + GameValues.BUTTON_PADDING * 2, "achiv_btn");
-        storeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), "store_btn");
-        homeButton = new CanvasButton((int) ((w / 2) + (GameValues.BUTTON_PADDING * 0.5f)), (int) ((h / 2) + (GameValues.BUTTON_PADDING * 2.5f)), "home_btn");
-        shareButton = new CanvasButton((int) ((w / 2) - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING * 0.5f)), (int) ((h / 2) + (GameValues.BUTTON_PADDING * 2.5f)), "share_btn");
-        homeButton2 = new CanvasButton((int) (2 - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), "home_btn");
-
-        // SETUP ETC:
-        setup();
-    }
 
     public static void setup() {
         // SETUP:
@@ -72,10 +49,8 @@ public class Game extends ApplicationAdapter {
         player.loadData();
     }
 
+
     public static void draw(SpriteBatch batch) {
-        color.set(GameValues.BACKGROUND_COLOR);
-        Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // GAME:
         level.draw(batch);
@@ -139,6 +114,13 @@ public class Game extends ApplicationAdapter {
         Utility.drawCenteredText(batch, color, "COINS", w / 2, h - (GameValues.TEXT_PADDING * 1.1f), Utility.getScale(GameValues.COIN_TEXT_SIZE / 2.5f));
     }
 
+    private static Texture getTextureColor(int color) {
+        final Pixmap p = new Pixmap(1, 1, Pixmap.Format.RGBA4444);
+        p.setColor(color);
+        p.fill();
+        return new Texture(p);
+    }
+
     public static void update(float delta) {
         level.update(delta);
         player.update(delta);
@@ -157,15 +139,40 @@ public class Game extends ApplicationAdapter {
         }
     }
 
+    private static void init() {
+        // ONCE:
+        level = new Level();
+        player = new Player();
+        textAnimator = new TextAnimator();
+
+        // SETUP BUTTONS:
+        rateButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), (h / 2) + GameValues.BUTTON_PADDING * 2, "rate_btn");
+        leaderButton = new CanvasButton((int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), (h / 2) + GameValues.BUTTON_PADDING * 2, "leader_btn");
+        achievementButton = new CanvasButton((int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), (h / 2) + GameValues.BUTTON_PADDING * 2, "achiv_btn");
+        storeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), "store_btn");
+        homeButton = new CanvasButton((int) ((w / 2) + (GameValues.BUTTON_PADDING * 0.5f)), (int) ((h / 2) + (GameValues.BUTTON_PADDING * 2.5f)), "home_btn");
+        shareButton = new CanvasButton((int) ((w / 2) - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING * 0.5f)), (int) ((h / 2) + (GameValues.BUTTON_PADDING * 2.5f)), "share_btn");
+        homeButton2 = new CanvasButton((int) (2 - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2), "home_btn");
+
+        menuTint = getTextureColor(0x000000aa);
+        // SETUP ETC:
+        setup();
+    }
+
     @Override
     public void create() {
         batch = new SpriteBatch();
+        w = Gdx.graphics.getWidth();
+        h = Gdx.graphics.getHeight();
+        init();
     }
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+        color.set(GameValues.BACKGROUND_COLOR);
+        Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
         draw(batch);
         batch.end();

@@ -4,15 +4,41 @@ public class GameController {
 
     public static void pressScreen(int x, int y) {
         if (Game.state == GameState.Menu) {
-            if (Game.achievementButton.isClicked(x, y)) {
-
-            } else if (Game.rateButton.isClicked(x, y)) {
-
+            if (Game.rateButton.isClicked(x, y)) {
+                final String appPackageName = Game.context.getPackageName(); // getPackageName() from Context or Activity object
+                try {
+                    Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
             } else if (Game.leaderButton.isClicked(x, y)) {
-
+                if (BaseGameActivity.getApiClient().isConnected()) {
+                    ((BaseGameActivity) Game.context).startActivityForResult(
+                            Games.Leaderboards.getLeaderboardIntent(
+                                    MainActivity.getApiClient(), GameValues.leaderboardID),
+                            10101);
+                } else {
+                    // LOGIN TO PLAY SERVICES:
+                    ((BaseGameActivity) Game.context).getGameHelper()
+                            .beginUserInitiatedSignIn();
+                }
             } else if (Game.storeButton.isClicked(x, y)) {
-//  todp              Game.showStore();
+                Game.state = GameState.Store;
+                Game.showStore();
+            } else if (Game.gambleButton.isClicked(x, y)) {
+                // START GAMBLING:
+                if (Game.player.coins >= Game.casinoManager.playCost) {
+                    Game.casinoManager.moneySpent = Game.casinoManager.playCost;
+                    Game.player.coins -= Game.casinoManager.playCost;
+                    Game.casinoManager.generateRewards();
+                    Game.player.earnCoinAnim(x, y, 0);
+                    Game.state = GameState.Casino;
+                    Game.soundPlayer.play(Game.moneySound, 1, 1, 0, 0, 1);
+                } else {
+                    Game.soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
+                }
             } else {
+                Game.soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
                 Game.state = GameState.Playing;
             }
         } else if (Game.state == GameState.Playing) {
@@ -21,8 +47,59 @@ public class GameController {
             if (Game.homeButton.isClicked(x, y)) {
                 Game.setup();
             } else if (Game.shareButton.isClicked(x, y)) {
-//       todo         Game.Share(Game.takeScreenShot());
+//                MainActivity.unlockAchievement("CgkIxIfix40fEAIQDA");
+                Game.Share(Game.takeScreenShot());
+            } else if (Game.retryButton.isClicked(x, y)) {
+                Game.setup();
+                Game.state = GameState.Playing;
+            } else if (Game.adButton.isClicked(x, y)) {
+                // SHOW AD:
+                Game.showAd(true);
+                Game.adButton.active = false;
+            } else if (Game.likeButton.isClicked(x, y)) {
+                // SHOW FB PAGE:
+                try {
+                    Game.context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+                    Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/337927283025915")));
+                } catch (Exception e) {
+                    Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/AndroidHackerApp")));
+                }
+                Game.likeButton.active = false;
+            } else if (Game.buyButton.isClicked(x, y)) {
+                // EARN MONEY REWARD:
+                MainActivity.unlockAchievement("CgkIxIfix40fEAIQCA");
+                Game.soundPlayer.play(Game.moneySound, 1, 1, 0, 0, 1);
+                Game.player.earnCoinAnim(x, y, Utility.getRandom(1, 20));
+                Game.buyButton.active = false;
+                if (Game.player.score > 0)
+                    Game.reviveButton.active = Game.player.coins >= Game.revivalCost;
+            } else if (Game.reviveButton.isClicked(x, y)) {
+                // REVIVAL LOGIC:
+                Game.reviveButton.active = false;
+                Game.player.coins -= Game.revivalCost;
+                Game.player.saveData();
+                Game.player.revive();
+                Game.state = GameState.Playing;
+            }
+        } else if (Game.state == GameState.Casino) {
+            if (!Game.casinoManager.rewardAnim) {
+                for (int i = 0; i < Game.casinoManager.items.size(); ++i) {
+                    if (Game.casinoManager.items.get(i).isClicked(x, y)) {
+                        for (int z = 0; z < Game.casinoManager.items.size(); ++z) {
+                            Game.casinoManager.items.get(z).active = false;
+                        }
+                        // GET REWARD:
+                        Game.casinoManager.playerSelectButton(i, x, y);
+                        Game.player.earnCoinAnim(x, y, 0);
+                    }
+                }
+            } else {
+                if (Game.homeButton2.isClicked(x, y)) {
+                    Game.state = GameState.Menu;
+                    Game.player.saveData();
+                }
             }
         }
+
     }
 }

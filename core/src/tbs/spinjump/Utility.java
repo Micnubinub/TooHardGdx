@@ -18,7 +18,7 @@ public class Utility {
     public static final Random rand = new Random();
     private static final int[] ints = new int[2];
     private static final GlyphLayout layout = new GlyphLayout();
-    private static boolean isFontInit = true;
+    private static boolean isFontInit;
     //Todo make the font private and have a method called getFont(){
     private static BitmapFont font;
 
@@ -32,7 +32,7 @@ public class Utility {
 
     public static BitmapFont getFont() {
         if (!isFontInit) {
-            font = new BitmapFont(Gdx.files.internal("/fonts/font.fnt"));
+            font = new BitmapFont(Gdx.files.internal("font.fnt"));
             isFontInit = true;
         }
         return font;

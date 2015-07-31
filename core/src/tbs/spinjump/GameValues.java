@@ -39,13 +39,14 @@ public class GameValues {
     public static final int RING_COLOR = 0xFF98a3d9;
     public static final int COG_COLOR = 0XFF999999;
     public static final int COG_COLOR_2 = 0xFFb3b3b3;
-    public static final float COG_GAP = Gdx.graphics.getHeight() / 2.5f;
+    public static final float COG_GAP = Gdx.graphics.getHeight() / 4f;
     public static final float COG_START_Y = Gdx.graphics.getHeight() * 0.775f;
-    public static final float COG_MIN_SIZE = (Gdx.graphics.getWidth() / 19.5f) * SCALE_MULT;
+    public static final float COG_MIN_SIZE = (Gdx.graphics.getWidth() / 17.5f) * SCALE_MULT;
     public static final float COG_MAX_SIZE = (Gdx.graphics.getWidth() / 10.0f) * SCALE_MULT;
     public static final float COG_MOVE_SPEED = ((float) Gdx.graphics.getHeight() / 6500.0f) * SCALE_MULT;
-    public static final float COG_STARTING_SPEED = (float) Gdx.graphics.getWidth() / 4000.0f;
+    public static final float COG_STARTING_SPEED = (float) Gdx.graphics.getWidth() / 4600.0f;
     public static final float SPIKE_SIZE = Gdx.graphics.getWidth() / 12;
+
 
     // Coins:
     public static final float COIN_SCALE = PLAYER_SCALE * 0.6f;
@@ -56,7 +57,25 @@ public class GameValues {
     public static final int MENU_BTN_WIDTH = (int) (Gdx.graphics.getWidth() / 5.75f);
     public static final int MENU_BTN_HEIGHT = MENU_BTN_WIDTH;
     public static final int BUTTON_PADDING = Gdx.graphics.getWidth() / 12;
+    public static final float BUTTON_SPEED = Gdx.graphics.getWidth() / 6000f;
 
     // Enemies:
     public static final float ENEMY_SCALE = PLAYER_SCALE;
+
+
+    // CASINO STUFF:
+    public static final int CASINO_ITEM_PADDING = Gdx.graphics.getWidth() / 11;
+    public static final int CASINO_ITEM_SCALE = MENU_BTN_WIDTH;
+    public static final int CAS_BUTTON_MOVE_RANGE = CASINO_ITEM_SCALE / 7;
+    public static final int CASINO_TEXT_SCALE = Gdx.graphics.getWidth() / 7;
+
+    // IAP:
+    public static final String removeAdsID = "remove_ads";
+    public static final String buyCoinsID = "buy_coins";
+
+    // OTHER:
+    public static final String leaderboardID = "CgkIxIfix40fEAIQDw";
+
+    // ADS:
+    public static final String FULL_SCREEN_AD = "ca-app-pub-7957464690974751/6002847029";
 }

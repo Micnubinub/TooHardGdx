@@ -1,6 +1,5 @@
 package tbs.spinjump;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,7 +11,6 @@ import java.util.ArrayList;
 public class GearPlatform extends GameObject {
 
     private static final Color c = new Color();
-    private static int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
     private static Sprite circle;
     private static boolean isCircleInit = false;
     // Gear Specific:
@@ -36,6 +34,7 @@ public class GearPlatform extends GameObject {
         for (int i = 0; i < 2; ++i) {
             enemies.add(new Enemy(this));
         }
+        initCircle();
     }
 
     public static void dispose() {
@@ -91,15 +90,15 @@ public class GearPlatform extends GameObject {
             for (int i = 0; i < coins.size(); ++i) {
                 coins.get(i).x += delta * xSpeed;
             }
-            if (x > (w * 0.75f)) {
-                float adjuster = x - (w * 0.75f);
+            if (x > (Game.w * 0.75f)) {
+                float adjuster = x - (Game.w * 0.75f);
                 x -= adjuster;
                 for (int i = 0; i < coins.size(); ++i) {
                     coins.get(i).x -= adjuster;
                 }
                 xSpeed *= -1;
-            } else if (x < (w * 0.25f)) {
-                float adjuster = (w * 0.25f) - x;
+            } else if (x < (Game.w * 0.25f)) {
+                float adjuster = (Game.w * 0.25f) - x;
                 x += adjuster;
                 for (int i = 0; i < coins.size(); ++i) {
                     coins.get(i).x += adjuster;
@@ -148,12 +147,12 @@ public class GearPlatform extends GameObject {
             coins.get(x).y += speed;
         }
         // Left the Screen:
-        if (y - getWidth() > h) {
-            generate(false); // Reset
+        if (y - getWidth() > Game.h) {
+            generate(false, false); // Reset
         }
     }
 
-    public void generate(boolean first) {
+    public void generate(boolean first, boolean second) {
         Level.stageNum += 1;
         moving = false;
         xSpeed = (GameValues.COG_MOVE_SPEED * Level.cogSpeedMult);
@@ -162,9 +161,13 @@ public class GearPlatform extends GameObject {
         if (!first) {
             tmpWidth = Utility.getRandom((int) GameValues.COG_MIN_SIZE, (int) GameValues.COG_MAX_SIZE);
             int tmpNum = (int) (GameValues.PLAYER_SCALE + (tmpWidth * 2));
-            setX(Utility.getRandom(tmpNum, w - tmpNum));
+            setX(Utility.getRandom(tmpNum, Game.w - tmpNum));
         } else {
-            setX(w / 2);
+            setX(Game.w / 2);
+            rotationSpeed = 0;
+        }
+        if (second) {
+            setX(Game.w / 2);
         }
         float tmpAverage = (GameValues.COG_MIN_SIZE + GameValues.COG_MAX_SIZE) / 2;
         float speedMult = tmpAverage / tmpWidth;
@@ -191,10 +194,10 @@ public class GearPlatform extends GameObject {
         int angle = 0;
         boolean hasEnemy = false;
         for (int i = 0; i < enemies.size(); ++i) {
-            enemies.get(i).active = Utility.getRandom(0, 2) == 0; // CHANGE
+            enemies.get(i).active = Utility.getRandom(0, 3) == 0; // CHANGE
             if (enemies.get(i).active)
                 hasEnemy = true;
-            if (first || Level.stageNum < 8) {
+            if (first || Level.stageNum < 20) {
                 enemies.get(i).active = false;
                 hasEnemy = false;
             }
@@ -206,7 +209,7 @@ public class GearPlatform extends GameObject {
         // COINS:
         angle = 90 + Utility.getRandom(-30, 30);
         for (int i = 0; i < coins.size(); ++i) {
-            coins.get(i).active = Utility.getRandom(0, 1) == 0;
+            coins.get(i).active = Utility.getRandom(0, 2) == 0;
             if (first || hasEnemy)
                 coins.get(i).active = false;
             coins.get(i).x = getX();
