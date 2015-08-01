@@ -50,7 +50,6 @@ public class StoreItem {
         try {
             sprite.getTexture().dispose();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

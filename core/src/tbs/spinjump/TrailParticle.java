@@ -20,7 +20,6 @@ public class TrailParticle {
         try {
             circle.getTexture().dispose();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -30,6 +29,7 @@ public class TrailParticle {
         final int s = Game.w / 4;
 
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
+        Pixmap.setFilter(Pixmap.Filter.BiLinear);
         pixmap.setColor(0xe6e8f1FF);
         pixmap.fillCircle(s / 2, s / 2, s / 2);
 

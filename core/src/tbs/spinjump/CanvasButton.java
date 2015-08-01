@@ -118,7 +118,6 @@ public class CanvasButton extends GameObject {
         try {
             image.getTexture().dispose();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

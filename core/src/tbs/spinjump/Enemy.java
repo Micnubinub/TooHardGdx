@@ -28,7 +28,6 @@ public class Enemy {
         try {
             circle.getTexture().dispose();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

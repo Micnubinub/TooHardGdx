@@ -22,7 +22,6 @@ public class AnimCircle {
         try {
             circle.getTexture().dispose();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -31,6 +30,7 @@ public class AnimCircle {
         final int s = Game.w / 3;
 
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
+        Pixmap.setFilter(Pixmap.Filter.BiLinear);
         pixmap.setColor(1, 1, 1, 1);
         pixmap.fillCircle(s / 2, s / 2, s / 2);
 

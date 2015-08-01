@@ -23,7 +23,6 @@ public class SpikeObject extends GameObject {
         try {
             triangle.getTexture().dispose();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

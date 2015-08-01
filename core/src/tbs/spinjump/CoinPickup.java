@@ -26,7 +26,6 @@ public class CoinPickup {
         try {
             circle.getTexture().dispose();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -36,7 +35,7 @@ public class CoinPickup {
         final int s = Game.w / 3;
 
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
-
+        Pixmap.setFilter(Pixmap.Filter.BiLinear);
         pixmap.setColor(GameValues.COIN_COLOR);
         pixmap.fillCircle(s / 2, s / 2, s / 2);
 

@@ -549,7 +549,6 @@ public class Game extends ApplicationAdapter {
                 item.dispose();
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         super.dispose();
     }

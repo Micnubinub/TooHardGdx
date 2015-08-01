@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class GearPlatform extends GameObject {
 
     private static final Color c = new Color();
-    private static Sprite circle;
+    private static Sprite cog1, cog2, backgroundCircle, ring;
     // Gear Specific:
     public float rotationSpeed;
     public float rotation;
@@ -37,9 +37,18 @@ public class GearPlatform extends GameObject {
 
     public static void dispose() {
         try {
-            circle.getTexture().dispose();
+            cog1.getTexture().dispose();
         } catch (Exception e) {
-            e.printStackTrace();
+        }
+
+        try {
+            ring.getTexture().dispose();
+        } catch (Exception e) {
+        }
+
+        try {
+            backgroundCircle.getTexture().dispose();
+        } catch (Exception e) {
         }
     }
 
@@ -49,20 +58,23 @@ public class GearPlatform extends GameObject {
         final int s = Game.w / 3;
 
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
-        pixmap.setColor(GameValues.COG_COLOR_2);
-//        pixmap.fillCircle(s / 2, s / 2, Math.round((s / 2) * 0.7f));
+        Pixmap.setFilter(Pixmap.Filter.BiLinear);
+
+        pixmap.setColor(GameValues.COG_COLOR);
         pixmap.fillCircle(s / 2, s / 2, s / 2);
+        cog1 = new Sprite(new Texture(pixmap));
 
-// Todo       pixmap.setStrokeWidth();
-//        // RINGS:
-//        Game.paint.setStyle(Paint.Style.STROKE);
-//        Game.paint.setStrokeWidth(GameValues.RING_WIDTH / 2);
-//        Game.paint.setColor(GameValues.RING_COLOR);
-//        canvas.drawCircle(x, y, width + (GameValues.PLAYER_SCALE), Game.paint);
-//        Game.paint.setStrokeWidth(GameValues.RING_WIDTH);
-//        canvas.drawCircle(x, y, width + (GameValues.PLAYER_SCALE * 2), Game.paint);
+        pixmap.setColor(GameValues.COG_COLOR_2);
+        pixmap.fillCircle(s / 2, s / 2, s / 2);
+        cog2 = new Sprite(new Texture(pixmap));
 
-        circle = new Sprite(new Texture(pixmap));
+        pixmap.setColor(GameValues.BACKGROUND_COLOR);
+        pixmap.fillCircle(s / 2, s / 2, s / 2);
+        backgroundCircle = new Sprite(new Texture(pixmap));
+
+        pixmap.setColor(GameValues.RING_COLOR);
+        pixmap.fillCircle(s / 2, s / 2, s / 2);
+        ring = new Sprite(new Texture(pixmap));
 
         pixmap.dispose();
     }
@@ -116,10 +128,34 @@ public class GearPlatform extends GameObject {
 
     public void draw(SpriteBatch batch) {
         // PLATFORM:
-        circle.setCenter(x, y);
-        circle.setSize(width, width);
+        final int s = width * 2;
+        final float ring1 = (width + (GameValues.PLAYER_SCALE)) * 2;
+        final float ring2 = (width + (GameValues.PLAYER_SCALE * 2)) * 2;
 
-        circle.draw(batch);
+        ring.setSize(ring2, ring2);
+        ring.setCenter(x, y);
+        ring.draw(batch);
+
+        backgroundCircle.setSize(ring2 - GameValues.RING_WIDTH, ring2 - GameValues.RING_WIDTH);
+        backgroundCircle.setCenter(x, y);
+        backgroundCircle.draw(batch);
+
+        ring.setSize(ring1, ring1);
+        ring.setCenter(x, y);
+        ring.draw(batch);
+
+        backgroundCircle.setSize(ring1 - (GameValues.RING_WIDTH / 2), ring1 - (GameValues.RING_WIDTH / 2));
+        backgroundCircle.setCenter(x, y);
+        backgroundCircle.draw(batch);
+
+
+        cog1.setSize(s, s);
+        cog1.setCenter(x, y);
+        cog1.draw(batch);
+
+        cog2.setSize(s * 0.7f, s * 0.7f);
+        cog2.setCenter(x, y);
+        cog2.draw(batch);
 
 
         // RESET:

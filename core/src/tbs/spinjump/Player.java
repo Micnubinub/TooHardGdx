@@ -69,13 +69,11 @@ public class Player extends GameObject {
         try {
             player.getTexture().dispose();
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         try {
             overA.getTexture().dispose();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -83,7 +81,6 @@ public class Player extends GameObject {
         try {
             player.getTexture().dispose();
         } catch (Exception e) {
-            e.printStackTrace();
         }
         final int s = width;
         final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA4444);
@@ -102,7 +99,6 @@ public class Player extends GameObject {
         try {
             overA.getTexture().dispose();
         } catch (Exception e) {
-            e.printStackTrace();
         }
         final int s = Game.w / 3;
 

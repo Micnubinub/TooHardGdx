@@ -52,7 +52,6 @@ public class Utility {
         try {
             font.dispose();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
