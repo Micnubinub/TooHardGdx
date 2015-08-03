@@ -56,7 +56,10 @@ public class CanvasButton extends GameObject {
     public boolean isClicked(int x, int y) {
         if (!active)
             return false;
-        rectangle.set(x, y, width, height);
+
+        rectangle.set(this.x, this.y, width, height);
+        Game.log(rectangle.toString() + " x,y : " + x + ", " + y);
+
         if (rectangle.contains(x, y)) {
             if (playSound)
                 Game.buttonSound.play();
@@ -99,7 +102,7 @@ public class CanvasButton extends GameObject {
     }
 
     public void draw(SpriteBatch canvas) {
-        image.setCenter(image.getWidth() / 2, image.getHeight() / 2);
+//        image.setCenter(image.getWidth() / 2, image.getHeight() / 2);
         image.setPosition(x, y);
         image.setOriginCenter();
         image.draw(canvas);

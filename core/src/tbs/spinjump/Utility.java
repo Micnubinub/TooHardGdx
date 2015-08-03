@@ -90,7 +90,7 @@ public class Utility {
 
     public static void drawCenteredText(SpriteBatch batch, Color color, String text, float x, float y, float scale) {
         final BitmapFont font = getFont();
-        font.getData().setScale(scale);
+        font.getData().setScale(scale * 1.25f);
 
         layout.setText(font, text);
         final float textWidth = layout.width;

@@ -1,15 +1,14 @@
 package tbs.spinjump;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 
 public class GameController implements InputProcessor {
 
     public static void pressScreen(int x, int y) {
-        Gdx.app.error("Press", "x :" + x + " y :" + y);
-
+        y = Game.h - y;
         if (Game.state == GameState.Menu) {
             if (Game.rateButton.isClicked(x, y)) {
+                Game.log("menu > rate");
           /*Todo      final String appPackageName = Game.context.getPackageName(); // getPackageName() from Context or Activity object
                 try {
                     Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
@@ -17,6 +16,7 @@ public class GameController implements InputProcessor {
                     Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                 }*/
             } else if (Game.leaderButton.isClicked(x, y)) {
+                Game.log("menu > lead");
 /*          Todo      if (BaseGameActivity.getApiClient().isConnected()) {
                     ((BaseGameActivity) Game.context).startActivityForResult(
                             Games.Leaderboards.getLeaderboardIntent(
@@ -28,9 +28,11 @@ public class GameController implements InputProcessor {
                             .beginUserInitiatedSignIn();
                 }*/
             } else if (Game.storeButton.isClicked(x, y)) {
+                Game.log("menu > store");
                 Game.state = GameState.Store;
                 Game.showStore();
             } else if (Game.gambleButton.isClicked(x, y)) {
+                Game.log("menu > gamble");
                 // START GAMBLING:
                 if (Game.player.coins >= Game.casinoManager.playCost) {
                     Game.casinoManager.moneySpent = Game.casinoManager.playCost;
@@ -43,25 +45,33 @@ public class GameController implements InputProcessor {
                     Game.buttonSound.play();
                 }
             } else {
+                Game.log("menu > play");
                 Game.buttonSound.play();
                 Game.state = GameState.Playing;
             }
         } else if (Game.state == GameState.Playing) {
+            Game.log("play > jump");
             Game.player.jump();
         } else if (Game.state == GameState.Death) {
+            Game.log("death > rate");
             if (Game.homeButton.isClicked(x, y)) {
+                Game.log("death > setup");
                 Game.setup();
             } else if (Game.shareButton.isClicked(x, y)) {
+                Game.log("death > share");
 //                MainActivity.unlockAchievement("CgkIxIfix40fEAIQDA");
 //      Todo          Game.Share(Game.takeScreenShot());
             } else if (Game.retryButton.isClicked(x, y)) {
+                Game.log("death > retry");
                 Game.setup();
                 Game.state = GameState.Playing;
             } else if (Game.adButton.isClicked(x, y)) {
+                Game.log("death > ad");
                 // SHOW AD:
                 Game.showAd(true);
                 Game.adButton.active = false;
             } else if (Game.likeButton.isClicked(x, y)) {
+                Game.log("death > like");
                 // SHOW FB PAGE:
 //   Todo             try {
 //                    Game.context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
@@ -71,6 +81,7 @@ public class GameController implements InputProcessor {
 //                }
                 Game.likeButton.active = false;
             } else if (Game.buyButton.isClicked(x, y)) {
+                Game.log("death > buy");
                 // EARN MONEY REWARD:
 //        Todo        MainActivity.unlockAchievement("CgkIxIfix40fEAIQCA");
                 Game.moneySound.play();
@@ -79,6 +90,7 @@ public class GameController implements InputProcessor {
                 if (Game.player.score > 0)
                     Game.reviveButton.active = Game.player.coins >= Game.revivalCost;
             } else if (Game.reviveButton.isClicked(x, y)) {
+                Game.log("death > revive");
                 // REVIVAL LOGIC:
                 Game.reviveButton.active = false;
                 Game.player.coins -= Game.revivalCost;
@@ -88,6 +100,7 @@ public class GameController implements InputProcessor {
             }
         } else if (Game.state == GameState.Casino) {
             if (!Game.casinoManager.rewardAnim) {
+                Game.log("casino > reward anim");
                 for (int i = 0; i < Game.casinoManager.items.size(); ++i) {
                     if (Game.casinoManager.items.get(i).isClicked(x, y)) {
                         for (int z = 0; z < Game.casinoManager.items.size(); ++z) {
@@ -99,7 +112,9 @@ public class GameController implements InputProcessor {
                     }
                 }
             } else {
+
                 if (Game.homeButton2.isClicked(x, y)) {
+                    Game.log("casino > home");
                     Game.state = GameState.Menu;
                     Game.player.saveData();
                 }

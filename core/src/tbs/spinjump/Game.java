@@ -112,15 +112,16 @@ public class Game extends ApplicationAdapter {
         player.draw(batch);
         textAnimator.draw(batch);
 
+        final BitmapFont font = Utility.getFont();
+        float scale;
 
         // SCORE:
         if (state == GameState.Playing) {
 
-            float scale = Utility.getScale(GameValues.SCORE_TEXT_SIZE * scoreTextMult);
-            final BitmapFont font = Utility.getFont();
+            scale = Utility.getScale(GameValues.SCORE_TEXT_SIZE * scoreTextMult);
+
             font.getData().setScale(scale);
             textToMeasure = "" + player.score;
-            glyphLayout.reset();
             glyphLayout.setText(font, textToMeasure);
             color.set(0xFFFFFFFF);
 
@@ -135,32 +136,32 @@ public class Game extends ApplicationAdapter {
             glyphLayout.reset();
             glyphLayout.setText(font, textToMeasure);
             color.set(GameValues.RING_COLOR);
-            Utility.drawCenteredText(batch, color, "SCORE", scoreX - (scoreW / 2) - (glyphLayout.width / 2) - (GameValues.TEXT_PADDING / 4), scoreBottom + glyphLayout.height / 2, scale);
+            Utility.drawCenteredText(batch, color, "SCORE", scoreX - (scoreW / 2) - (glyphLayout.width / 2) - (GameValues.TEXT_PADDING / 2), scoreBottom + glyphLayout.height / 2, scale);
         }
 
         // DRAW MENU:
         if (state == GameState.Menu) {
             batch.draw(menuTint, 0, 0, w, h);
 
-            float scale = Utility.getScale(GameValues.MENU_TEXT_SIZE);
+            scale = Utility.getScale(GameValues.MENU_TEXT_SIZE);
 
-            final BitmapFont font = Utility.getFont();
             font.getData().setScale(scale);
-            glyphLayout.reset();
-            glyphLayout.setText(font, "a");
 
+            glyphLayout.setText(font, "T");
             float textHeight = glyphLayout.height;
             float textBottom = h - textHeight;
-            batch.draw(menuTint, (w / 2) - (glyphLayout.width / 2), textBottom, glyphLayout.width, textHeight);
 
             // MENU TEXT:
             color.set(0xe6e8f1FF);
             Utility.drawCenteredText(batch, color, "TOO HARD?", w / 2, textBottom + (textHeight / 2), scale);
 
 
+            glyphLayout.setText(font, "T");
+            textHeight = glyphLayout.height;
+
             color.set(1, 1, 1, 120 / 255f);
-            Utility.drawCenteredText(batch, color, "CAN YOU GET TO 100?", w / 2, h - ((h / 4) + (GameValues.TEXT_PADDING * 1.5f)), scale / 2);
-            Utility.drawCenteredText(batch, color, "TAP TO BEGIN", w / 2, h - ((h / 2) * 1.075f), scale / 2);
+            Utility.drawCenteredText(batch, color, "CAN YOU GET TO 100?", w / 2, textBottom - (GameValues.TEXT_PADDING / 8) - (textHeight / 4), scale / 2);
+            Utility.drawCenteredText(batch, color, "TAP TO BEGIN", w / 2, leaderButton.y + leaderButton.height + GameValues.TEXT_PADDING + (textHeight / 4), scale / 2);
 
             // BUTTONS:
             rateButton.draw(batch);
@@ -170,7 +171,7 @@ public class Game extends ApplicationAdapter {
             gambleButton.draw(batch);
             if (gambleButton.active) {
                 color.set(1, 1, 1, 120 / 255f);
-                Utility.drawCenteredText(batch, color, casinoManager.playCost + " COINS", w / 2, h - (h - ((gambleButton.y + GameValues.MENU_BTN_HEIGHT) + (GameValues.TEXT_PADDING * 1.5f))), Utility.getScale(GameValues.MENU_TEXT_SIZE_2 / 2));
+                Utility.drawCenteredText(batch, color, casinoManager.playCost + " COINS", w / 2, (gambleButton.y - (GameValues.TEXT_PADDING * 0.85f)), Utility.getScale(GameValues.MENU_TEXT_SIZE_2 / 2));
             }
         }
 
@@ -179,13 +180,22 @@ public class Game extends ApplicationAdapter {
             batch.draw(menuTint, 0, 0, w, h);
 
             // DEATH TEXT:
+            scale = Utility.getScale(GameValues.MENU_TEXT_SIZE);
+            glyphLayout.setText(font, "YOU DIED");
+            float bottom = h - glyphLayout.height - GameValues.TEXT_PADDING;
             color.set(0xe6e8f1FF);
-            Utility.drawCenteredText(batch, color, "YOU DIED", w / 2, h - (h / 8), Utility.getScale(GameValues.MENU_TEXT_SIZE));
+            Utility.drawCenteredText(batch, color, "YOU DIED", w / 2, bottom + (glyphLayout.height / 2), scale);
             color.set(1, 1, 1, 120 / 250f);
-            Utility.drawCenteredText(batch, color, "GET TO 100", w / 2, h - ((h / 4) + (GameValues.TEXT_PADDING * 1.5f)), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
+            Utility.drawCenteredText(batch, color, "GET TO 100", w / 2, bottom - (1.3f * GameValues.TEXT_PADDING) - (glyphLayout.height / 2), scale / 2);
             // AFTER GAME INFO:
-            Utility.drawCenteredText(batch, color, "SCORE: " + player.score, w / 2, h - ((h / 2) * 1.185f), Utility.getScale(GameValues.MENU_TEXT_SIZE_2));
-            Utility.drawCenteredText(batch, color, "BEST: " + player.highScore, w / 2, h - ((h / 2) * 1.075f), Utility.getScale(GameValues.MENU_TEXT_SIZE_2));
+
+            scale = Utility.getScale(GameValues.MENU_TEXT_SIZE_2);
+            bottom = homeButton.y + homeButton.height + GameValues.TEXT_PADDING;
+            glyphLayout.setText(font, "T");
+            Utility.drawCenteredText(batch, color, "SCORE: " + player.score, w / 2, bottom + (glyphLayout.height / 2), scale);
+
+            color.set(0xffffffff);
+            Utility.drawCenteredText(batch, color, "BEST: " + player.highScore, w / 2, bottom + (1.35f * glyphLayout.height), scale);
 
 
             // BUTTONS:
@@ -235,13 +245,27 @@ public class Game extends ApplicationAdapter {
         color.set(0xFFFFFFFF);
 
         textToMeasure = player.coins + "";
-        Utility.drawCenteredText(batch, color, textToMeasure, GameValues.TEXT_PADDING, h - (h - GameValues.TEXT_PADDING), Utility.getScale(GameValues.COIN_TEXT_SIZE * coinTextMult));
+
+        scale = Utility.getScale(GameValues.COIN_TEXT_SIZE * coinTextMult);
+
+        font.getData().setScale(scale);
+
+        glyphLayout.setText(font, textToMeasure);
+        final float textWidth = glyphLayout.width;
+
+        Utility.drawCenteredText(batch, color, textToMeasure, GameValues.TEXT_PADDING + (glyphLayout.width / 2), GameValues.TEXT_PADDING + (glyphLayout.height / 2), scale);
+
         if (state == GameState.Playing)
             color.set(GameValues.RING_COLOR);
         else {
             color.set(1, 1, 1, 120 / 255f);
         }
-        Utility.drawCenteredText(batch, color, "COINS", w / 2, h - (h - (GameValues.TEXT_PADDING * 1.1f)), Utility.getScale(GameValues.COIN_TEXT_SIZE / 2.5f));
+
+        scale = Utility.getScale(GameValues.COIN_TEXT_SIZE / 2.5f);
+        font.getData().setScale(scale);
+
+        glyphLayout.setText(font, "COINS");
+        Utility.drawCenteredText(batch, color, "COINS", (1.75f * GameValues.TEXT_PADDING) + textWidth + (glyphLayout.width / 2), GameValues.TEXT_PADDING + (glyphLayout.height / 2), scale);
 
         // DRAW INTRO:
         if (introAlpha > 0) {
@@ -311,17 +335,17 @@ public class Game extends ApplicationAdapter {
         rateButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) + GameValues.BUTTON_PADDING * 2), "rate_btn", false);
         leaderButton = new CanvasButton((int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + GameValues.BUTTON_PADDING * 2), "leader_btn", false);
         achievementButton = new CanvasButton((int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + GameValues.BUTTON_PADDING * 2), "achiv_btn", false);
-        storeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2)), "store_btn", false);
-        homeButton2 = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2)), "home_btn", false);
+        storeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, "store_btn", false);
+        homeButton2 = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, "home_btn", false);
         // DEATH:
         shareButton = new CanvasButton((int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - (int) (((h / 2) + (GameValues.BUTTON_PADDING * 2.5f))), "share_btn", false);
         homeButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - (int) (((h / 2) + (GameValues.BUTTON_PADDING * 2.5f))), "home_btn", false);
         retryButton = new CanvasButton((int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - (int) (((h / 2) + (GameValues.BUTTON_PADDING * 2.5f))), "retry_btn", false);
-        adButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2)), "ad_btn", true);
-        likeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2)), "fb_btn", true);
-        buyButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), h - (h - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 2)), "money_btn", true);
-        reviveButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 2.25f)), "heart_btn", true);
-        gambleButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 2.25f)), "gamble_btn", true);
+        adButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, "ad_btn", true);
+        likeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, "fb_btn", true);
+        buyButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, "money_btn", true);
+        reviveButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 1.75f)), "heart_btn", true);
+        gambleButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 1.75f)), "gamble_btn", true);
         reviveButton.up = false;
         buyButton.playSound = false;
         gambleButton.playSound = false;
