@@ -97,7 +97,7 @@ public class Utility {
         final float left = x - (textWidth / 2);
         final float textHeight = font.getLineHeight();
         font.setColor(color);
-        font.draw(batch, text, left, y + (textHeight / 3));
+        font.draw(batch, text, left, y + (textHeight / 2));
     }
 
     public static boolean customBool(int i) {

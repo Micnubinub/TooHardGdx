@@ -37,7 +37,7 @@ public class AnimatedText {
     public void draw(SpriteBatch canvas) {
         if (alpha > 0) {
             color.set(1, 1, 1, (alpha / 255f));
-            Utility.drawCenteredText(canvas, color, text, x, y, Utility.getScale(GameValues.ANIM_TEXT_SIZE));
+            Utility.drawCenteredText(canvas, color, text, x, Game.h - y, Utility.getScale(GameValues.ANIM_TEXT_SIZE));
         }
     }
 

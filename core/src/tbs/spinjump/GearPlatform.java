@@ -133,28 +133,28 @@ public class GearPlatform extends GameObject {
         final float ring2 = (width + (GameValues.PLAYER_SCALE * 2)) * 2;
 
         ring.setSize(ring2, ring2);
-        ring.setCenter(x, y);
+        ring.setCenter(x, Game.h - y);
         ring.draw(batch);
 
-        backgroundCircle.setSize(ring2 - GameValues.RING_WIDTH, ring2 - GameValues.RING_WIDTH);
-        backgroundCircle.setCenter(x, y);
+        backgroundCircle.setSize(ring2 - GameValues.RING_WIDTH, ring2 - (GameValues.RING_WIDTH * 2));
+        backgroundCircle.setCenter(x, Game.h - y);
         backgroundCircle.draw(batch);
 
         ring.setSize(ring1, ring1);
-        ring.setCenter(x, y);
+        ring.setCenter(x, Game.h - y);
         ring.draw(batch);
 
-        backgroundCircle.setSize(ring1 - (GameValues.RING_WIDTH / 2), ring1 - (GameValues.RING_WIDTH / 2));
-        backgroundCircle.setCenter(x, y);
+        backgroundCircle.setSize(ring1 - (GameValues.RING_WIDTH / 2), ring1 - ((GameValues.RING_WIDTH / 2) * 2));
+        backgroundCircle.setCenter(x, Game.h - y);
         backgroundCircle.draw(batch);
 
 
         cog1.setSize(s, s);
-        cog1.setCenter(x, y);
+        cog1.setCenter(x, Game.h - y);
         cog1.draw(batch);
 
         cog2.setSize(s * 0.7f, s * 0.7f);
-        cog2.setCenter(x, y);
+        cog2.setCenter(x, Game.h - y);
         cog2.draw(batch);
 
 

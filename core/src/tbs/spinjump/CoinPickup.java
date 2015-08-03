@@ -55,7 +55,7 @@ public class CoinPickup {
 
     public void draw(SpriteBatch canvas) {
         if (active) {
-            circle.setCenter(x, y);
+            circle.setCenter(x, Game.h - y);
             circle.setSize(scale * 2, scale * 2);
             circle.draw(canvas);
         }

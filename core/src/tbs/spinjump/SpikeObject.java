@@ -72,7 +72,7 @@ public class SpikeObject extends GameObject {
 
         triangle.setSize(triangleRadius, triangleRadius);
         triangle.setRotation(angle);
-        triangle.setPosition(triangleX, triangleY);
+        triangle.setPosition(triangleX, Game.h - triangleY);
         triangle.draw(batch);
     }
 

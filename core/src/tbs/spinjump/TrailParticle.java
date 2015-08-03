@@ -49,7 +49,7 @@ public class TrailParticle {
     }
 
     public void draw(SpriteBatch batch) {
-        circle.setCenter(x, y);
+        circle.setCenter(x, Game.h - y);
         circle.setSize(scale * 2, scale * 2);
         circle.draw(batch);
     }

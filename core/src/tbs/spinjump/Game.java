@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -67,9 +68,7 @@ public class Game extends ApplicationAdapter {
 
     public static void setup() {
         // SETUP:
-        state = GameState.Playing;
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
-        Pixmap.setBlending(Pixmap.Blending.None);
+        state = GameState.Menu;
         level.setup();
         player.setup();
         Gdx.input.setInputProcessor(controller);
@@ -113,33 +112,55 @@ public class Game extends ApplicationAdapter {
         player.draw(batch);
         textAnimator.draw(batch);
 
+
         // SCORE:
         if (state == GameState.Playing) {
-            //Todo use glyph here for measuremesnts
-      /*      batch.drawText(textToMeasure, w - GameValues.TEXT_PADDING, textRect.height() + GameValues.TEXT_PADDING, paint);
-            batch.drawText("SCORE", w - (textRect.width() + (GameValues.TEXT_PADDING * 1.55f)), textRect.height() + (GameValues.TEXT_PADDING * 0.9f), paint);
-       */
+
+            float scale = Utility.getScale(GameValues.SCORE_TEXT_SIZE * scoreTextMult);
+            final BitmapFont font = Utility.getFont();
+            font.getData().setScale(scale);
+            textToMeasure = "" + player.score;
+            glyphLayout.reset();
+            glyphLayout.setText(font, textToMeasure);
             color.set(0xFFFFFFFF);
-            textToMeasure = "SCORE" + player.score;
-            Utility.drawCenteredText(batch, color, textToMeasure, w - GameValues.TEXT_PADDING, h - GameValues.TEXT_PADDING, Utility.getScale(GameValues.SCORE_TEXT_SIZE * scoreTextMult));
+
+            float scoreBottom = h - glyphLayout.height - (GameValues.TEXT_PADDING / 3);
+            float scoreW = glyphLayout.width;
+            float scoreX = w - GameValues.TEXT_PADDING - (scoreW / 2);
+            Utility.drawCenteredText(batch, color, textToMeasure, scoreX, scoreBottom + (glyphLayout.height / 2), scale);
+
+            scale = Utility.getScale(GameValues.SCORE_TEXT_SIZE / 2.5f);
+            font.getData().setScale(scale);
+            textToMeasure = "SCORE";
+            glyphLayout.reset();
+            glyphLayout.setText(font, textToMeasure);
+            color.set(GameValues.RING_COLOR);
+            Utility.drawCenteredText(batch, color, "SCORE", scoreX - (scoreW / 2) - (glyphLayout.width / 2) - (GameValues.TEXT_PADDING / 4), scoreBottom + glyphLayout.height / 2, scale);
         }
 
         // DRAW MENU:
         if (state == GameState.Menu) {
             batch.draw(menuTint, 0, 0, w, h);
 
-   /* Todo use glyph and getData
-           batch.drawText("TOO HARD?", w/2, h/8, paint);
-            batch.drawText("CAN YOU GET TO 100?", w/2, (h/8) + (GameValues.TEXT_PADDING * 1.5f), paint);
-            batch.drawText("TAP TO BEGIN", w/2, h/2 * 1.075f, paint);
-*/
+            float scale = Utility.getScale(GameValues.MENU_TEXT_SIZE);
+
+            final BitmapFont font = Utility.getFont();
+            font.getData().setScale(scale);
+            glyphLayout.reset();
+            glyphLayout.setText(font, "a");
+
+            float textHeight = glyphLayout.height;
+            float textBottom = h - textHeight;
+            batch.draw(menuTint, (w / 2) - (glyphLayout.width / 2), textBottom, glyphLayout.width, textHeight);
 
             // MENU TEXT:
             color.set(0xe6e8f1FF);
-            Utility.drawCenteredText(batch, color, "TOO HARD?", w / 2, h - (h / 4), Utility.getScale(GameValues.MENU_TEXT_SIZE));
+            Utility.drawCenteredText(batch, color, "TOO HARD?", w / 2, textBottom + (textHeight / 2), scale);
+
+
             color.set(1, 1, 1, 120 / 255f);
-            Utility.drawCenteredText(batch, color, "CAN YOU GET TO 100?", w / 2, h - ((h / 4) + (GameValues.TEXT_PADDING * 1.5f)), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
-            Utility.drawCenteredText(batch, color, "TAP TO BEGIN", w / 2, h - ((h / 2) * 1.075f), Utility.getScale(GameValues.MENU_TEXT_SIZE_2 / 2));
+            Utility.drawCenteredText(batch, color, "CAN YOU GET TO 100?", w / 2, h - ((h / 4) + (GameValues.TEXT_PADDING * 1.5f)), scale / 2);
+            Utility.drawCenteredText(batch, color, "TAP TO BEGIN", w / 2, h - ((h / 2) * 1.075f), scale / 2);
 
             // BUTTONS:
             rateButton.draw(batch);
@@ -175,9 +196,10 @@ public class Game extends ApplicationAdapter {
             likeButton.draw(batch);
             buyButton.draw(batch);
             reviveButton.draw(batch);
+
             if (reviveButton.active) {
                 color.set(1, 1, 1, 120 / 250f);
-                Utility.drawCenteredText(batch, color, revivalCost + " COINS", w / 2, h - ((reviveButton.y + GameValues.MENU_BTN_HEIGHT) + (GameValues.TEXT_PADDING * 1.5f)), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2.5f));
+                Utility.drawCenteredText(batch, color, revivalCost + " COINS", w / 2, (reviveButton.y - GameValues.MENU_BTN_HEIGHT) - (GameValues.TEXT_PADDING * 1.5f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2.5f));
             }
         }
 
@@ -499,6 +521,7 @@ public class Game extends ApplicationAdapter {
         Gdx.gl.glClearColor(color.r, color.g, color.b, color.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glEnable(GL20.GL_BLEND);
+
         update(Gdx.graphics.getDeltaTime() * 1000);
 
         batch.begin();
@@ -549,6 +572,7 @@ public class Game extends ApplicationAdapter {
                 item.dispose();
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         super.dispose();
     }

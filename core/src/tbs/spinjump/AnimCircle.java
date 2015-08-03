@@ -39,7 +39,6 @@ public class AnimCircle {
         pixmap.dispose();
     }
 
-
     public void setup(float x, float y) {
         this.x = x;
         this.y = y;
@@ -59,8 +58,8 @@ public class AnimCircle {
     public void draw(SpriteBatch batch) {
         if (alpha > 0) {
             circle.setAlpha(alpha / 255f);
-            circle.setSize(scale * 1.5f, scale * 1.5f);
-            circle.setCenter(x, y);
+            circle.setSize(scale * 2, scale * 2);
+            circle.setCenter(x, Game.h - y);
             circle.draw(batch);
         }
     }

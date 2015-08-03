@@ -247,12 +247,12 @@ public class Player extends GameObject {
             circles.get(i).draw(batch);
         }
         if (!dead) {
-            player.setCenter(x, y);
+            player.setCenter(x, Game.h - y);
             player.draw(batch);
             if (overAlpha > 0) {
                 overA.setAlpha(overAlpha / 255f);
                 overA.setSize(width, width);
-                overA.setCenter(x, y);
+                overA.setCenter(x, Game.h - y);
                 overA.draw(batch);
             }
         }

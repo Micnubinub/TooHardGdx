@@ -78,7 +78,7 @@ public class Particle {
 
     public void draw(SpriteBatch batch) {
         if (this.state == STATE_ALIVE) {
-            circle.setCenter(x, y);
+            circle.setCenter(x, Game.h - y);
             circle.setSize(width, width);
             circle.draw(batch);
         }
