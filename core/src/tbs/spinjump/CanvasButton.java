@@ -102,6 +102,8 @@ public class CanvasButton extends GameObject {
     }
 
     public void draw(SpriteBatch canvas) {
+        if (!active)
+            return;
 //        image.setCenter(image.getWidth() / 2, image.getHeight() / 2);
         image.setPosition(x, y);
         image.setOriginCenter();

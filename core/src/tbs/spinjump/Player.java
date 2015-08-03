@@ -242,10 +242,11 @@ public class Player extends GameObject {
         for (int i = 0; i < splash.size(); ++i) {
             splash.get(i).draw(batch);
         }
-        //Todo Game.paint.setStrokeWidth(GameValues.RING_WIDTH / 1.25f);
+
         for (int i = 0; i < circles.size(); ++i) {
             circles.get(i).draw(batch);
         }
+
         if (!dead) {
             player.setCenter(x, Game.h - y);
             player.draw(batch);
