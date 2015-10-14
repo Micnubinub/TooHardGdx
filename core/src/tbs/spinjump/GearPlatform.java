@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class GearPlatform extends GameObject {
 
     private static final Color c = new Color();
-    private static Sprite cog1, cog2, backgroundCircle, ring;
+    //Todo renderer private static Sprite cog1, cog2, backgroundCircle, ring;
     // Gear Specific:
     public float rotationSpeed;
     public float rotation;
@@ -128,6 +128,32 @@ public class GearPlatform extends GameObject {
 
     public void draw(SpriteBatch batch) {
         // PLATFORM:
+// Todo renderer       Game.paint.setColor(GameValues.COG_COLOR);
+//        canvas.drawCircle(x, y, width, Game.paint);
+//        Game.paint.setColor(GameValues.COG_COLOR_2);
+//        canvas.drawCircle(x, y, width * 0.7f, Game.paint);
+//
+//        // RINGS:
+//        Game.paint.setStyle(Paint.Style.STROKE);
+//        Game.paint.setStrokeWidth(GameValues.RING_WIDTH / 2);
+//        Game.paint.setColor(GameValues.RING_COLOR);
+//        canvas.drawCircle(x, y, width + (GameValues.PLAYER_SCALE), Game.paint);
+//        Game.paint.setStrokeWidth(GameValues.RING_WIDTH);
+//        canvas.drawCircle(x, y, width + (GameValues.PLAYER_SCALE * 2), Game.paint);
+//
+//        // RESET:
+//        Game.paint.setStyle(Paint.Style.FILL);
+//
+//        // DRAW COINS:
+//        for (int i = 0; i < coins.size(); ++i) {
+//            coins.get(i).draw(canvas);
+//        }
+//
+//        // DRAW ENEMIES:
+//        for (int i = 0; i < enemies.size(); ++i) {
+//            enemies.get(i).draw(canvas);
+//        }
+
         final int s = width * 2;
         final float ring1 = (width + (GameValues.PLAYER_SCALE)) * 2;
         final float ring2 = (width + (GameValues.PLAYER_SCALE * 2)) * 2;
@@ -201,14 +227,14 @@ public class GearPlatform extends GameObject {
         }
         float tmpAverage = (GameValues.COG_MIN_SIZE + GameValues.COG_MAX_SIZE) / 2;
         float speedMult = tmpAverage / tmpWidth;
-        rotationSpeed *= speedMult;
+        rotationSpeed *= (speedMult * 0.9);
         setWidth(tmpWidth);
         startingWidth = tmpWidth;
         if (!first)
             setY(Level.getNextCogPos(this));
 
         // Change Direction Sometimes:
-        if (Utility.getRandom(0, 1) == 0)
+        if (Utility.rand.nextBoolean())
             rotationSpeed *= -1;
 
         // STAGE DIFFICULTY GEN STUFF:
@@ -224,7 +250,7 @@ public class GearPlatform extends GameObject {
         int angle = 0;
         boolean hasEnemy = false;
         for (int i = 0; i < enemies.size(); ++i) {
-            enemies.get(i).active = Utility.getRandom(0, 3) == 0; // CHANGE
+            enemies.get(i).active = Utility.getRandom(0, 3) == 0; // CHANGE MAYBE
             if (enemies.get(i).active)
                 hasEnemy = true;
             if (first || Level.stageNum < 20) {

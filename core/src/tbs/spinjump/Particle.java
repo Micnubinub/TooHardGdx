@@ -10,7 +10,7 @@ public class Particle {
     public static final int STATE_DEAD = 1; // particle is dead
 
     public static final int DEFAULT_LIFETIME = 200; // play with this
-    private static Sprite circle;
+    //Todo renderer private static Sprite circle;
     private int state; // particle is alive or dead
     private float width; // width of the particle
     private float height; // height of the particle

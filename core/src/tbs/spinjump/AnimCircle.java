@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Created by Sidney on 11/06/2015.
  */
 public class AnimCircle {
-    private static Sprite circle;
+    //Todo renderer private static Sprite circle;
     public float scale;
     public float alpha;
     public float x, y;

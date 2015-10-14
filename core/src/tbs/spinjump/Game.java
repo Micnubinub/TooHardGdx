@@ -363,7 +363,62 @@ public class Game extends ApplicationAdapter {
         initSound();
         // SETUP ETC:
         setup();
+        setupStore();
 
+    }
+
+    private static void setupStore() {
+        // STORE:
+        casinoManager = new CasinoManager();
+        storeItems = new ArrayList<StoreItem>();
+        // SKINS:
+        storeItems.add(new StoreItem(10, 0XFFff8c8c, 0XFFffabab, false, 0, false)); // 0
+        storeItems.add(new StoreItem(10, 0xFF948cff, 0xFFc0abff, false, 0, false)); // 1
+        storeItems.add(new StoreItem(10, 0xFFc2ff8c, 0xFFd2ffab, false, 0, false)); // 2
+        storeItems.add(new StoreItem(10, 0xFFffff8c, 0xFFf9ffab, false, 0, false)); // 3
+        storeItems.add(new StoreItem(25, 0xFFf08cff, 0xFFf4abff, false, 0, false)); // 4
+        storeItems.add(new StoreItem(25, 0xFFff8ce8, 0xFFffabee, false, 0, false)); // 5
+        storeItems.add(new StoreItem(50, 0xFFffab4a, 0xFFffc17a, false, 0, false)); // 6
+        storeItems.add(new StoreItem(50, 0xFFff477a, 0xFFff99b5, false, 0, false)); // 7
+        storeItems.add(new StoreItem(50, 0xFF6699b5, 0xFFc2d7e3, false, 0, false)); // 8
+        storeItems.add(new StoreItem(50, 0xFF69d7e3, 0xFFc7e0e3, false, 0, false)); // 9
+        storeItems.add(new StoreItem(75, 0xFFe4ef37, 0xFFeaef9a, false, 0, false)); // 10
+        storeItems.add(new StoreItem(75, 0xFF23ef4b, 0xFFe6ffeb, false, 0, false)); // 11
+        storeItems.add(new StoreItem(100, 0xFF999999, 0xFFb3b3b3, false, 0, false)); // 12
+        storeItems.add(new StoreItem(100, 0xFFcbcbcb, 0xFFffffff, false, 0, false)); // 13
+        storeItems.add(new StoreItem(150, 0xFFeb767f, 0xFFeb767f, false, 0, false)); // 14
+        storeItems.add(new StoreItem(150, 0xFF81eb66, 0xFF81eb66, false, 0, false)); // 15
+        storeItems.add(new StoreItem(200, 0xFF66b6eb, 0xFF66b6eb, false, 0, false)); // 16
+        storeItems.add(new StoreItem(200, 0xFF575757, 0xFFf9f9f9, false, 0, false)); // 17
+        storeItems.add(new StoreItem(500, 0xFF575757, 0xFFeb6973, false, 0, false)); // 18
+        storeItems.add(new StoreItem(500, 0xFF575757, 0xFF81eb66, false, 0, false)); // 19
+        storeItems.add(new StoreItem(1000, 0xFFFFFFFF, 0xFFffabab, false, 0, false)); // 20
+        storeItems.add(new StoreItem(1000, 0xFF363636, 0xFF6a6a6a, false, 0, false)); // 21
+        storeItems.add(new StoreItem(1000, 0xFFFFFFFF, 0xFF4cde5a, false, 0, false)); // 22
+        storeItems.add(new StoreItem(1000, 0xFF4c5fde, 0xFF55de4c, false, 0, false)); // 23
+        storeItems.add(new StoreItem(1000, 0xFFde4c4c, 0xFFe3ed71, false, 0, false)); // 24
+        storeItems.add(new StoreItem(1000, 0xFFe3ed5b, 0xFFe37a5b, false, 0, false)); // 25
+        storeItems.add(new StoreItem(10000, 0xFFFFFFFF, 0xFF000000, false, 0, false)); // 26
+        storeItems.add(new StoreItem(10000, 0xFF000000, 0xFFFFFFFF, false, 0, false)); // 27
+        storeItems.add(new StoreItem(-1, 0xFFed2df9, 0xFF415ef9, false, 5, false)); // 28
+        storeItems.add(new StoreItem(-1, 0xFF516aec, 0xFFFFFFFF, false, 10, false));  // 29
+        storeItems.add(new StoreItem(-1, 0xFFec5151, 0xFFFFFFFF, false, 100, false));  // 30
+        storeItems.add(new StoreItem(-1, 0xFF9f6236, 0xFF9f62be, false, 500, false));  // 31
+        storeItems.add(new StoreItem(-1, 0xFFffbb00, 0xFFff2800, false, 1000, false)); // 32
+        storeItems.add(new StoreItem(-1, 0xFFffff93, 0xFFffffe8, false, 10000, false)); // 33
+        // TRAILS:
+        storeItems.add(new StoreItem(10, 0xFFFFFFFF, -1, false, 0, true)); // 34
+        storeItems.add(new StoreItem(10, 0xFF363636, -1, false, 0, true)); // 35
+        storeItems.add(new StoreItem(100, 0xFFc2ff8c, -1, false, 0, true)); // 36
+        storeItems.add(new StoreItem(100, 0xFF4c5fde, -1, false, 0, true)); // 37
+        storeItems.add(new StoreItem(1000, 0xFFde4c4c, -1, false, 0, true)); // 38
+        storeItems.add(new StoreItem(1000, 0xFFe3ed5b, -1, false, 0, true)); // 39
+        storeItems.add(new StoreItem(10000, 0xFF2ded28, -1, false, 0, true)); // 40
+        storeItems.add(new StoreItem(10000, 0xFFffab4a, -1, false, 0, true)); // 41
+        storeItems.add(new StoreItem(-1, 0xFFffbb00, -1, false, 2, true)); // 42
+        storeItems.add(new StoreItem(-1, 0xFFffff93, -1, false, 100, true)); // 43
+        storeItems.add(new StoreItem(-1, 0xFFed9c28, -1, false, 1000, true)); // 44
+        storeItems.add(new StoreItem(-1, 0xFFed28d8, -1, false, 10000, true)); // 45
     }
 
     private static void initSound() {
@@ -441,88 +496,88 @@ public class Game extends ApplicationAdapter {
 
     // STORE DIALOG:
     public static void showStore() {
-//        final Dialog dialog = new Dialog(context, R.style.CustomDialog);
-//        dialog.setContentView(R.layout.store_gridview);
-//
-//        // BUTTON:
-//        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) dialog.findViewById(R.id.back).getLayoutParams();
-//        params.width = GameValues.MENU_BTN_WIDTH;
-//        params.height = GameValues.MENU_BTN_HEIGHT;
-//        params.rightMargin = (int) (GameValues.BUTTON_PADDING / 1.5f);
-//        params.bottomMargin = (int) (GameValues.BUTTON_PADDING / 2);
-//        params.leftMargin = 0;
-//        params.topMargin = (int) (GameValues.BUTTON_PADDING / 1.5f);
-//        dialog.findViewById(R.id.back).setLayoutParams(params);
-//        dialog.findViewById(R.id.back).setAlpha(0.705f);
-//
-//        // SETUP SCALE AND POSITION OF DIALOG:
-//        dialog.getWindow().setLayout(ScreenObject.width, (int) (ScreenObject.height * 0.785f));
-//        WindowManager.LayoutParams wlp = dialog.getWindow().getAttributes();
-//        wlp.gravity = Gravity.BOTTOM;
-//        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-//        dialog.getWindow().setAttributes(wlp);
-//        dialog.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                state = GameState.Menu;
-//                soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
-//                dialog.dismiss();
-//            }
-//        });
-//
-//
-//        // CHECK IF THEY HAVE BEEN BOUGHT:
-//        final GridView gridView = (GridView) dialog.findViewById(R.id.grid);
-//        for (int i = 0; i < storeItems.size(); ++i) {
-//            storeItems.get(i).bought = player.purchases.get(i) == 1; // x == y;
-//        }
-//        gridView.setAdapter(new StoreAdapter(storeItems));
-//        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                // SKINS:
-//                if (storeItems.get(position).IAPID.equals("NONE")) {
-//                    if (storeItems.get(position).cost <= player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
-//                        // BUY:
-//                        storeItems.get(position).bought = true;
-//                        MainActivity.unlockAchievement("CgkIxIfix40fEAIQAQ");
-//                        int itemsBought = 0;
-//                        for (int i = 0; i < storeItems.size(); ++i) {
-//                            if (storeItems.get(i).bought && storeItems.get(i).buyable && storeItems.get(i).IAPID.equals("NONE"))
-//                                itemsBought += 1;
-//                        }
-//                        if (itemsBought >= storeItems.size()) { // EDIT
-//                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAw");
-//                        } else if (itemsBought >= 5) {
-//                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAg");
-//                        }
-//                        if (position == storeItems.size() - 3) {
-//                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQBA");
-//                        }
-//                        soundPlayer.play(moneySound, 1, 1, 0, 0, 1);
-//                        player.coins -= storeItems.get(position).cost;
-//                        player.purchases.set(position, 1);
-//                        player.saveData();
-//                    } else if (storeItems.get(position).cost > player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
-//                        // CANT AFFORD:
-//                        soundPlayer.play(buttonSound, 1, 1, 0, 0, 1);
-//                    } else if (storeItems.get(position).bought) {
-//                        // EQUIP:
-//                        if (storeItems.get(position).trail) {
-//                            player.equipTrail(storeItems.get(position));
-//                        } else {
-//                            player.equipSkin(storeItems.get(position));
-//                        }
-//                        soundPlayer.play(buttonSound, 1, 1, 0, 0, 1);
-//                    }
-//                } else {
-//                    // IN APP PURCHASE:
-//                    gPurchaseManager.makePurchase(storeItems.get(position).IAPID);
-//                }
-//                ((BaseAdapter) gridView.getAdapter()).notifyDataSetChanged();
-//            }
-//        });
-//        dialog.show();
+        final Dialog dialog = new Dialog(context, R.style.CustomDialog);
+        dialog.setContentView(R.layout.store_gridview);
+
+        // BUTTON:
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) dialog.findViewById(R.id.back).getLayoutParams();
+        params.width = GameValues.MENU_BTN_WIDTH;
+        params.height = GameValues.MENU_BTN_HEIGHT;
+        params.rightMargin = (int) (GameValues.BUTTON_PADDING / 1.5f);
+        params.bottomMargin = GameValues.BUTTON_PADDING / 2;
+        params.leftMargin = 0;
+        params.topMargin = (int) (GameValues.BUTTON_PADDING / 1.5f);
+        dialog.findViewById(R.id.back).setLayoutParams(params);
+        dialog.findViewById(R.id.back).setAlpha(0.705f);
+
+        // SETUP SCALE AND POSITION OF DIALOG:
+        dialog.getWindow().setLayout(ScreenObject.width, (int) (ScreenObject.height * 0.785f));
+        WindowManager.LayoutParams wlp = dialog.getWindow().getAttributes();
+        wlp.gravity = Gravity.BOTTOM;
+        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        dialog.getWindow().setAttributes(wlp);
+        dialog.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                state = GameState.Menu;
+                soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
+                dialog.dismiss();
+            }
+        });
+
+
+        // CHECK IF THEY HAVE BEEN BOUGHT:
+        final GridView gridView = (GridView) dialog.findViewById(R.id.grid);
+        for (int i = 0; i < storeItems.size(); ++i) {
+            storeItems.get(i).bought = player.purchases.get(i) == 1; // x == y;
+        }
+        gridView.setAdapter(new StoreAdapter(storeItems));
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // SKINS:
+                if (storeItems.get(position).IAPID.equals("NONE")) {
+                    if (storeItems.get(position).cost <= player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
+                        // BUY:
+                        storeItems.get(position).bought = true;
+                        MainActivity.unlockAchievement("CgkIxIfix40fEAIQAQ");
+                        int itemsBought = 0;
+                        for (int i = 0; i < storeItems.size(); ++i) {
+                            if (storeItems.get(i).bought && storeItems.get(i).buyable && storeItems.get(i).IAPID.equals("NONE"))
+                                itemsBought += 1;
+                        }
+                        if (itemsBought >= storeItems.size()) { // EDIT
+                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAw");
+                        } else if (itemsBought >= 5) {
+                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAg");
+                        }
+                        if (position == storeItems.size() - 3) {
+                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQBA");
+                        }
+                        soundPlayer.play(moneySound, 1, 1, 0, 0, 1);
+                        player.coins -= storeItems.get(position).cost;
+                        player.purchases.set(position, 1);
+                        player.saveData();
+                    } else if (storeItems.get(position).cost > player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
+                        // CANT AFFORD:
+                        soundPlayer.play(buttonSound, 1, 1, 0, 0, 1);
+                    } else if (storeItems.get(position).bought) {
+                        // EQUIP:
+                        if (storeItems.get(position).trail) {
+                            player.equipTrail(storeItems.get(position));
+                        } else {
+                            player.equipSkin(storeItems.get(position));
+                        }
+                        soundPlayer.play(buttonSound, 1, 1, 0, 0, 1);
+                    }
+                } else {
+                    // IN APP PURCHASE:
+                    gPurchaseManager.makePurchase(storeItems.get(position).IAPID);
+                }
+                ((BaseAdapter) gridView.getAdapter()).notifyDataSetChanged();
+            }
+        });
+        dialog.show();
     }
 
     public static void log(String msg) {
@@ -599,4 +654,6 @@ public class Game extends ApplicationAdapter {
         }
         super.dispose();
     }
+
+
 }

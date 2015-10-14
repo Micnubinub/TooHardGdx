@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Created by Sidney on 16/06/2015.
  */
 public class Enemy {
-    private static Sprite circle;
+    //Todo renderer private static Sprite circle;
     public float scale;
     public float x, y;
     public GearPlatform platform;

@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * Created by Sidney on 11/06/2015.
  */
 public class CoinPickup {
-    private static Sprite circle;
+    //Todo renderer private static Sprite circle;
     public int worth;
     public float x, y;
     public float scale;

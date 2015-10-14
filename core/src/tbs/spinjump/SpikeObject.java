@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class SpikeObject extends GameObject {
     static int height, width, halfT, tCX, tCY;
-    private static Sprite triangle;
+    //Todo renderer    private static Sprite triangle;
     public float angle;
 
 

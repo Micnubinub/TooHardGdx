@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class TrailParticle {
-    private static Sprite circle;
+    //Todo renderer private static Sprite circle;
     public float scale;
     public int x;
     public int y;

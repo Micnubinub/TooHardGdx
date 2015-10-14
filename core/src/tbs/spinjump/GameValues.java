@@ -73,9 +73,4 @@ public class GameValues {
     public static final String removeAdsID = "remove_ads";
     public static final String buyCoinsID = "buy_coins";
 
-    // OTHER:
-    public static final String leaderboardID = "CgkIxIfix40fEAIQDw";
-
-    // ADS:
-    public static final String FULL_SCREEN_AD = "ca-app-pub-7957464690974751/6002847029";
 }

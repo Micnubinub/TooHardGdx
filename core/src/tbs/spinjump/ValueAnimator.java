@@ -1,4 +1,4 @@
-package tbs.spinjump.hunnid.menu;
+package tbs.spinjump;
 
 /**
  * Created by root on 4/11/14.

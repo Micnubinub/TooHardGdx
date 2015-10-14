@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
@@ -12,7 +14,11 @@ public class Player extends GameObject {
 
     //    private static final Color color = new Color();
     private static int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-    private static Sprite player, overA;
+    private static int[] ints;
+    private static float[] lineStop;
+    private static Vector2 vec2 = new Vector2();
+    private static Vector2 vec2_1 = new Vector2();
+    //  Todo renderer  private static Sprite player, overA;
     // Collision & Platforms:
     public GearPlatform platform; // Which Platform the Player is on
     public double platformOnAngle;
@@ -47,6 +53,7 @@ public class Player extends GameObject {
     // POINTS SINCE DEATH:
     public int revivalCount;
 
+
     public Player() {
         setWidth((int) GameValues.PLAYER_SCALE);
         setHeight((int) GameValues.PLAYER_SCALE);
@@ -77,23 +84,24 @@ public class Player extends GameObject {
         }
     }
 
-    private static void getPlayer(int width, int color1, int color2) {
-        try {
-            player.getTexture().dispose();
-        } catch (Exception e) {
-        }
-        final int s = width;
-        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA4444);
-        pixmap.setColor(color1);
-        pixmap.fillCircle(s / 2, s / 2, s / 2);
-        pixmap.setColor(color2);
-        pixmap.fillCircle(s / 2, s / 2, s / 4);
-
-        player = new Sprite(new Texture(pixmap));
-        player.setSize(s, s);
-        pixmap.dispose();
-
-    }
+//    private static void getPlayer(int width, int color1, int color2) {
+//        //Todo consider changing over to shaperenderer
+//        try {
+//            player.getTexture().dispose();
+//        } catch (Exception e) {
+//        }
+//        final int s = width;
+//        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA4444);
+//        pixmap.setColor(color1);
+//        pixmap.fillCircle(s / 2, s / 2, s / 2);
+//        pixmap.setColor(color2);
+//        pixmap.fillCircle(s / 2, s / 2, s / 4);
+//
+//        player = new Sprite(new Texture(pixmap));
+//        player.setSize(s, s);
+//        pixmap.dispose();
+//
+//    }
 
     private static void initOverA() {
         try {
@@ -120,11 +128,12 @@ public class Player extends GameObject {
         setX(w / 2);
         platform = Level.gears.get(0);
         setY((int) ((platform.getY() - platform.width) - (width)));
-        platformOnAngle = getAngle(platform.x, platform.y);
+        platformOnAngle = Math.PI;
         particleIndex = 0;
         circleIndex = 0;
         getPlayer(width * 2, GameValues.PLAYER_COLOR, GameValues.PLAYER_COLOR_2);
         updateAnglePos();
+        revivalCount = 0;
     }
 
     public void revive() {
@@ -139,13 +148,18 @@ public class Player extends GameObject {
         revivalCount += 1;
     }
 
+    public float getAngle(float xO, float yO) {
+        //Todo check if theres too much conversion to and from deg
+        return (float) (Math.atan2(yO - y, xO - x) % 6.28319);
+    }
+
     public void update(float delta) { // Use Delta
         // Update Level Platforms as well:
         if (platform != null) {
             if (!dead) {
                 // On a Platform:
-                platformOnAngle -= (platform.rotationSpeed * delta);
-                platformOnAngle %= 360;
+                platformOnAngle -= (platform.rotationSpeed * delta * 0.01745330555f);
+                platformOnAngle %= 6.28319;
 
                 // CHECK COIN COLLISION:
                 for (int i = 0; i < platform.coins.size(); ++i) {
@@ -175,15 +189,16 @@ public class Player extends GameObject {
                 }
             }
         } else {
-            // Jumping:
-            x += (speed * delta) * Math.sin(Math.toRadians((platformOnAngle + 90) % 360));
-            y += (speed * delta) * Math.cos(Math.toRadians((platformOnAngle + 90) % 360));
+            // Jumping: (IF NO ONE LIKES IT CHANGE THIS BACK)
+            x += (speed * delta) * Math.sin((platformOnAngle) % 6.28319);
+            y += (speed * delta) * Math.cos((platformOnAngle) % 6.28319);
 
             // Check Landing:
             for (int i = 0; i < Level.gears.size(); ++i) {
-                if (Level.gears.get(i).circleCollision(x, y, width)) {
-                    land(Level.gears.get(i));
-                }
+                if (i != lastPlatformIndex)
+                    if (Level.gears.get(i).circleCollision(x, y, width)) {
+                        land(Level.gears.get(i));
+                    }
             }
         }
 
@@ -235,6 +250,7 @@ public class Player extends GameObject {
     }
 
     public void draw(SpriteBatch batch) {
+        drawLine();
         if (!dead)
             for (int i = 0; i < trail.size(); ++i) {
                 trail.get(i).draw(batch);
@@ -255,25 +271,56 @@ public class Player extends GameObject {
                 overA.setSize(width, width);
                 overA.setCenter(x, Game.h - y);
                 overA.draw(batch);
+//        Todo renderer        Game.paint.setColor(0xFFFFFFFF);
+//                Game.paint.setAlpha((int) overAlpha);
+//                canvas.drawCircle(x, y, width, Game.paint);
             }
         }
     }
 
-    public void land(GearPlatform platformTmp) {
-        score += 1;
-        int expectedIndex = lastPlatformIndex + 1;
-        if (expectedIndex >= Level.gears.size())
-            expectedIndex = 0;
-        if (Level.gears.indexOf(platformTmp) != expectedIndex)
-            score += 1;
-        Game.scoreTextMult = 1.5f;
-        platform = platformTmp;
-        if (Level.moverIndex != Level.gears.indexOf(this)) {
-            Level.moverIndex = Level.gears.indexOf(platform);
-            Level.moving = true;
+    private void drawLine(ShapeRenderer shapeRenderer, int dotDist) {
+
+        if (!(Game.state == GameState.Playing) || !isOnPlatform() || dead)
+            return;
+
+        CircleIntercestor.reset();
+
+        for (GearPlatform gear : Level.gears) {
+            if (gear == platform)
+                continue;
+
+            lineStop = CircleIntercestor.intercect(gear, (float) (x + (Game.h * Math.sin(platformOnAngle))), (float) (y + (Game.h * Math.cos(platformOnAngle))));
+            if (lineStop[2] > 0) break;
         }
-        platformOnAngle = (180 - getAngle(platform.x, platform.y)) % 360;
-        updateAnglePos();
+
+        shapeRenderer.end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
+        vec2.set(lineStop[0], lineStop[1]).sub(vec2_1.set(x, y));
+        float length = vec2.len();
+        for (int i = 0; i < length; i += dotDist) {
+            vec2.clamp(length - i, length - i);
+            shapeRenderer.point(x + vec2.x, y + vec2.y, 0);
+        }
+    }
+
+
+    public void land(GearPlatform platformTmp) {
+        if (!dead) {
+            score += 1;
+            int expectedIndex = lastPlatformIndex + 1;
+            if (expectedIndex >= Level.gears.size())
+                expectedIndex = 0;
+            if (Level.gears.indexOf(platformTmp) != expectedIndex)
+                score += 1;
+            Game.scoreTextMult = 1.5f;
+            platform = platformTmp;
+            if (Level.moverIndex != Level.gears.indexOf(platform)) {
+                Level.moverIndex = Level.gears.indexOf(platform);
+                Level.moving = true;
+            }
+            platformOnAngle = (180 - getAngle(platform.x, platform.y)) % 360;
+            platformOnAngle = Math.atan2(x - platform.x, y - platform.y);
+        }
     }
 
     public void setupParticles() {
@@ -286,7 +333,8 @@ public class Player extends GameObject {
     public void updateAnglePos() {
         if (platform == null)
             return;
-        final int[] ints = Utility.getAnglePos((float) platformOnAngle, platform.width + (width), (int) platform.x, (int) platform.y);
+
+        ints = Utility.getAnglePos((float) (platformOnAngle % 6.28319), platform.width + (width), (int) platform.x, (int) platform.y);
         x = ints[0];
         y = ints[1];
     }
