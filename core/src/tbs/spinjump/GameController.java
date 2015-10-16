@@ -1,5 +1,6 @@
 package tbs.spinjump;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 
 public class GameController implements InputProcessor {
@@ -123,10 +124,6 @@ public class GameController implements InputProcessor {
 
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
 
     @Override
     public boolean keyUp(int keycode) {
@@ -141,6 +138,16 @@ public class GameController implements InputProcessor {
     @Override
     public boolean touchDown(int x, int y, int pointer, int button) {
         pressScreen(x, y);
+        return false;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        switch (keycode) {
+            case Input.Keys.SPACE:
+                pressScreen(0, 0);
+                break;
+        }
         return false;
     }
 

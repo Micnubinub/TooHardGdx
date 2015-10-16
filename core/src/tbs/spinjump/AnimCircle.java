@@ -42,7 +42,7 @@ public class AnimCircle {
         if (alpha > 0) {
             color.set(1, 1, 1, alpha / 255f);
             renderer.setColor(color);
-            renderer.circle(x, y, scale / 2);
+            renderer.circle(x, Game.h - y, scale / 2);
         }
     }
 }

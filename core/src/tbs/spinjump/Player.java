@@ -2,7 +2,6 @@ package tbs.spinjump;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
@@ -224,7 +223,7 @@ public class Player extends GameObject {
         return distanceSquared < (width + radius2) * (width + radius2);
     }
 
-    public void draw(SpriteBatch batch, ShapeRenderer renderer) {
+    public void draw(ShapeRenderer renderer) {
         drawLine(renderer, Game.w / 6);
         if (!dead)
             for (int i = 0; i < trail.size(); ++i) {
@@ -242,7 +241,9 @@ public class Player extends GameObject {
             color.set(color1);
             renderer.setColor(color);
             renderer.circle(x, Game.h - y, width);
+
             color.set(color2);
+            renderer.setColor(color);
             renderer.circle(x, Game.h - y, width / 2);
             if (overAlpha > 0) {
 
@@ -253,7 +254,6 @@ public class Player extends GameObject {
     }
 
     private void drawLine(ShapeRenderer shapeRenderer, int dotDist) {
-
         if (!(Game.state == GameState.Playing) || !isOnPlatform() || dead)
             return;
 
@@ -311,6 +311,7 @@ public class Player extends GameObject {
             return;
 
         ints = Utility.getAnglePos((float) (platformOnAngle % 6.28319), platform.width + (width), (int) platform.x, (int) platform.y);
+        x = ints[0];
         x = ints[0];
         y = ints[1];
     }

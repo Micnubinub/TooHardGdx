@@ -114,11 +114,14 @@ public class Game extends ApplicationAdapter {
         font = Utility.getFont();
     }
 
-    public static void draw(SpriteBatch batch) {
-
+    public static void draw() {
         // GAME:
         level.draw(renderer);
-        player.draw(batch, renderer);
+        player.draw(renderer);
+
+    }
+
+    private static void drawHUD() {
         textAnimator.draw(batch);
 
 
@@ -126,7 +129,6 @@ public class Game extends ApplicationAdapter {
 
         // SCORE:
         if (state == GameState.Playing) {
-
             scale = Utility.getScale(GameValues.SCORE_TEXT_SIZE * scoreTextMult);
 
             font.getData().setScale(scale);
@@ -585,10 +587,7 @@ public class Game extends ApplicationAdapter {
             item.dispose();
         }
         Player.dispose();
-        CoinPickup.dispose();
-        Enemy.dispose();
-        GearPlatform.dispose();
-        Particle.dispose();
+
         SpikeObject.dispose();
         TrailParticle.dispose();
 
@@ -623,12 +622,16 @@ public class Game extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glEnable(GL20.GL_BLEND);
 
+
         update(Gdx.graphics.getDeltaTime() * 1000);
 
-        batch.begin();
         renderer.begin(ShapeRenderer.ShapeType.Filled);
-        draw(batch);
+        Gdx.gl.glLineWidth(100);
+        draw();
         renderer.end();
+
+        batch.begin();
+        drawHUD();
         batch.end();
     }    // STORE DIALOG:
 

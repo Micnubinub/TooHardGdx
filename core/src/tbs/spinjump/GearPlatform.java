@@ -8,8 +8,6 @@ import java.util.ArrayList;
 public class GearPlatform extends GameObject {
 
     private static final Color c = new Color();
-    //Todo renderer private static Sprite cog1, cog2, backgroundCircle, ring;
-    // Gear Specific:
     public float rotationSpeed;
     public float rotation;
     public int startingWidth;
@@ -84,28 +82,31 @@ public class GearPlatform extends GameObject {
     }
 
     public void draw(ShapeRenderer renderer) {
-
-
         final float ring1 = (width + (GameValues.PLAYER_SCALE));
         final float ring2 = (width + (GameValues.PLAYER_SCALE * 2));
 
+        renderer.setColor(c);
         c.set(GameValues.RING_COLOR);
-        renderer.circle(x, Game.h - y, ring2 - GameValues.RING_WIDTH);
+        renderer.circle(x, Game.h - y, ring2);
 
         c.set(GameValues.BACKGROUND_COLOR);
-        renderer.circle(x, Game.h - y, ring2 - (GameValues.RING_WIDTH * 2));
+        renderer.setColor(c);
+        renderer.circle(x, Game.h - y, ring2 - (GameValues.RING_WIDTH / 2));
 
         c.set(GameValues.RING_COLOR);
-        renderer.circle(x, Game.h - y, ring1 - GameValues.RING_WIDTH);
+        renderer.setColor(c);
+        renderer.circle(x, Game.h - y, ring1);
 
         c.set(GameValues.BACKGROUND_COLOR);
+        renderer.setColor(c);
         renderer.circle(x, Game.h - y, ring1 - (GameValues.RING_WIDTH / 2));
 
-
         c.set(GameValues.COG_COLOR);
+        renderer.setColor(c);
         renderer.circle(x, Game.h - y, width);
 
         c.set(GameValues.COG_COLOR_2);
+        renderer.setColor(c);
         renderer.circle(x, Game.h - y, width * 0.7f);
 
 
@@ -183,8 +184,8 @@ public class GearPlatform extends GameObject {
                 hasEnemy = false;
             }
             enemies.get(i).platformOnAngle = angle;
-            angle += (360 / enemies.size());
-            angle %= 360;
+            angle += (6.28319 / enemies.size());
+            angle %= 6.28319;
         }
 
         // COINS:
@@ -198,8 +199,8 @@ public class GearPlatform extends GameObject {
             final int[] ints = Utility.getAnglePos(angle, (GameValues.PLAYER_SCALE + width), (int) x, (int) y);
             coins.get(i).angle = angle;
             coins.get(i).setup(ints[0], ints[1]);
-            angle += (360 / coins.size());
-            angle %= 360;
+            angle += (6.28319 / coins.size());
+            angle %= 6.28319;
         }
 
 

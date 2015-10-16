@@ -29,21 +29,20 @@ public class Enemy {
 
 
     public void draw(ShapeRenderer renderer) {
-
         if (active) {
             color.set(GameValues.COG_COLOR);
             renderer.setColor(color);
-            renderer.circle(x, y, scale);
+            renderer.circle(x, Game.h - y, scale);
 
             color.set(GameValues.COG_COLOR_2);
             renderer.setColor(color);
-            renderer.circle(x, y, scale / 2);
+            renderer.circle(x, Game.h - y, scale / 2);
         }
     }
 
     public void update(float delta) {
-        platformOnAngle -= (platform.rotationSpeed * delta);
-        platformOnAngle %= 360;
+        platformOnAngle -= (platform.rotationSpeed * delta * 0.01745330555f);
+        platformOnAngle %= 6.28319;
         updateAnglePos();
     }
 
