@@ -1,6 +1,6 @@
 package tbs.spinjump;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
 
@@ -88,9 +88,9 @@ public class Level {
         }
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(ShapeRenderer renderer) {
         for (int i = 0; i < gears.size(); ++i) {
-            gears.get(i).draw(batch);
+            gears.get(i).draw(renderer);
         }
     }
 

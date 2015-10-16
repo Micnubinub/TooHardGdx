@@ -1,15 +1,14 @@
 package tbs.spinjump;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Particle {
     public static final int STATE_ALIVE = 0; // particle is alive
     public static final int STATE_DEAD = 1; // particle is dead
 
     public static final int DEFAULT_LIFETIME = 200; // play with this
+    private static final Color color = new Color(1, 1, 1, 1); // the color of the particle
     //Todo renderer private static Sprite circle;
     private int state; // particle is alive or dead
     private float width; // width of the particle
@@ -18,33 +17,15 @@ public class Particle {
     private double xv, yv; // vertical and horizontal velocity
     private int age; // current age of the particle
     private int lifetime; // particle dies when it reaches this value
-    private int color; // the color of the particle
+
 
     public Particle() {
-        initCircle();
     }
 
     public static void dispose() {
-        try {
-            circle.getTexture().dispose();
-        } catch (Exception e) {
-        }
+
     }
 
-    private static void initCircle() {
-        dispose();
-
-        final int s = Game.w / 10;
-
-        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
-        pixmap.setColor(1, 1, 1, 1);
-        pixmap.fillCircle(s / 2, s / 2, s / 2);
-
-        circle = new Sprite(new Texture(pixmap));
-
-        pixmap.dispose();
-    }
 
     public void setup(int x, int y) {
         this.x = x;
@@ -76,11 +57,10 @@ public class Particle {
         }
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(ShapeRenderer renderer) {
         if (this.state == STATE_ALIVE) {
-            circle.setCenter(x, Game.h - y);
-            circle.setSize(width, width);
-            circle.draw(batch);
+            renderer.setColor(color);
+            renderer.circle(x, Game.h - y, width / 2);
         }
     }
 }

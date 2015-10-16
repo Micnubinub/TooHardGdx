@@ -4,8 +4,8 @@ package tbs.spinjump;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class StoreItem {
     private static final Color color = new Color();
@@ -14,7 +14,7 @@ public class StoreItem {
     public int cost;
     public boolean bought;
     public int color1, color2;
-    public Sprite sprite;
+    public Image sprite;
     public String IAPID;
     public boolean buyable;
     public int unlockRarity;
@@ -40,15 +40,13 @@ public class StoreItem {
     }
 
     private void draw(SpriteBatch batch, float x, float y) {
-        sprite.setOriginCenter();
-        sprite.setCenter(sprite.getWidth() / 2, sprite.getHeight() / 2);
         sprite.setPosition(x, y);
-        sprite.draw(batch);
+        sprite.draw(batch, 1);
     }
 
     public void dispose() {
         try {
-            sprite.getTexture().dispose();
+            sprite.getDrawable();
         } catch (Exception e) {
         }
     }
@@ -61,7 +59,8 @@ public class StoreItem {
 
         color.set(color2);
         p.setColor(color);
-        sprite = new Sprite(new Texture(p));
+
+        sprite = new Image(new Texture(p));
         p.dispose();
     }
 

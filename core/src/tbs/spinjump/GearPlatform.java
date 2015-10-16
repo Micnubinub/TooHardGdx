@@ -1,10 +1,7 @@
 package tbs.spinjump;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
 
@@ -32,52 +29,12 @@ public class GearPlatform extends GameObject {
         for (int i = 0; i < 2; ++i) {
             enemies.add(new Enemy(this));
         }
-        initCircle();
     }
 
     public static void dispose() {
-        try {
-            cog1.getTexture().dispose();
-        } catch (Exception e) {
-        }
 
-        try {
-            ring.getTexture().dispose();
-        } catch (Exception e) {
-        }
-
-        try {
-            backgroundCircle.getTexture().dispose();
-        } catch (Exception e) {
-        }
     }
 
-    private static void initCircle() {
-        dispose();
-
-        final int s = Game.w / 3;
-
-        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
-
-        pixmap.setColor(GameValues.COG_COLOR);
-        pixmap.fillCircle(s / 2, s / 2, s / 2);
-        cog1 = new Sprite(new Texture(pixmap));
-
-        pixmap.setColor(GameValues.COG_COLOR_2);
-        pixmap.fillCircle(s / 2, s / 2, s / 2);
-        cog2 = new Sprite(new Texture(pixmap));
-
-        pixmap.setColor(GameValues.BACKGROUND_COLOR);
-        pixmap.fillCircle(s / 2, s / 2, s / 2);
-        backgroundCircle = new Sprite(new Texture(pixmap));
-
-        pixmap.setColor(GameValues.RING_COLOR);
-        pixmap.fillCircle(s / 2, s / 2, s / 2);
-        ring = new Sprite(new Texture(pixmap));
-
-        pixmap.dispose();
-    }
 
     public void update(float delta) {
         rotation += (rotationSpeed * delta);
@@ -126,74 +83,42 @@ public class GearPlatform extends GameObject {
         return distanceSquared < (width + radius2) * (width + radius2);
     }
 
-    public void draw(SpriteBatch batch) {
-        // PLATFORM:
-// Todo renderer       Game.paint.setColor(GameValues.COG_COLOR);
-//        canvas.drawCircle(x, y, width, Game.paint);
-//        Game.paint.setColor(GameValues.COG_COLOR_2);
-//        canvas.drawCircle(x, y, width * 0.7f, Game.paint);
-//
-//        // RINGS:
-//        Game.paint.setStyle(Paint.Style.STROKE);
-//        Game.paint.setStrokeWidth(GameValues.RING_WIDTH / 2);
-//        Game.paint.setColor(GameValues.RING_COLOR);
-//        canvas.drawCircle(x, y, width + (GameValues.PLAYER_SCALE), Game.paint);
-//        Game.paint.setStrokeWidth(GameValues.RING_WIDTH);
-//        canvas.drawCircle(x, y, width + (GameValues.PLAYER_SCALE * 2), Game.paint);
-//
-//        // RESET:
-//        Game.paint.setStyle(Paint.Style.FILL);
-//
-//        // DRAW COINS:
-//        for (int i = 0; i < coins.size(); ++i) {
-//            coins.get(i).draw(canvas);
-//        }
-//
-//        // DRAW ENEMIES:
-//        for (int i = 0; i < enemies.size(); ++i) {
-//            enemies.get(i).draw(canvas);
-//        }
-
-        final int s = width * 2;
-        final float ring1 = (width + (GameValues.PLAYER_SCALE)) * 2;
-        final float ring2 = (width + (GameValues.PLAYER_SCALE * 2)) * 2;
-
-        ring.setSize(ring2, ring2);
-        ring.setCenter(x, Game.h - y);
-        ring.draw(batch);
-
-        backgroundCircle.setSize(ring2 - GameValues.RING_WIDTH, ring2 - (GameValues.RING_WIDTH * 2));
-        backgroundCircle.setCenter(x, Game.h - y);
-        backgroundCircle.draw(batch);
-
-        ring.setSize(ring1, ring1);
-        ring.setCenter(x, Game.h - y);
-        ring.draw(batch);
-
-        backgroundCircle.setSize(ring1 - (GameValues.RING_WIDTH / 2), ring1 - ((GameValues.RING_WIDTH / 2) * 2));
-        backgroundCircle.setCenter(x, Game.h - y);
-        backgroundCircle.draw(batch);
+    public void draw(ShapeRenderer renderer) {
 
 
-        cog1.setSize(s, s);
-        cog1.setCenter(x, Game.h - y);
-        cog1.draw(batch);
+        final float ring1 = (width + (GameValues.PLAYER_SCALE));
+        final float ring2 = (width + (GameValues.PLAYER_SCALE * 2));
 
-        cog2.setSize(s * 0.7f, s * 0.7f);
-        cog2.setCenter(x, Game.h - y);
-        cog2.draw(batch);
+        c.set(GameValues.RING_COLOR);
+        renderer.circle(x, Game.h - y, ring2 - GameValues.RING_WIDTH);
+
+        c.set(GameValues.BACKGROUND_COLOR);
+        renderer.circle(x, Game.h - y, ring2 - (GameValues.RING_WIDTH * 2));
+
+        c.set(GameValues.RING_COLOR);
+        renderer.circle(x, Game.h - y, ring1 - GameValues.RING_WIDTH);
+
+        c.set(GameValues.BACKGROUND_COLOR);
+        renderer.circle(x, Game.h - y, ring1 - (GameValues.RING_WIDTH / 2));
+
+
+        c.set(GameValues.COG_COLOR);
+        renderer.circle(x, Game.h - y, width);
+
+        c.set(GameValues.COG_COLOR_2);
+        renderer.circle(x, Game.h - y, width * 0.7f);
 
 
         // RESET:
 
         // DRAW COINS:
         for (int i = 0; i < coins.size(); ++i) {
-            coins.get(i).draw(batch);
+            coins.get(i).draw(renderer);
         }
 
         // DRAW ENEMIES:
         for (int i = 0; i < enemies.size(); ++i) {
-            enemies.get(i).draw(batch);
+            enemies.get(i).draw(renderer);
         }
     }
 

@@ -1,42 +1,22 @@
 package tbs.spinjump;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class TrailParticle {
+    private static final Color color = new Color();
     //Todo renderer private static Sprite circle;
     public float scale;
     public int x;
     public int y;
 
-
     public TrailParticle() {
-        initCircle();
     }
 
     public static void dispose() {
-        try {
-            circle.getTexture().dispose();
-        } catch (Exception e) {
-        }
+
     }
 
-    private static void initCircle() {
-        dispose();
-
-        final int s = Game.w / 4;
-
-        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
-        pixmap.setColor(0xe6e8f1FF);
-        pixmap.fillCircle(s / 2, s / 2, s / 2);
-
-        circle = new Sprite(new Texture(pixmap));
-
-        pixmap.dispose();
-    }
 
     public void reset(int x, int y) {
         scale = GameValues.PARTICLE_SIZE;
@@ -48,9 +28,9 @@ public class TrailParticle {
         scale -= GameValues.PARTICLE_SHRINK_SPEED * delta;
     }
 
-    public void draw(SpriteBatch batch) {
-        circle.setCenter(x, Game.h - y);
-        circle.setSize(scale * 2, scale * 2);
-        circle.draw(batch);
+    public void draw(ShapeRenderer renderer) {
+        color.set(0xe6e8f1FF);
+        renderer.setColor(color);
+        renderer.circle(x, Game.h - y, scale / 2);
     }
 }

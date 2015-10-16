@@ -1,9 +1,7 @@
 package tbs.spinjump;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -12,13 +10,14 @@ import java.util.ArrayList;
 
 public class Player extends GameObject {
 
+    private static final Color color = new Color();
     //    private static final Color color = new Color();
     private static int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
     private static int[] ints;
     private static float[] lineStop;
     private static Vector2 vec2 = new Vector2();
     private static Vector2 vec2_1 = new Vector2();
-    //  Todo renderer  private static Sprite player, overA;
+    //  Todo renderer
     // Collision & Platforms:
     public GearPlatform platform; // Which Platform the Player is on
     public double platformOnAngle;
@@ -69,19 +68,10 @@ public class Player extends GameObject {
         for (int i = 0; i < 6; ++i) {
             circles.add(new AnimCircle());
         }
-        initOverA();
     }
 
     public static void dispose() {
-        try {
-            player.getTexture().dispose();
-        } catch (Exception e) {
-        }
 
-        try {
-            overA.getTexture().dispose();
-        } catch (Exception e) {
-        }
     }
 
 //    private static void getPlayer(int width, int color1, int color2) {
@@ -103,21 +93,6 @@ public class Player extends GameObject {
 //
 //    }
 
-    private static void initOverA() {
-        try {
-            overA.getTexture().dispose();
-        } catch (Exception e) {
-        }
-        final int s = Game.w / 3;
-
-        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
-        pixmap.setColor(1, 1, 1, 1);
-        pixmap.fillCircle(s / 2, s / 2, s / 2);
-
-        overA = new Sprite(new Texture(pixmap));
-
-        pixmap.dispose();
-    }
 
     public void setup() {
         // Starting Position on First Cog
@@ -131,10 +106,10 @@ public class Player extends GameObject {
         platformOnAngle = Math.PI;
         particleIndex = 0;
         circleIndex = 0;
-        getPlayer(width * 2, GameValues.PLAYER_COLOR, GameValues.PLAYER_COLOR_2);
         updateAnglePos();
         revivalCount = 0;
     }
+
 
     public void revive() {
         platform = Level.gears.get(Level.moverIndex);
@@ -249,31 +224,30 @@ public class Player extends GameObject {
         return distanceSquared < (width + radius2) * (width + radius2);
     }
 
-    public void draw(SpriteBatch batch) {
-        drawLine();
+    public void draw(SpriteBatch batch, ShapeRenderer renderer) {
+        drawLine(renderer, Game.w / 6);
         if (!dead)
             for (int i = 0; i < trail.size(); ++i) {
-                trail.get(i).draw(batch);
+                trail.get(i).draw(renderer);
             }
         for (int i = 0; i < splash.size(); ++i) {
-            splash.get(i).draw(batch);
+            splash.get(i).draw(renderer);
         }
 
         for (int i = 0; i < circles.size(); ++i) {
-            circles.get(i).draw(batch);
+            circles.get(i).draw(renderer);
         }
 
         if (!dead) {
-            player.setCenter(x, Game.h - y);
-            player.draw(batch);
+            color.set(color1);
+            renderer.setColor(color);
+            renderer.circle(x, Game.h - y, width);
+            color.set(color2);
+            renderer.circle(x, Game.h - y, width / 2);
             if (overAlpha > 0) {
-                overA.setAlpha(overAlpha / 255f);
-                overA.setSize(width, width);
-                overA.setCenter(x, Game.h - y);
-                overA.draw(batch);
-//        Todo renderer        Game.paint.setColor(0xFFFFFFFF);
-//                Game.paint.setAlpha((int) overAlpha);
-//                canvas.drawCircle(x, y, width, Game.paint);
+
+                color.set(1, 1, 1, overAlpha / 255f);
+                renderer.circle(x, Game.h - y, width);
             }
         }
     }
@@ -301,6 +275,8 @@ public class Player extends GameObject {
             vec2.clamp(length - i, length - i);
             shapeRenderer.point(x + vec2.x, y + vec2.y, 0);
         }
+        shapeRenderer.end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
     }
 
 

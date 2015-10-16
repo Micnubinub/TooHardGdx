@@ -1,43 +1,26 @@
 package tbs.spinjump;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
 
 /**
  * Created by Sidney on 11/06/2015.
  */
 public class AnimCircle {
+    private static final Color color = new Color();
     //Todo renderer private static Sprite circle;
     public float scale;
     public float alpha;
     public float x, y;
 
     public AnimCircle() {
-        initCircle();
     }
 
     public static void dispose() {
-        try {
-            circle.getTexture().dispose();
-        } catch (Exception e) {
-        }
+
     }
 
-    private static void initCircle() {
-        dispose();
-        final int s = Game.w / 3;
-
-        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA8888);
-        Pixmap.setFilter(Pixmap.Filter.BiLinear);
-        pixmap.setColor(1, 1, 1, 1);
-        pixmap.fillCircle(s / 2, s / 2, s / 2);
-
-        circle = new Sprite(new Texture(pixmap));
-
-        pixmap.dispose();
-    }
 
     public void setup(float x, float y) {
         this.x = x;
@@ -55,12 +38,11 @@ public class AnimCircle {
         }
     }
 
-    public void draw(SpriteBatch batch) {
+    public void draw(ShapeRenderer renderer) {
         if (alpha > 0) {
-            circle.setAlpha(alpha / 255f);
-            circle.setSize(scale * 2, scale * 2);
-            circle.setCenter(x, Game.h - y);
-            circle.draw(batch);
+            color.set(1, 1, 1, alpha / 255f);
+            renderer.setColor(color);
+            renderer.circle(x, y, scale / 2);
         }
     }
 }
