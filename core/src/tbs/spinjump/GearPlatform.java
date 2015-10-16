@@ -109,7 +109,6 @@ public class GearPlatform extends GameObject {
         renderer.setColor(c);
         renderer.circle(x, Game.h - y, width * 0.7f);
 
-
         // RESET:
 
         // DRAW COINS:

@@ -622,11 +622,10 @@ public class Game extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glEnable(GL20.GL_BLEND);
 
-
         update(Gdx.graphics.getDeltaTime() * 1000);
 
         renderer.begin(ShapeRenderer.ShapeType.Filled);
-        Gdx.gl.glLineWidth(100);
+        Gdx.gl.glLineWidth(GameValues.RING_WIDTH);
         draw();
         renderer.end();
 
