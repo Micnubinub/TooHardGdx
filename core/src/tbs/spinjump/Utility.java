@@ -30,7 +30,7 @@ public class Utility {
     }
 
     public static BitmapFont getFont() {
-        if (!isFontInit) {
+        if (!isFontInit || font == null) {
             font = new BitmapFont(Gdx.files.internal("font.fnt"));
             isFontInit = true;
         }
@@ -43,6 +43,7 @@ public class Utility {
 
     public static void disposeFont() {
         isFontInit = false;
+        font = null;
         try {
             font.dispose();
         } catch (Exception e) {

@@ -14,14 +14,6 @@ public class AnimCircle {
     public float alpha;
     public float x, y;
 
-    public AnimCircle() {
-    }
-
-    public static void dispose() {
-
-    }
-
-
     public void setup(float x, float y) {
         this.x = x;
         this.y = y;

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 public class Player extends GameObject {
 
     private static final Color color = new Color();
-    //    private static final Color color = new Color();
     private static int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
     private static int[] ints;
     private static float[] lineStop;
@@ -68,30 +67,6 @@ public class Player extends GameObject {
             circles.add(new AnimCircle());
         }
     }
-
-    public static void dispose() {
-
-    }
-
-//    private static void getPlayer(int width, int color1, int color2) {
-//        //Todo consider changing over to shaperenderer
-//        try {
-//            player.getTexture().dispose();
-//        } catch (Exception e) {
-//        }
-//        final int s = width;
-//        final Pixmap pixmap = new Pixmap(s, s, Pixmap.Format.RGBA4444);
-//        pixmap.setColor(color1);
-//        pixmap.fillCircle(s / 2, s / 2, s / 2);
-//        pixmap.setColor(color2);
-//        pixmap.fillCircle(s / 2, s / 2, s / 4);
-//
-//        player = new Sprite(new Texture(pixmap));
-//        player.setSize(s, s);
-//        pixmap.dispose();
-//
-//    }
-
 
     public void setup() {
         // Starting Position on First Cog
@@ -224,7 +199,7 @@ public class Player extends GameObject {
     }
 
     public void draw(ShapeRenderer renderer) {
-        drawLine(renderer, Game.w / 6);
+        drawLine(renderer, Game.w / 18);
         if (!dead)
             for (int i = 0; i < trail.size(); ++i) {
                 trail.get(i).draw(renderer);
@@ -246,7 +221,6 @@ public class Player extends GameObject {
             renderer.setColor(color);
             renderer.circle(x, Game.h - y, width / 2);
             if (overAlpha > 0) {
-
                 color.set(1, 1, 1, overAlpha / 255f);
                 renderer.circle(x, Game.h - y, width);
             }
@@ -263,17 +237,17 @@ public class Player extends GameObject {
             if (gear == platform)
                 continue;
 
-            lineStop = CircleIntercestor.intercect(gear, (float) (x + (Game.h * Math.sin(platformOnAngle))), (float) (y + (Game.h * Math.cos(platformOnAngle))));
+            lineStop = CircleIntercestor.intercect(gear, (float) (x + (Game.h * Math.sin(platformOnAngle))), (float) (Game.h - y + (Game.h * Math.cos(platformOnAngle))));
             if (lineStop[2] > 0) break;
         }
 
         shapeRenderer.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
-        vec2.set(lineStop[0], lineStop[1]).sub(vec2_1.set(x, y));
+        vec2.set(lineStop[0], lineStop[1]).sub(vec2_1.set(x, Game.h - y));
         float length = vec2.len();
         for (int i = 0; i < length; i += dotDist) {
             vec2.clamp(length - i, length - i);
-            shapeRenderer.point(x + vec2.x, y + vec2.y, 0);
+            shapeRenderer.point(x + vec2.x, Game.h - y + vec2.y, 0);
         }
         shapeRenderer.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);

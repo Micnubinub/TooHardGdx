@@ -1,22 +1,19 @@
 package tbs.spinjump;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 
 
 public class CanvasButton extends GameObject {
     private static final Rectangle rectangle = new Rectangle();
-    public Sprite image;
+    public TextureAtlas.AtlasRegion image;
     public int width, height;
     public boolean active;
     public boolean animated;
     public boolean up;
     public float yOrigin;
     public boolean playSound;
-    public int id;
     public float moveRange;
 
     // WIGGLE:
@@ -24,16 +21,15 @@ public class CanvasButton extends GameObject {
     public boolean rotateLeft;
     public float rotation;
 
-    public CanvasButton(int x, int y, String id, boolean anim) {
+    public CanvasButton(TextureAtlas.AtlasRegion region, int x, int y, boolean anim) {
         this.x = x;
         this.y = y;
         width = GameValues.MENU_BTN_WIDTH;
         height = GameValues.MENU_BTN_HEIGHT;
         yOrigin = y;
-        image = new Sprite(new Texture(Gdx.files.internal(id + ".png")));
-        image.setSize(width, height);
         active = true;
         animated = anim;
+        image = region;
         up = true;
         playSound = true;
 
@@ -46,7 +42,7 @@ public class CanvasButton extends GameObject {
         rotate = false;
     }
 
-    public void wiggle(int amount) {
+    public void wiggle() {
         if (!rotate) {
             rotate = true;
             rotateLeft = false;
@@ -101,20 +97,17 @@ public class CanvasButton extends GameObject {
         }
     }
 
-    public void draw(SpriteBatch canvas) {
+    public void draw(SpriteBatch batch) {
         if (!active)
             return;
 //        image.setCenter(image.getWidth() / 2, image.getHeight() / 2);
-        image.setPosition(x, y);
-        image.setOriginCenter();
-        image.draw(canvas);
 
         if (active) {
             if (rotate) {
-                image.setRotation(rotation);
-                image.draw(canvas);
+                batch.draw(image, x, y, x, y, width, width, 1, 1, rotation);
+
             } else {
-                image.draw(canvas);
+                batch.draw(image, x, y, width, width);
             }
         }
     }

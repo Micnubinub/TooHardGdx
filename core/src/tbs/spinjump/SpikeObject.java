@@ -14,12 +14,7 @@ public class SpikeObject extends GameObject {
 
     public SpikeObject() {
     }
-
-    public static void dispose() {
-
-    }
-
-
+    
     public static void setWidthAndHeight() {
         SpikeObject.width = (int) GameValues.SPIKE_SIZE;
         SpikeObject.height = (int) GameValues.SPIKE_SIZE;

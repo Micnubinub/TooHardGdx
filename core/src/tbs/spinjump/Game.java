@@ -6,11 +6,11 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
@@ -63,11 +63,10 @@ public class Game extends ApplicationAdapter {
     public static int revivalCost;
     // CASINO:
     public static CasinoManager casinoManager;
-    private static Texture menuTint;
+    private static Texture buttonAtlas;
     private static SpriteBatch batch;
     private static ShapeRenderer renderer;
     private static BitmapFont font;
-    private static Texture introTexture;
 
     public static void setup() {
         // SETUP:
@@ -118,7 +117,20 @@ public class Game extends ApplicationAdapter {
         // GAME:
         level.draw(renderer);
         player.draw(renderer);
+        if (state != GameState.Playing) {
+            color.set(0x000000aa);
+            renderer.setColor(color);
+            renderer.rect(0, 0, w, h);
+        }
 
+        // DRAW INTRO:
+        if (introAlpha > 0) {
+            color.set(GameValues.BACKGROUND_COLOR);
+            color.a = introAlpha / 255f;
+            renderer.setColor(color);
+            renderer.rect(0, 0, w, h);
+            Utility.drawCenteredText(batch, color, "THE BIG SHOTS", w / 2, h / 2, Utility.getScale(GameValues.MENU_TEXT_SIZE / 1.5f));
+        }
     }
 
     private static void drawHUD() {
@@ -152,7 +164,7 @@ public class Game extends ApplicationAdapter {
 
         // DRAW MENU:
         if (state == GameState.Menu) {
-            batch.draw(menuTint, 0, 0, w, h);
+
 
             scale = Utility.getScale(GameValues.MENU_TEXT_SIZE);
 
@@ -188,8 +200,6 @@ public class Game extends ApplicationAdapter {
 
         // DRAW DEATH:
         if (state == GameState.Death) {
-            batch.draw(menuTint, 0, 0, w, h);
-
             // DEATH TEXT:
             scale = Utility.getScale(GameValues.MENU_TEXT_SIZE);
             glyphLayout.setText(font, "YOU DIED");
@@ -224,8 +234,8 @@ public class Game extends ApplicationAdapter {
         }
 
         // DRAW STORE:
+
         if (state == GameState.Store) {
-            batch.draw(menuTint, 0, 0, w, h);
 
 
             // DEATH TEXT:
@@ -237,8 +247,8 @@ public class Game extends ApplicationAdapter {
         }
 
         // DRAW CASINO
+
         if (state == GameState.Casino) {
-            batch.draw(menuTint, 0, 0, w, h);
 
             // CASINO HEADER:
             color.set(0xFFe6e8f1);
@@ -277,20 +287,9 @@ public class Game extends ApplicationAdapter {
         glyphLayout.setText(font, "COINS");
         Utility.drawCenteredText(batch, color, "COINS", (1.75f * GameValues.TEXT_PADDING) + textWidth + (glyphLayout.width / 2), GameValues.TEXT_PADDING + (glyphLayout.height / 2), scale);
 
-        // DRAW INTRO:
-        if (introAlpha > 0) {
-            batch.draw(introTexture, 0, 0, w, h);
-            color.set(1, 1, 1, introAlpha / 255f);
-            Utility.drawCenteredText(batch, color, "THE BIG SHOTS", w / 2, h / 2, Utility.getScale(GameValues.MENU_TEXT_SIZE / 1.5f));
-        }
+
     }
 
-    private static Texture getTextureColor(int color) {
-        final Pixmap p = new Pixmap(1, 1, Pixmap.Format.RGBA4444);
-        p.setColor(color);
-        p.fill();
-        return new Texture(p);
-    }
 
     public static void update(float delta) {
         level.update(delta);
@@ -341,27 +340,10 @@ public class Game extends ApplicationAdapter {
         player = new Player();
         textAnimator = new TextAnimator();
 
-        // SETUP BUTTONS:
-        rateButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) + GameValues.BUTTON_PADDING * 4), "rate_btn", false);
-        leaderButton = new CanvasButton((int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + GameValues.BUTTON_PADDING * 4), "leader_btn", false);
-        achievementButton = new CanvasButton((int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + GameValues.BUTTON_PADDING * 4), "achiv_btn", false);
-        storeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, "store_btn", false);
-        homeButton2 = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, "home_btn", false);
-        // DEATH:
-        shareButton = new CanvasButton((int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + (GameValues.BUTTON_PADDING * 4)), "share_btn", false);
-        homeButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) + (GameValues.BUTTON_PADDING * 4)), "home_btn", false);
-        retryButton = new CanvasButton((int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + (GameValues.BUTTON_PADDING * 4)), "retry_btn", false);
-        adButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, "ad_btn", true);
-        likeButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, "fb_btn", true);
-        buyButton = new CanvasButton((int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, "money_btn", true);
-        reviveButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 1.75f)), "heart_btn", true);
-        gambleButton = new CanvasButton((w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 1.75f)), "gamble_btn", true);
         reviveButton.up = false;
         buyButton.playSound = false;
         gambleButton.playSound = false;
         gambleButton.up = false;
-        menuTint = getTextureColor(0x000000aa);
-        introTexture = getTextureColor(GameValues.BACKGROUND_COLOR);
 
         // AD:
         showAdInt = 0;
@@ -377,6 +359,29 @@ public class Game extends ApplicationAdapter {
         setupStore();
 
     }
+
+    private static void getCanvasButtons() {
+        buttonAtlas = new Texture("buttons.png");
+        // SETUP BUTTONS:
+        // SETUP BUTTONS:
+        rateButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) + GameValues.BUTTON_PADDING * 4), false);
+        leaderButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + GameValues.BUTTON_PADDING * 4), false);
+        achievementButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + GameValues.BUTTON_PADDING * 4), false);
+        storeButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, false);
+        homeButton2 = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, false);
+        shareButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + (GameValues.BUTTON_PADDING * 4)), false);
+        homeButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) + (GameValues.BUTTON_PADDING * 4)), false);
+        retryButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (int) rateButton.x + (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + (GameValues.BUTTON_PADDING * 4)), false);
+        adButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, true);
+        likeButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, true);
+        buyButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, true);
+        reviveButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 1.75f)), true);
+        gambleButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, x, y, 256, 256), (w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 1.75f)), true);
+
+    }
+
+
+
 
     private static void setupStore() {
         // STORE:
@@ -549,13 +554,12 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        menuTint.dispose();
         try {
             batch.dispose();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        introTexture.dispose();
+        buttonAtlas.dispose();
         jumpSound.dispose();
         coinSound.dispose();
         buttonSound.dispose();
@@ -581,15 +585,7 @@ public class Game extends ApplicationAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        AnimCircle.dispose();
         Utility.disposeFont();
-        for (StoreItem item : storeItems) {
-            item.dispose();
-        }
-        Player.dispose();
-
-        SpikeObject.dispose();
-        TrailParticle.dispose();
 
         try {
             for (CanvasButton item : casinoManager.items) {

@@ -44,15 +44,8 @@ public class StoreItem {
         sprite.draw(batch, 1);
     }
 
-    public void dispose() {
-        try {
-            sprite.getDrawable();
-        } catch (Exception e) {
-        }
-    }
-
     public void getSprite() {
-        dispose();
+        //Todo make this dynamic
         final Pixmap p = new Pixmap(100, 100, Pixmap.Format.RGBA4444);
         color.set(color1);
         p.setColor(color);

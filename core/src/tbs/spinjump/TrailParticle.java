@@ -13,10 +13,6 @@ public class TrailParticle {
     public TrailParticle() {
     }
 
-    public static void dispose() {
-
-    }
-
     public void reset(int x, int y) {
         scale = GameValues.PARTICLE_SIZE;
         this.x = x;
