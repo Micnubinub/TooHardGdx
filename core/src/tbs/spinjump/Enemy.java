@@ -23,11 +23,6 @@ public class Enemy {
         updateAnglePos();
     }
 
-    public static void dispose() {
-
-    }
-
-
     public void draw(ShapeRenderer renderer) {
         if (active) {
             color.set(GameValues.COG_COLOR);
@@ -49,7 +44,7 @@ public class Enemy {
     public void updateAnglePos() {
         if (platform == null)
             return;
-        final int[] ints = Utility.getAnglePos((float) platformOnAngle, platform.width + (scale), (int) platform.x, (int) platform.y);
+        final int[] ints = Utility.getAnglePos(platformOnAngle, platform.width + (scale), platform.x, platform.y);
         x = ints[0];
         y = ints[1];
     }

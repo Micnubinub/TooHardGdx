@@ -1,5 +1,6 @@
 package tbs.spinjump;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 
@@ -11,7 +12,7 @@ public class GameController implements InputProcessor {
         if (Game.state == GameState.Menu) {
             if (Game.rateButton.isClicked(x, y)) {
                 Game.log("menu > rate");
-          /*Todo      final String appPackageName = Game.context.getPackageName(); // getPackageName() from Context or Activity object
+          /*Todo    vGdx.net.openURI(  final String appPackageName = Game.context.getPackageName(); // getPackageName() from Context or Activity object
                 try {
                     Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
                 } catch (android.content.ActivityNotFoundException anfe) {
@@ -74,13 +75,7 @@ public class GameController implements InputProcessor {
                 Game.adButton.active = false;
             } else if (Game.likeButton.isClicked(x, y)) {
                 Game.log("death > like");
-                // SHOW FB PAGE:
-//   Todo             try {
-//                    Game.context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
-//                    Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/337927283025915")));
-//                } catch (Exception e) {
-//                    Game.context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/AndroidHackerApp")));
-//                }
+                Gdx.net.openURI("https://www.facebook.com/AndroidHackerApp");
                 Game.likeButton.active = false;
             } else if (Game.buyButton.isClicked(x, y)) {
                 Game.log("death > buy");

@@ -22,11 +22,6 @@ public class Particle {
     public Particle() {
     }
 
-    public static void dispose() {
-
-    }
-
-
     public void setup(int x, int y) {
         this.x = x;
         this.y = y;
@@ -42,7 +37,6 @@ public class Particle {
         yv *= 0.85;
 
         // DEBUG VALUES:::::
-
     }
 
     public void update(float delta) {

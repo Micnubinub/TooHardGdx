@@ -5,7 +5,6 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.Random;
@@ -22,7 +21,7 @@ public class Utility {
     private static BitmapFont font;
 
     public static int getRandom(int min, int max) {
-        return rand.nextInt((max - min) + 1) + min;
+        return rand.nextInt((max - min) < 0 ? 0 : (max - min) + 1) + min;
     }
 
     public static float randFloat(int minX, int maxX) {
@@ -50,15 +49,10 @@ public class Utility {
         }
     }
 
-    public static int[] getAnglePos(float angle, float distFromCenter, int x, int y) {
+    public static int[] getAnglePos(double angle, float distFromCenter, float x, float y) {
         ints[0] = (int) (Math.round(distFromCenter * Math.sin(angle)) + x);
         ints[1] = (int) (Math.round(distFromCenter * Math.cos(angle)) + y);
         return ints;
-    }
-
-    public static Sprite getResizedBitmap(Sprite sprite, int newHeight, int newWidth) {
-        sprite.setSize(newWidth, newHeight);
-        return sprite;
     }
 
     public static Preferences getPreferences() {

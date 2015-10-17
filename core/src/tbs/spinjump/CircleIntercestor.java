@@ -4,7 +4,7 @@ package tbs.spinjump;
  * Created by linde on 06-Oct-15.
  */
 public class CircleIntercestor {
-    private static final double minAngle = 1.5 * Math.PI;
+    private static final double minAngle = 270;
     private static final Point[] points = new Point[]{
             new Point(),
             new Point(),
@@ -18,14 +18,17 @@ public class CircleIntercestor {
         lineStop[2] = 0;
     }
 
-    public static float[] intercect(GearPlatform platform, float outerX, float outerY) {
-        check = Game.player.platformOnAngle < 0 ? (Math.PI * 2 + Game.player.platformOnAngle) : Game.player.platformOnAngle;
-        if (check < (Math.PI / 2) && check > minAngle) {
+    public static float[] intersect(GearPlatform platform, float outerX, float outerY) {
+        check = (360 + Math.toDegrees(Game.player.platformOnAngle)) % 360;
+
+        if (check < 90 || check > minAngle) {
             lineStop[0] = outerX;
             lineStop[1] = outerY;
             lineStop[2] = 1;
             return lineStop;
         }
+
+        Game.log(String.valueOf(check));
 
         points[0].x = Game.player.x;
         points[0].y = Game.player.y;
@@ -36,7 +39,7 @@ public class CircleIntercestor {
         points[2].x = platform.x;
         points[2].y = platform.y;
 
-        final Point intercept = getCircleLineIntersectionPoint(platform.width);
+        final Point intercept = getCircleLineIntersectionPoint(platform.width + GameValues.PLAYER_SCALE);
         if (intercept != null) {
             lineStop[0] = intercept.x;
             lineStop[1] = intercept.y;
@@ -46,7 +49,6 @@ public class CircleIntercestor {
             lineStop[1] = outerY;
             lineStop[2] = 0;
         }
-
         return lineStop;
     }
 
@@ -67,19 +69,12 @@ public class CircleIntercestor {
         if (disc < 0) {
             return null;
         }
-        // if disc == 0 ... dealt with later
+
         float tmpSqrt = (float) Math.sqrt(disc);
         float abScalingFactor1 = -pBy2 + tmpSqrt;
-        float abScalingFactor2 = -pBy2 - tmpSqrt;
 
-//        if (disc == 0) { // abScalingFactor1 == abScalingFactor2
         points[3].x = points[0].x - baX * abScalingFactor1;
         points[3].y = points[0].y - baY * abScalingFactor1;
-////        } else {
-//        points[3].x = points[0].x - baX * abScalingFactor2;
-//        points[3].y = points[0].y
-//                - baY * abScalingFactor2;
-//        }
 
         return points[3];
     }
@@ -89,11 +84,6 @@ public class CircleIntercestor {
 
         public Point() {
             super();
-        }
-
-        public Point(float x, float y) {
-            this.x = x;
-            this.y = y;
         }
 
         @Override

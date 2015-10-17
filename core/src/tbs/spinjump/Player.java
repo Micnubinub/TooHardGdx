@@ -10,11 +10,13 @@ import java.util.ArrayList;
 public class Player extends GameObject {
 
     private static final Color color = new Color();
+    private static final Vector2 playerPos = new Vector2();
+    private static final float[] rotationInts = new float[2];
+    private static final float[] rotationInts2 = new float[2];
     private static int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
     private static int[] ints;
     private static float[] lineStop;
-    private static Vector2 vec2 = new Vector2();
-    private static Vector2 vec2_1 = new Vector2();
+    private static int lineWidth, lineLength, lineSep;
     //  Todo renderer
     // Collision & Platforms:
     public GearPlatform platform; // Which Platform the Player is on
@@ -66,6 +68,10 @@ public class Player extends GameObject {
         for (int i = 0; i < 6; ++i) {
             circles.add(new AnimCircle());
         }
+
+        lineLength = Math.round(GameValues.PLAYER_SCALE * 0.8f);
+        lineWidth = Math.round(lineLength * 0.22f);
+        lineSep = Math.round(lineLength * 0.33f);
     }
 
     public void setup() {
@@ -97,18 +103,13 @@ public class Player extends GameObject {
         revivalCount += 1;
     }
 
-    public float getAngle(float xO, float yO) {
-        //Todo check if theres too much conversion to and from deg
-        return (float) (Math.atan2(yO - y, xO - x) % 6.28319);
-    }
-
     public void update(float delta) { // Use Delta
         // Update Level Platforms as well:
         if (platform != null) {
             if (!dead) {
                 // On a Platform:
                 platformOnAngle -= (platform.rotationSpeed * delta * 0.01745330555f);
-                platformOnAngle %= 6.28319;
+                platformOnAngle = platformOnAngle % 6.28319;
 
                 // CHECK COIN COLLISION:
                 for (int i = 0; i < platform.coins.size(); ++i) {
@@ -139,8 +140,8 @@ public class Player extends GameObject {
             }
         } else {
             // Jumping: (IF NO ONE LIKES IT CHANGE THIS BACK)
-            x += (speed * delta) * Math.sin((platformOnAngle) % 6.28319);
-            y += (speed * delta) * Math.cos((platformOnAngle) % 6.28319);
+            x += (speed * delta) * Math.sin(platformOnAngle % 6.28319);
+            y += (speed * delta) * Math.cos(platformOnAngle % 6.28319);
 
             // Check Landing:
             for (int i = 0; i < Level.gears.size(); ++i) {
@@ -199,7 +200,7 @@ public class Player extends GameObject {
     }
 
     public void draw(ShapeRenderer renderer) {
-        drawLine(renderer, Game.w / 18);
+        drawLine(renderer);
         if (!dead)
             for (int i = 0; i < trail.size(); ++i) {
                 trail.get(i).draw(renderer);
@@ -227,7 +228,7 @@ public class Player extends GameObject {
         }
     }
 
-    private void drawLine(ShapeRenderer shapeRenderer, int dotDist) {
+    private void drawLine(ShapeRenderer renderer) {
         if (!(Game.state == GameState.Playing) || !isOnPlatform() || dead)
             return;
 
@@ -237,22 +238,38 @@ public class Player extends GameObject {
             if (gear == platform)
                 continue;
 
-            lineStop = CircleIntercestor.intercect(gear, (float) (x + (Game.h * Math.sin(platformOnAngle))), (float) (Game.h - y + (Game.h * Math.cos(platformOnAngle))));
+            Utility.getAnglePos(platformOnAngle, Game.h, platform.x, platform.y);
+            lineStop = CircleIntercestor.intersect(gear, ints[0], ints[1]);
             if (lineStop[2] > 0) break;
         }
 
-        shapeRenderer.end();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
-        vec2.set(lineStop[0], lineStop[1]).sub(vec2_1.set(x, Game.h - y));
-        float length = vec2.len();
-        for (int i = 0; i < length; i += dotDist) {
-            vec2.clamp(length - i, length - i);
-            shapeRenderer.point(x + vec2.x, Game.h - y + vec2.y, 0);
-        }
-        shapeRenderer.end();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-    }
+        float dirX = lineStop[0] - x;
+        float dirY = (Game.h - lineStop[1]) - (Game.h - y);
 
+        float length = Vector2.len(dirX, dirY);
+        dirX /= length;
+        dirY /= length;
+
+        float curLen = 0;
+        float curX;
+        float curY;
+
+        color.set(0xffffffaa);
+        renderer.setColor(color);
+
+        while (curLen < length) {
+            curX = (x + dirX * curLen);
+            curY = ((Game.h - y) + dirY * curLen);
+            if (curLen + lineLength > length) {
+                final float len = length - curLen;
+                renderer.rectLine(curX, curY, curX + dirX * len, (curY) + dirY * len, lineWidth);
+            } else {
+                renderer.rectLine(curX, curY, curX + dirX * lineLength, (curY) + dirY * lineLength, lineWidth);
+            }
+            curLen += (lineLength + lineSep);
+        }
+
+    }
 
     public void land(GearPlatform platformTmp) {
         if (!dead) {
@@ -268,7 +285,6 @@ public class Player extends GameObject {
                 Level.moverIndex = Level.gears.indexOf(platform);
                 Level.moving = true;
             }
-            platformOnAngle = (180 - getAngle(platform.x, platform.y)) % 360;
             platformOnAngle = Math.atan2(x - platform.x, y - platform.y);
         }
     }
@@ -284,8 +300,7 @@ public class Player extends GameObject {
         if (platform == null)
             return;
 
-        ints = Utility.getAnglePos((float) (platformOnAngle % 6.28319), platform.width + (width), (int) platform.x, (int) platform.y);
-        x = ints[0];
+        ints = Utility.getAnglePos((platformOnAngle % 6.28319), platform.width + width, (int) platform.x, (int) platform.y);
         x = ints[0];
         y = ints[1];
     }
@@ -315,6 +330,7 @@ public class Player extends GameObject {
     }
 
     public void earnCoinAnim(int xT, int yT, int amount) {
+        yT = Game.h - yT;
         circles.get(circleIndex).setup(xT, yT);
         for (int i = 0; i < splash.size(); ++i) {
             splash.get(i).setup(xT, yT);

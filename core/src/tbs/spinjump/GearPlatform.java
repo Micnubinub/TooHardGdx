@@ -172,7 +172,7 @@ public class GearPlatform extends GameObject {
         }
 
         // ENEMIES:
-        int angle = 0;
+        double angle = 0;
         boolean hasEnemy = false;
         for (int i = 0; i < enemies.size(); ++i) {
             enemies.get(i).active = Utility.getRandom(0, 3) == 0; // CHANGE MAYBE
@@ -188,7 +188,7 @@ public class GearPlatform extends GameObject {
         }
 
         // COINS:
-        angle = 90 + Utility.getRandom(-30, 30);
+        angle = Math.toRadians(90 + Utility.getRandom(-30, 30));
         for (int i = 0; i < coins.size(); ++i) {
             coins.get(i).active = Utility.getRandom(0, 2) == 0;
             if (first || hasEnemy)

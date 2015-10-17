@@ -14,17 +14,11 @@ public class CoinPickup {
     public float x, y;
     public float scale;
     public boolean active;
-    public float angle;
+    public double angle;
 
     public CoinPickup() {
         scale = GameValues.COIN_SCALE;
     }
-
-
-    public static void dispose() {
-
-    }
-
 
     public void setup(float x, float y) {
         this.x = x;
@@ -34,7 +28,6 @@ public class CoinPickup {
 
     public void draw(ShapeRenderer renderer) {
         if (active) {
-
             color.set(GameValues.COIN_COLOR);
             renderer.setColor(color);
             renderer.circle(x, Game.h - y, scale);

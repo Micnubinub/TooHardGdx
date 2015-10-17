@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class GameObject {
     private static final Rectangle bounds = new Rectangle();
-    public boolean hasScore;
     float x;
     float y;
     int width;
@@ -28,12 +27,7 @@ public class GameObject {
     }
 
     public float getAngle(float xO, float yO) {
-        return ((float) Math.toDegrees(Math.atan2(yO - y, xO - x))) % 360;
-    }
-
-    public Rectangle getBounds() {
-        bounds.set((int) x, (int) y, (int) x + width, (int) y + height);
-        return bounds;
+        return (float) (Math.atan2(yO - y, xO - x) % 6.28319);
     }
 
     public float getX() {
