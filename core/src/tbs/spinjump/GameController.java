@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 public class GameController implements InputProcessor {
 
     public static void pressScreen(int x, int y) {
+        Game.log("" + x + " , " + y);
         y = Game.h - y;
         if (Game.state == GameState.Menu) {
             if (Game.rateButton.isClicked(x, y)) {

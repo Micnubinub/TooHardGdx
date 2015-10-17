@@ -85,8 +85,8 @@ public class GearPlatform extends GameObject {
         final float ring1 = (width + (GameValues.PLAYER_SCALE));
         final float ring2 = (width + (GameValues.PLAYER_SCALE * 2));
 
-        renderer.setColor(c);
         c.set(GameValues.RING_COLOR);
+        renderer.setColor(c);
         renderer.circle(x, Game.h - y, ring2);
 
         c.set(GameValues.BACKGROUND_COLOR);
