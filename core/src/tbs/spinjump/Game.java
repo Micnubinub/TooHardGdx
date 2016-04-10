@@ -63,8 +63,8 @@ public class Game extends ApplicationAdapter {
     public static int revivalCost;
     // CASINO:
     public static CasinoManager casinoManager;
+    public static SpriteBatch spriteBatch;
     private static Texture buttonAtlas;
-    private static SpriteBatch batch;
     private static ShapeRenderer renderer;
     private static BitmapFont font;
 
@@ -73,7 +73,7 @@ public class Game extends ApplicationAdapter {
         state = GameState.Menu;
         level.setup();
         player.setup();
-        Gdx.input.setInputProcessor(controller);
+
         score = 0;
         casinoManager = new CasinoManager();
 
@@ -83,35 +83,10 @@ public class Game extends ApplicationAdapter {
 
         player.loadData();
         casinoManager.updateCost(player.coins);
-
     }
 
     public static void showAd(final boolean manual) {
-//        if (player.showAds || manual) {
-//            interstitial = new InterstitialAd(context);
-//            interstitial.setAdUnitId(GameValues.FULL_SCREEN_AD);
-//            AdRequest adRequest = new AdRequest.Builder().build();
-//            interstitial.loadAd(adRequest);
-//            interstitial.setAdListener(new AdListener() {
-//                public void onAdLoaded() {
-//                    if (manual) {
-//                        interstitial.show();
-//                        player.coins += 10;
-//                        player.saveData();
-//                        if (player.score > 0)
-//                            reviveButton.active = player.coins >= revivalCost;
-//                    }
-//                    loadedBigAd = true;
-//                }
-//            });
-//        }
-    }
 
-    private static void getSprites() {
-        batch = new SpriteBatch();
-        renderer = new ShapeRenderer();
-        font = Utility.getFont();
-        getCanvasButtons();
     }
 
     public static void draw() {
@@ -126,9 +101,7 @@ public class Game extends ApplicationAdapter {
     }
 
     private static void drawHUD() {
-        textAnimator.draw(batch);
-
-
+        textAnimator.draw(spriteBatch);
         float scale;
 
         // SCORE:
@@ -143,7 +116,7 @@ public class Game extends ApplicationAdapter {
             float scoreBottom = h - glyphLayout.height - (GameValues.TEXT_PADDING / 3);
             float scoreW = glyphLayout.width;
             float scoreX = w - GameValues.TEXT_PADDING - (scoreW / 2);
-            Utility.drawCenteredText(batch, color, textToMeasure, scoreX, scoreBottom + (glyphLayout.height / 2), scale);
+            Utility.drawCenteredText(spriteBatch, color, textToMeasure, scoreX, scoreBottom + (glyphLayout.height / 2), scale);
 
             scale = Utility.getScale(GameValues.SCORE_TEXT_SIZE / 2.5f);
             font.getData().setScale(scale);
@@ -151,15 +124,12 @@ public class Game extends ApplicationAdapter {
             glyphLayout.reset();
             glyphLayout.setText(font, textToMeasure);
             color.set(GameValues.RING_COLOR);
-            Utility.drawCenteredText(batch, color, "SCORE", scoreX - (scoreW / 2) - (glyphLayout.width / 2) - (GameValues.TEXT_PADDING / 2), scoreBottom + glyphLayout.height / 2, scale);
+            Utility.drawCenteredText(spriteBatch, color, "SCORE", scoreX - (scoreW / 2) - (glyphLayout.width / 2) - (GameValues.TEXT_PADDING / 2), scoreBottom + glyphLayout.height / 2, scale);
         }
 
         // DRAW MENU:
         if (state == GameState.Menu) {
-
-
             scale = Utility.getScale(GameValues.MENU_TEXT_SIZE);
-
             font.getData().setScale(scale);
 
             glyphLayout.setText(font, "T");
@@ -168,25 +138,24 @@ public class Game extends ApplicationAdapter {
 
             // MENU TEXT:
             color.set(0xe6e8f1FF);
-            Utility.drawCenteredText(batch, color, "TOO HARD?", w / 2, textBottom + (textHeight / 2), scale);
-
+            Utility.drawCenteredText(spriteBatch, color, "TOO HARD?", w / 2, textBottom + (textHeight / 2), scale);
 
             glyphLayout.setText(font, "T");
             textHeight = glyphLayout.height;
 
             color.set(1, 1, 1, 120 / 255f);
-            Utility.drawCenteredText(batch, color, "CAN YOU GET TO 100?", w / 2, textBottom - (GameValues.TEXT_PADDING / 8) - (textHeight / 4), scale / 2);
-            Utility.drawCenteredText(batch, color, "TAP TO BEGIN", w / 2, leaderButton.y + leaderButton.height + GameValues.TEXT_PADDING + (textHeight / 4), scale / 2);
+            Utility.drawCenteredText(spriteBatch, color, "CAN YOU GET TO 100?", w / 2, textBottom - (GameValues.TEXT_PADDING / 8) - (textHeight / 4), scale / 2);
+            Utility.drawCenteredText(spriteBatch, color, "TAP TO BEGIN", w / 2, leaderButton.y + leaderButton.height + GameValues.TEXT_PADDING + (textHeight / 4), scale / 2);
 
             // BUTTONS:
-            rateButton.draw(batch);
-            leaderButton.draw(batch);
-            achievementButton.draw(batch);
-            storeButton.draw(batch);
-            gambleButton.draw(batch);
+            rateButton.draw(spriteBatch);
+            leaderButton.draw(spriteBatch);
+            achievementButton.draw(spriteBatch);
+            storeButton.draw(spriteBatch);
+            gambleButton.draw(spriteBatch);
             if (gambleButton.active) {
                 color.set(1, 1, 1, 120 / 255f);
-                Utility.drawCenteredText(batch, color, casinoManager.playCost + " COINS", w / 2, gambleButton.y - (GameValues.TEXT_PADDING * 0.85f), Utility.getScale(GameValues.MENU_TEXT_SIZE_2 / 2));
+                Utility.drawCenteredText(spriteBatch, color, casinoManager.playCost + " COINS", w / 2, gambleButton.y - (GameValues.TEXT_PADDING * 0.85f), Utility.getScale(GameValues.MENU_TEXT_SIZE_2 / 2));
             }
         }
 
@@ -197,77 +166,71 @@ public class Game extends ApplicationAdapter {
             glyphLayout.setText(font, "YOU DIED");
             float bottom = h - glyphLayout.height - GameValues.TEXT_PADDING;
             color.set(0xe6e8f1FF);
-            Utility.drawCenteredText(batch, color, "YOU DIED", w / 2, bottom + (glyphLayout.height / 2), scale);
+            Utility.drawCenteredText(spriteBatch, color, "YOU DIED", w / 2, bottom + (glyphLayout.height / 2), scale);
             color.set(1, 1, 1, 120 / 250f);
-            Utility.drawCenteredText(batch, color, "GET TO 100", w / 2, bottom - (1.3f * GameValues.TEXT_PADDING) - (glyphLayout.height / 2), scale / 2);
+            Utility.drawCenteredText(spriteBatch, color, "GET TO 100", w / 2, bottom - (1.3f * GameValues.TEXT_PADDING) - (glyphLayout.height / 2), scale / 2);
             // AFTER GAME INFO:
 
             scale = Utility.getScale(GameValues.MENU_TEXT_SIZE_2);
             bottom = homeButton.y + homeButton.height + GameValues.TEXT_PADDING;
             glyphLayout.setText(font, "T");
-            Utility.drawCenteredText(batch, color, "SCORE: " + player.score, w / 2, bottom + (glyphLayout.height / 2), scale);
+            Utility.drawCenteredText(spriteBatch, color, "SCORE: " + player.score, w / 2, bottom + (glyphLayout.height / 2), scale);
 
             color.set(0xffffffff);
-            Utility.drawCenteredText(batch, color, "BEST: " + player.highScore, w / 2, bottom + (1.35f * glyphLayout.height), scale);
+            Utility.drawCenteredText(spriteBatch, color, "BEST: " + player.highScore, w / 2, bottom + (1.35f * glyphLayout.height), scale);
 
             // BUTTONS:
-            homeButton.draw(batch);
-            shareButton.draw(batch);
-            retryButton.draw(batch);
-            adButton.draw(batch);
-            buyButton.draw(batch);
-            reviveButton.draw(batch);
+            homeButton.draw(spriteBatch);
+            shareButton.draw(spriteBatch);
+            retryButton.draw(spriteBatch);
+            adButton.draw(spriteBatch);
+            buyButton.draw(spriteBatch);
+            reviveButton.draw(spriteBatch);
 
             if (!buyButton.active)
-                likeButton.draw(batch);
+                likeButton.draw(spriteBatch);
 
             if (reviveButton.active) {
                 color.set(1, 1, 1, 120 / 250f);
-                Utility.drawCenteredText(batch, color, revivalCost + " COINS", w / 2, reviveButton.y - (GameValues.TEXT_PADDING * 0.85f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2.5f));
+                Utility.drawCenteredText(spriteBatch, color, revivalCost + " COINS", w / 2, reviveButton.y - (GameValues.TEXT_PADDING * 0.85f), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2.5f));
             }
         }
 
         // DRAW STORE:
 
         if (state == GameState.Store) {
-
-
             // DEATH TEXT:
             color.set(0xe6e8f1FF);
-            Utility.drawCenteredText(batch, color, "STORE", w / 2, h - (h / 8), Utility.getScale(GameValues.MENU_TEXT_SIZE));
+            Utility.drawCenteredText(spriteBatch, color, "STORE", w / 2, h - (h / 8), Utility.getScale(GameValues.MENU_TEXT_SIZE));
 
             color.set(1, 1, 1, 120 / 250f);
-            Utility.drawCenteredText(batch, color, "BUY NEW ITEMS", w / 2, h - ((h / 8) + (GameValues.TEXT_PADDING * 1.5f)), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
+            Utility.drawCenteredText(spriteBatch, color, "BUY NEW ITEMS", w / 2, h - ((h / 8) + (GameValues.TEXT_PADDING * 1.5f)), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
         }
 
         // DRAW CASINO
 
         if (state == GameState.Casino) {
-
             // CASINO HEADER:
             color.set(0xFFe6e8f1);
-            Utility.drawCenteredText(batch, color, "REWARDS", w / 2, h - (h / 8), Utility.getScale(GameValues.MENU_TEXT_SIZE));
+            Utility.drawCenteredText(spriteBatch, color, "REWARDS", w / 2, h - (h / 8), Utility.getScale(GameValues.MENU_TEXT_SIZE));
             color.set(1, 1, 1, 120 / 250f);
-            Utility.drawCenteredText(batch, color, "SELECT ONE", w / 2, h - ((h / 8) + (GameValues.TEXT_PADDING * 1.5f)), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
+            Utility.drawCenteredText(spriteBatch, color, "SELECT ONE", w / 2, h - ((h / 8) + (GameValues.TEXT_PADDING * 1.5f)), Utility.getScale(GameValues.MENU_TEXT_SIZE / 2));
 
             // DRAW CASINO:
-            casinoManager.draw(batch);
-            homeButton2.draw(batch);
+            casinoManager.draw(spriteBatch);
+            homeButton2.draw(spriteBatch);
         }
 
         // COINS:
         color.set(0xFFFFFFFF);
-
         textToMeasure = player.coins + "";
-
         scale = Utility.getScale(GameValues.COIN_TEXT_SIZE * coinTextMult);
-
         font.getData().setScale(scale);
 
         glyphLayout.setText(font, textToMeasure);
         final float textWidth = glyphLayout.width;
 
-        Utility.drawCenteredText(batch, color, textToMeasure, GameValues.TEXT_PADDING + (glyphLayout.width / 2), GameValues.TEXT_PADDING + (glyphLayout.height / 2), scale);
+        Utility.drawCenteredText(spriteBatch, color, textToMeasure, GameValues.TEXT_PADDING + (glyphLayout.width / 2), GameValues.TEXT_PADDING + (glyphLayout.height / 2), scale);
 
         if (state == GameState.Playing)
             color.set(GameValues.RING_COLOR);
@@ -277,26 +240,24 @@ public class Game extends ApplicationAdapter {
 
         scale = Utility.getScale(GameValues.COIN_TEXT_SIZE / 2.5f);
         font.getData().setScale(scale);
-
         glyphLayout.setText(font, "COINS");
-        Utility.drawCenteredText(batch, color, "COINS", (1.75f * GameValues.TEXT_PADDING) + textWidth + (glyphLayout.width / 2), GameValues.TEXT_PADDING + (glyphLayout.height / 2), scale);
+        Utility.drawCenteredText(spriteBatch, color, "COINS", (1.75f * GameValues.TEXT_PADDING) + textWidth + (glyphLayout.width / 2), GameValues.TEXT_PADDING + (glyphLayout.height / 2), scale);
 
         // DRAW INTRO:
         if (introAlpha > 0) {
             // DRAW INTRO:
-            batch.end();
+            spriteBatch.end();
             renderer.begin(ShapeRenderer.ShapeType.Filled);
             color.set(GameValues.BACKGROUND_COLOR);
             color.a = introAlpha / 255f;
             renderer.setColor(color);
             renderer.rect(0, 0, w, h);
             renderer.end();
-            batch.begin();
+            spriteBatch.begin();
             color.set(0xffffffff);
-            Utility.drawCenteredText(batch, color, "THE BIG SHOTS", w / 2, h / 2, Utility.getScale(GameValues.MENU_TEXT_SIZE / 1.5f));
+            Utility.drawCenteredText(spriteBatch, color, "THE BIG SHOTS", w / 2, h / 2, Utility.getScale(GameValues.MENU_TEXT_SIZE / 1.5f));
         }
     }
-
 
     public static void update(float delta) {
         level.update(delta);
@@ -314,7 +275,6 @@ public class Game extends ApplicationAdapter {
             if (coinTextMult <= 1)
                 coinTextMult = 1;
         }
-
 
         // UPDATE CASINO:
         if (state == GameState.Casino) {
@@ -360,16 +320,12 @@ public class Game extends ApplicationAdapter {
         introCountdown = 100;
         introAlpha = 255;
 
-        initSound();
         // SETUP ETC:
         setup();
-        setupStore();
-
     }
 
     private static void getCanvasButtons() {
         buttonAtlas = new Texture("buttons.png");
-        // SETUP BUTTONS:
         // SETUP BUTTONS:
         rateButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, 256, 256, 256, 256), (w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) + GameValues.BUTTON_PADDING * 4), false);
         leaderButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, 256, 512, 256, 256), (int) rateButton.x - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING), h - ((h / 2) + GameValues.BUTTON_PADDING * 4), false);
@@ -384,9 +340,7 @@ public class Game extends ApplicationAdapter {
         buyButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, 0, 512, 256, 256), (int) (w - (GameValues.MENU_BTN_WIDTH + GameValues.BUTTON_PADDING / 1.5f)), (int) GameValues.TEXT_PADDING, true);
         reviveButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, 0, 768, 256, 256), (w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 1.75f)), true);
         gambleButton = new CanvasButton(new TextureAtlas.AtlasRegion(buttonAtlas, 768, 512, 256, 256), (w / 2) - (GameValues.MENU_BTN_WIDTH / 2), h - ((h / 2) - (int) (GameValues.MENU_BTN_WIDTH * 1.75f)), true);
-
     }
-
 
     private static void setupStore() {
         // STORE:
@@ -422,7 +376,6 @@ public class Game extends ApplicationAdapter {
         storeItems.add(new StoreItem(10000, 0xFFFFFFff, 0x000000ff, false, 0, false)); // 26
         storeItems.add(new StoreItem(10000, 0x000000ff, 0xFFFFFFff, false, 0, false)); // 27
 
-
         storeItems.add(new StoreItem(-1, 0xed2df9ff, 0x415ef9ff, false, 5, false)); // 28
         storeItems.add(new StoreItem(-1, 0x516aecff, 0xFFFFFFff, false, 10, false));  // 29
         storeItems.add(new StoreItem(-1, 0xec5151ff, 0xFFFFFFff, false, 100, false));  // 30
@@ -443,135 +396,52 @@ public class Game extends ApplicationAdapter {
         storeItems.add(new StoreItem(-1, 0xed9c28ff, -1, false, 1000, true)); // 44
         storeItems.add(new StoreItem(-1, 0xed28d8ff, -1, false, 10000, true)); // 45
 
-
-        StoreItem removeAds = new StoreItem(0, 0x000000ff, 0x000000ff, false, 0, false);
+        final StoreItem removeAds = new StoreItem(0, 0x000000ff, 0x000000ff, false, 0, false);
         removeAds.text = "Remove Ads";
         removeAds.IAPID = GameValues.removeAdsID; // PUT ID HERE
         storeItems.add(removeAds);
-        StoreItem buyCoins = new StoreItem(0, 0x000000ff, 0x000000ff, false, 0, false);
+        final StoreItem buyCoins = new StoreItem(0, 0x000000ff, 0x000000ff, false, 0, false);
         buyCoins.text = "Buy Coins";
         buyCoins.IAPID = GameValues.buyCoinsID; // PUT ID HERE
         storeItems.add(buyCoins);
     }
 
-    private static void initSound() {
+    // STORE DIALOG:
+    public static void showStore() {
+
+    }
+
+    private void getSprites() {
+        dispose();
+        spriteBatch = new SpriteBatch();
+        renderer = new ShapeRenderer();
+        font = Utility.getFont();
+        getCanvasButtons();
+        Gdx.input.setInputProcessor(controller);
         jumpSound = Gdx.audio.newSound(Gdx.files.internal("jump.mp3"));
         coinSound = Gdx.audio.newSound(Gdx.files.internal("coin.mp3"));
         buttonSound = Gdx.audio.newSound(Gdx.files.internal("button.mp3"));
         moneySound = Gdx.audio.newSound(Gdx.files.internal("money.mp3"));
         deathSound = Gdx.audio.newSound(Gdx.files.internal("death2.mp3"));
         winSound = Gdx.audio.newSound(Gdx.files.internal("win.mp3"));
-        ambientMusic = Gdx.audio.newMusic(Gdx.files.internal("ambient.mp3"));
-        ambientMusic.setLooping(true);
-        ambientMusic.play();
-    }
-
-    // STORE DIALOG:
-    public static void showStore() {
-//        final Dialog dialog = new Dialog(context, R.style.CustomDialog);
-//        dialog.setContentView(R.layout.store_gridview);
-//
-//        // BUTTON:
-//        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) dialog.findViewById(R.id.back).getLayoutParams();
-//        params.width = GameValues.MENU_BTN_WIDTH;
-//        params.height = GameValues.MENU_BTN_HEIGHT;
-//        params.rightMargin = (int) (GameValues.BUTTON_PADDING / 1.5f);
-//        params.bottomMargin = GameValues.BUTTON_PADDING / 2;
-//        params.leftMargin = 0;
-//        params.topMargin = (int) (GameValues.BUTTON_PADDING / 1.5f);
-//        dialog.findViewById(R.id.back).setLayoutParams(params);
-//        dialog.findViewById(R.id.back).setAlpha(0.705f);
-//
-//        // SETUP SCALE AND POSITION OF DIALOG:
-//        dialog.getWindow().setLayout(ScreenObject.width, (int) (ScreenObject.height * 0.785f));
-//        WindowManager.LayoutParams wlp = dialog.getWindow().getAttributes();
-//        wlp.gravity = Gravity.BOTTOM;
-//        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-//        dialog.getWindow().setAttributes(wlp);
-//        dialog.findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                state = GameState.Menu;
-//                soundPlayer.play(Game.buttonSound, 1, 1, 0, 0, 1);
-//                dialog.dismiss();
-//            }
-//        });
-//
-//
-//        // CHECK IF THEY HAVE BEEN BOUGHT:
-//        final GridView gridView = (GridView) dialog.findViewById(R.id.grid);
-//        for (int i = 0; i < storeItems.size(); ++i) {
-//            storeItems.get(i).bought = player.purchases.get(i) == 1; // x == y;
-//        }
-//        gridView.setAdapter(new StoreAdapter(storeItems));
-//        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                // SKINS:
-//                if (storeItems.get(position).IAPID.equals("NONE")) {
-//                    if (storeItems.get(position).cost <= player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
-//                        // BUY:
-//                        storeItems.get(position).bought = true;
-//                        MainActivity.unlockAchievement("CgkIxIfix40fEAIQAQ");
-//                        int itemsBought = 0;
-//                        for (int i = 0; i < storeItems.size(); ++i) {
-//                            if (storeItems.get(i).bought && storeItems.get(i).buyable && storeItems.get(i).IAPID.equals("NONE"))
-//                                itemsBought += 1;
-//                        }
-//                        if (itemsBought >= storeItems.size()) { // EDIT
-//                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAw");
-//                        } else if (itemsBought >= 5) {
-//                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQAg");
-//                        }
-//                        if (position == storeItems.size() - 3) {
-//                            MainActivity.unlockAchievement("CgkIxIfix40fEAIQBA");
-//                        }
-//                        soundPlayer.play(moneySound, 1, 1, 0, 0, 1);
-//                        player.coins -= storeItems.get(position).cost;
-//                        player.purchases.set(position, 1);
-//                        player.saveData();
-//                    } else if (storeItems.get(position).cost > player.coins && !storeItems.get(position).bought && storeItems.get(position).buyable) {
-//                        // CANT AFFORD:
-//                        soundPlayer.play(buttonSound, 1, 1, 0, 0, 1);
-//                    } else if (storeItems.get(position).bought) {
-//                        // EQUIP:
-//                        if (storeItems.get(position).trail) {
-//                            player.equipTrail(storeItems.get(position));
-//                        } else {
-//                            player.equipSkin(storeItems.get(position));
-//                        }
-//                        soundPlayer.play(buttonSound, 1, 1, 0, 0, 1);
-//                    }
-//                } else {
-//                    // IN APP PURCHASE:
-//                    gPurchaseManager.makePurchase(storeItems.get(position).IAPID);
-//                }
-//                ((BaseAdapter) gridView.getAdapter()).notifyDataSetChanged();
-//            }
-//        });
-//        dialog.show();
-    }
-
-    public static void log(String msg) {
-        date.setTime(System.currentTimeMillis());
-        Gdx.app.error("" + date.toString(), msg);
+        BitmapLoader.init();
+//        ambientMusic = Gdx.audio.newMusic(Gdx.files.internal("ambient.mp3"));
+//        ambientMusic.setLooping(true);
+//        ambientMusic.play();
     }
 
     @Override
     public void dispose() {
-        try {
-            batch.dispose();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        buttonAtlas.dispose();
-        jumpSound.dispose();
-        coinSound.dispose();
-        buttonSound.dispose();
-        moneySound.dispose();
-        deathSound.dispose();
-        winSound.dispose();
-        ambientMusic.dispose();
+        Utility.dispose(spriteBatch);
+        Utility.dispose(renderer);
+        Utility.dispose(buttonAtlas);
+        Utility.dispose(jumpSound);
+        Utility.dispose(coinSound);
+        Utility.dispose(buttonSound);
+        Utility.dispose(moneySound);
+        Utility.dispose(deathSound);
+        Utility.dispose(winSound);
+        Utility.dispose(ambientMusic);
         Utility.disposeFont();
         super.dispose();
     }
@@ -604,26 +474,22 @@ public class Game extends ApplicationAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Gdx.gl.glLineWidth(GameValues.RING_WIDTH);
         draw();
         try {
             renderer.end();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         try {
-            batch.begin();
+            spriteBatch.begin();
         } catch (Exception e) {
             e.printStackTrace();
         }
         drawHUD();
         try {
-            batch.end();
+            spriteBatch.end();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }    // STORE DIALOG:
-
-
+    }
 }

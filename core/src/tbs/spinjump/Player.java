@@ -10,9 +10,6 @@ import java.util.ArrayList;
 public class Player extends GameObject {
 
     private static final Color color = new Color();
-    private static final Vector2 playerPos = new Vector2();
-    private static final float[] rotationInts = new float[2];
-    private static final float[] rotationInts2 = new float[2];
     private static int w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
     private static int[] ints;
     private static float[] lineStop;
@@ -525,8 +522,7 @@ public class Player extends GameObject {
 //        if (coins > 1000000) {
 //            MainActivity.unlockAchievement("CgkIxIfix40fEAIQCw");
 //        }
-
-        // UPDATE COST OF CASINO EVERYTIME COINS CHANGE:
+//           UPDATE COST OF CASINO EVERYTIME COINS CHANGE:
         Game.casinoManager.updateCost(coins);
     }
 

@@ -36,7 +36,6 @@ public class StoreItem {
     public static void setSize(float w, float h) {
         StoreItem.w = w;
         StoreItem.h = h;
-
     }
 
     private void draw(SpriteBatch batch, float x, float y) {

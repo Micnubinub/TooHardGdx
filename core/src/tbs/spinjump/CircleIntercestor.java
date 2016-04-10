@@ -28,7 +28,6 @@ public class CircleIntercestor {
             return lineStop;
         }
 
-        Game.log(String.valueOf(check));
 
         points[0].x = Game.player.x;
         points[0].y = Game.player.y;

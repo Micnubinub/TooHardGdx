@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 
 import tbs.spinjump.Game;
 
+
 public class DesktopLauncher {
     public static void main(String[] arg) {
         final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

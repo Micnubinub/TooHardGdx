@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Disposable;
 
 import java.util.Random;
 
@@ -21,7 +22,9 @@ public class Utility {
     private static BitmapFont font;
 
     public static int getRandom(int min, int max) {
-        return rand.nextInt((max - min) < 0 ? 0 : (max - min) + 1) + min;
+        if (max == min || max < 0)
+            max++;
+        return rand.nextInt((max - min) < 1 ? 1 : (max - min) + 1) + min;
     }
 
     public static float randFloat(int minX, int maxX) {
@@ -42,11 +45,11 @@ public class Utility {
 
     public static void disposeFont() {
         isFontInit = false;
-        font = null;
         try {
             font.dispose();
         } catch (Exception e) {
         }
+        font = null;
     }
 
     public static int[] getAnglePos(double angle, float distFromCenter, float x, float y) {
@@ -76,6 +79,11 @@ public class Utility {
     }
 
     public static void drawCenteredText(SpriteBatch batch, Color color, String text, float x, float y, float scale) {
+
+//        font.getData().setScale(scale);
+//        textToMeasure = "" + player.score;
+//        glyphLayout.setText(font, textToMeasure);
+//        color.set(0xFFFFFFFF);
         final BitmapFont font = getFont();
         font.getData().setScale(scale * 1.25f);
 
@@ -96,5 +104,16 @@ public class Utility {
         return true;
     }
 
-
+    public static void dispose(Object o) {
+        if (o != null && o instanceof Disposable) {
+            try {
+                ((Disposable) o).dispose();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+//        else {
+//            Gdx.app.error("Util: ", "Not dosposable");
+//        }
+    }
 }

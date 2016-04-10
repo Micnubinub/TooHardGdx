@@ -32,14 +32,14 @@ public class CasinoManager {
         float startXPos = ((Game.w / 2) - ((GameValues.CASINO_ITEM_SCALE * 1.5f) + GameValues.CASINO_ITEM_PADDING));
         float startYPos = Game.h - (((Game.h / 2) - ((GameValues.CASINO_ITEM_SCALE * 1.5f) + GameValues.CASINO_ITEM_PADDING)));
         for (int i = 0; i < 9; ++i) {
-//     Todo             items.add(new CanvasButton((int) (startXPos + ((GameValues.CASINO_ITEM_SCALE + GameValues.CASINO_ITEM_PADDING) * (itemRowC - 1))), (int) (startYPos + ((GameValues.CASINO_ITEM_SCALE + GameValues.CASINO_ITEM_PADDING) * (itemColC - 1))), "qe_btn", false));
+//           items.add(new CanvasButton((int) (startXPos + ((GameValues.CASINO_ITEM_SCALE + GameValues.CASINO_ITEM_PADDING) * (itemRowC - 1))), (int) (startYPos + ((GameValues.CASINO_ITEM_SCALE + GameValues.CASINO_ITEM_PADDING) * (itemColC - 1))), "qe_btn", false));
             itemRowC += 1;
             if (itemRowC == 4) {
                 itemRowC = 1;
                 itemColC += 1;
             }
-//     Todo       items.get(i).id = i;
-//TOdo            items.get(i).animated = true;
+//      items.get(i).id = i;
+//      items.get(i).animated = true;
         }
 
         flash = getColorTexture(0xffffffff);
@@ -88,7 +88,8 @@ public class CasinoManager {
         wiggleCountdown -= delta;
         if (wiggleCountdown <= 0) {
             wiggleCountdown = 50;
-            items.get(Utility.getRandom(0, items.size() - 1)).wiggle();
+            if (items.size() > 0)
+                items.get(Utility.getRandom(0, items.size() - 1)).wiggle();
         }
     }
 

@@ -54,7 +54,6 @@ public class CanvasButton extends GameObject {
             return false;
 
         rectangle.set(this.x, this.y, width, height);
-        Game.log(rectangle.toString() + " x,y : " + x + ", " + y);
 
         if (rectangle.contains(x, y)) {
             if (playSound)
